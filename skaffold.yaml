@@ -1,0 +1,45 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: auth-service
+build:
+  local:
+    push: false
+  artifacts:
+    - image: auth-service
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "target/classes/**"
+            dest: /app/target/classes
+          - src: "src/main/resources/**"
+            dest: /app/src/main/resources
+    - image: product-service
+      context: product
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+
+manifests:
+  rawYaml:
+    - k8s/auth-service-deployment.yaml
+    - k8s/product-service-deployment.yaml
+    - k8s/product-mongo-deployment.yaml
+deploy:
+  kubectl:
+    defaultNamespace: default
+
+portForward:
+  - resourceType: service
+    resourceName: auth-service
+    port: 8081
+    namespace: default
+  - resourceType: service
+    resourceName: product-mongo-service
+    port: 27017
+    localPort: 27018

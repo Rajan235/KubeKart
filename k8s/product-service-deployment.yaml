@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: product-service:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: jwt-key
+            - name: MONGO_URI
+              value: mongodb://product-mongo-service:27017/productdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service-service
+spec:
+  selector:
+    app: product-service
+  ports:
+    - name: product-service
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

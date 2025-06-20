@@ -1,0 +1,41 @@
+# Java
+**/target/
+**/.classpath
+**/.project
+**/.settings/
+**/.idea/
+**/.mvn/
+**/build/
+*.iml
+# Node.js
+**/node_modules/
+**/npm-debug.log
+**/yarn-debug.log
+**/yarn-error.log
+**/dist/
+**/.env
+**/.env.*
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Logs
+**/logs/
+*.log
+
+# Test output
+**/coverage/
+**/test-results/
+
+# Docker
+**/.docker/
+**/docker-compose.override.yml
+
+# VSCode
+.vscode/
+
+# Misc
+*.swp
+*.swo
+
