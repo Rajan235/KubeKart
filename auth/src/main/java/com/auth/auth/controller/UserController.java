@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -108,7 +109,7 @@ public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest
 	
 	@PostMapping("/login")
     //manual login method
-public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
     try {
         
         Authentication auth = authenticationManager.authenticate(
@@ -126,6 +127,11 @@ public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Invalid Credentials", null));
     }
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Login Failed", null));
+}
+@GetMapping("/admin-only")
+@PreAuthorize("hasRole('ADMIN')")
+public String adminOnly() {
+    return "Welcome, Admin!";
 }
 
     
