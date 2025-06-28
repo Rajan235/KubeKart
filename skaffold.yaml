@@ -24,12 +24,22 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: order-service
+      context: order
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
 
 manifests:
   rawYaml:
     - k8s/auth-service-deployment.yaml
     - k8s/product-service-deployment.yaml
     - k8s/product-mongo-deployment.yaml
+    - k8s/order-service-deployment.yaml
+    - k8s/order-postgres-deployment.yaml
 deploy:
   kubectl:
     defaultNamespace: default
@@ -43,3 +53,7 @@ portForward:
     resourceName: product-mongo-service
     port: 27017
     localPort: 27018
+  - resourceType: service
+    resourceName: order-postgres-service
+    port: 5432
+    localPort: 5433
