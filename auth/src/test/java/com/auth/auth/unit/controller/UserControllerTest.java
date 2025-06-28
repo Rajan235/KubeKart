@@ -1,145 +1,152 @@
-// package com.auth.auth.unit.controller;
+    package com.auth.auth.unit.controller;
 
-// import com.auth.auth.controller.UserController;
-// import com.auth.auth.dtos.AuthResponse;
-// import com.auth.auth.dtos.LoginRequest;
-// import com.auth.auth.dtos.RegisterRequest;
-// import com.auth.auth.model.Role;
-// import com.auth.auth.model.User;
-// import com.auth.auth.model.UserPrincipal;
-// import com.auth.auth.service.JwtService;
-// import com.auth.auth.service.UserService;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.Mockito;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+    import com.auth.auth.config.JwtFilter;
+    import com.auth.auth.controller.UserController;
+    import com.auth.auth.dtos.AuthResponse;
+    import com.auth.auth.dtos.LoginRequest;
+    import com.auth.auth.dtos.RegisterRequest;
+    import com.auth.auth.model.Role;
+    import com.auth.auth.model.User;
+    import com.auth.auth.model.UserPrincipal;
+    import com.auth.auth.service.JwtService;
+    import com.auth.auth.service.UserService;
+    import org.junit.jupiter.api.Test;
+    import org.mockito.Mockito;
+    import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-// import org.springframework.boot.test.mock.mockito.MockBean;
-// import org.springframework.context.annotation.Import;
-// import org.springframework.http.MediaType;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-// import org.springframework.security.core.Authentication;
-// import org.springframework.test.context.ActiveProfiles;
-// import org.springframework.test.web.servlet.MockMvc;
-// import com.fasterxml.jackson.databind.ObjectMapper;
+    import org.springframework.boot.test.mock.mockito.MockBean;
+    import org.springframework.context.annotation.Import;
+    import org.springframework.http.MediaType;
+    import org.springframework.security.authentication.AuthenticationManager;
+    import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+    import org.springframework.security.core.Authentication;
+    import org.springframework.test.context.ActiveProfiles;
+    import org.springframework.test.web.servlet.MockMvc;
+    import com.fasterxml.jackson.databind.ObjectMapper;
 
-// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+    import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+    import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// import static org.mockito.ArgumentMatchers.any;
+    import static org.mockito.ArgumentMatchers.any;
 
-// @WebMvcTest(UserController.class)
-// @ActiveProfiles("test")
-// public class UserControllerTest {
+    @WebMvcTest(UserController.class)
+    
+@Import(UserController.class)
+@AutoConfigureMockMvc(addFilters = false) 
+    public class UserControllerTest {
 
-//     @Autowired
-//     private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-//     @MockBean
-//     private JwtService jwtService;
+        @MockBean
+        private JwtService jwtService;
 
-//     @MockBean
-//     private UserService userService;
+        @MockBean
+        private UserService userService;
 
-//     @MockBean
-//     private AuthenticationManager authenticationManager;
+        @MockBean
+        private AuthenticationManager authenticationManager;
 
-//     @Autowired
-//     private ObjectMapper objectMapper; // to convert Java -> JSON
+        @MockBean
+        private JwtFilter jwtFilter; // Not used in this test, but needed for @WebMvcTest
 
-//     @Test
-//     void testRegister() throws Exception {
-//         RegisterRequest request = new RegisterRequest();
-//         request.setUsername("testuser");
-//         request.setEmail("test@email.com");
-//         request.setPassword("pass");
-//         request.setRole(Role.USER);
+        @Autowired
+        private ObjectMapper objectMapper; // to convert Java -> JSON
 
-//         User user = new User();
-//         user.setUsername("testuser");
-//         user.setEmail("test@email.com");
-//         user.setPassword("encodedpass");
-//         user.setRole(Role.USER);
+        @Test
+        void testRegister() throws Exception {
+            RegisterRequest request = new RegisterRequest();
+            request.setUsername("testuser");
+            request.setEmail("test@email.com");
+            request.setPassword("password123");
+            request.setRole(Role.USER);
 
-//         Mockito.when(userService.saveUser(any(User.class))).thenReturn(user);
+            User user = new User();
+            user.setUsername("testuser");
+            user.setEmail("test@email.com");
+            user.setPassword("encodedpass");
+            user.setRole(Role.USER);
 
-//         mockMvc.perform(post("/register")
-//                 .contentType(MediaType.APPLICATION_JSON)
-//                 .content(objectMapper.writeValueAsString(request)))
-//                 .andExpect(status().isOk())
-//                 .andExpect(jsonPath("$.message").value("User registered"));
-//     }
+            Mockito.when(userService.saveUser(any(User.class))).thenReturn(user);
 
-//     @Test
-//     void testLoginSuccess() throws Exception {
-//         LoginRequest request = new LoginRequest();
-//         request.setUsername("testuser");
-//         request.setPassword("password");
+            mockMvc.perform(post("/register")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("User registered"));
+        }
 
-//         User user = new User();
-//         user.setUserId(1);
-//         user.setUsername("testuser");
-//         user.setEmail("test@email.com");
-//         user.setRole(Role.USER);
+        @Test
+        void testLoginSuccess() throws Exception {
+            LoginRequest request = new LoginRequest();
+            request.setUsername("testuser");
+            request.setPassword("password");
 
-//         UserPrincipal principal = new UserPrincipal(user);
+            User user = new User();
+            user.setUserId(1);
+            user.setUsername("testuser");
+            user.setEmail("test@email.com");
+            user.setRole(Role.USER);
 
-//         Authentication mockAuth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+            UserPrincipal principal = new UserPrincipal(user);
 
-//         Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-//                 .thenReturn(mockAuth);
+            Authentication mockAuth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
 
-//         Mockito.when(jwtService.generateToken(principal)).thenReturn("mock-jwt-token");
+            Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                    .thenReturn(mockAuth);
 
-//         mockMvc.perform(post("/login")
-//                 .contentType(MediaType.APPLICATION_JSON)
-//                 .content(objectMapper.writeValueAsString(request)))
-//                 .andExpect(status().isOk())
-//                 .andExpect(jsonPath("$.message").value("Login Successful"))
-//                 .andExpect(jsonPath("$.token").value("mock-jwt-token"));
-//     }
+            Mockito.when(jwtService.generateToken(principal)).thenReturn("mock-jwt-token");
 
-//     @Test
-// void testLoginInvalidCredentials() throws Exception {
-//     LoginRequest request = new LoginRequest();
-//     request.setUsername("invaliduser");
-//     request.setPassword("wrongpass");
+            mockMvc.perform(post("/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Login Successful"))
+                    .andExpect(jsonPath("$.token").value("mock-jwt-token"));
+        }
 
-//     Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-//             .thenThrow(new RuntimeException("Bad credentials"));
+        @Test
+    void testLoginInvalidCredentials() throws Exception {
+        LoginRequest request = new LoginRequest();
+        request.setUsername("invaliduser");
+        request.setPassword("wrongpass");
 
-//     mockMvc.perform(post("/login")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(request)))
-//             .andExpect(status().isUnauthorized())
-//             .andExpect(jsonPath("$.message").value("Invalid Credentials"))
-//             .andExpect(jsonPath("$.token").doesNotExist());
-// }
-// @Test
-// void testLoginFailsCompletely() throws Exception {
-//     LoginRequest request = new LoginRequest();
-//     request.setUsername("someuser");
-//     request.setPassword("somepass");
+        Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new RuntimeException("Bad credentials"));
 
-//     // simulate no exception but still not authenticated
-//     Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-//             .thenReturn(null);
+        mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Invalid Credentials"))
+                .andExpect(jsonPath("$.token").doesNotExist());
+    }
+    @Test
+    void testLoginFailsCompletely() throws Exception {
+        LoginRequest request = new LoginRequest();
+        request.setUsername("someuser");
+        request.setPassword("somepass");
 
-//     mockMvc.perform(post("/login")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(request)))
-//             .andExpect(status().isUnauthorized())
-//             .andExpect(jsonPath("$.message").value("Login Failed"));
-// }
-// @Test
-// void testRegisterMissingFields() throws Exception {
-//     RegisterRequest request = new RegisterRequest(); // all fields null
+        // simulate no exception but still not authenticated
+        Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(null);
 
-//     mockMvc.perform(post("/register")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(request)))
-//             .andExpect(status().isBadRequest()); // Spring auto handles this with @Valid
-// }
+        mockMvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Invalid Credentials"));
+    }
+    @Test
+    void testRegisterMissingFields() throws Exception {
+        RegisterRequest request = new RegisterRequest(); // all fields null
 
-// }
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest()); // Spring auto handles this with @Valid
+    }
+
+    }

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+// import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,14 +45,15 @@ public class UserControllerIntegrationTest {
 
     @Test
     void testRegisterEndpoint_missingFields() throws Exception {
-        RegisterRequest request = new RegisterRequest(); // empty fields
+        //RegisterRequest request = new RegisterRequest(); // empty fields
 
         mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.username").value("Username is required"))
-                .andExpect(jsonPath("$.email").value("Email is required"))
-                .andExpect(jsonPath("$.role").value("Role must be specified"));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(new RegisterRequest())))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.username").value("Username is required"))
+        .andExpect(jsonPath("$.email").value("Email is required"))
+        .andExpect(jsonPath("$.role").value("Role must be specified"));
+
     }
 }
