@@ -11,9 +11,10 @@ router.get(
   "/api/orders/:orderId",
   requireAuth,
   async (req: Request, res: Response) => {
-    const order = await prisma.order
-      .findById(req.params.orderId)
-      .populate("product");
+    const order = await prisma.order.findUnique({
+      where: { id: req.params.orderId },
+      include: { orderItems: true },
+    });
 
     if (!order) {
       throw new NotFoundError();

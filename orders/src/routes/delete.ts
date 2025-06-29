@@ -16,7 +16,10 @@ router.delete(
   async (req: Request, res: Response) => {
     const { orderId } = req.params;
 
-    const order = await prisma.order.findById(orderId).populate("product");
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { orderItems: true },
+    });
 
     if (!order) {
       throw new NotFoundError();
@@ -24,8 +27,14 @@ router.delete(
     if (order.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
     }
-    order.status = prisma.OrderStatus.Cancelled;
-    await order.save();
+    const updatedOrder = await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        status: "CANCELLED",
+      },
+    });
+    // order.status = prisma.OrderStatus.Cancelled;
+    // await order.save();
 
     // publishing an event saying this was cancelled!
     // new OrderCancelledPublisher(natsWrapper.client).publish({
@@ -36,7 +45,7 @@ router.delete(
     //   }
     // });
 
-    res.status(204).send(order);
+    res.status(204).send(updatedOrder);
   }
 );
 

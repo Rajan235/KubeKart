@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  
 }
 
 datasource db {
@@ -22,18 +22,23 @@ enum OrderStatus {
   AWAITING_PAYMENT
 }
 
-model Product {
+model OrderItem {
   id         String   @id @default(uuid())
-  name        String
-  description String?
-  price       Float
+  orderId    String
+  order     Order    @relation(fields: [orderId], references: [id])
+  // denormalized fields to avoid joins
+  productId  String
+  productName        String
+  productPrice       Float
+  quantity  Int
+  totalPrice Float
   version    Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  orders      Order[]  @relation("ProductOrders")
+  
 
-  @@map("products")
+  @@map("order_items")
 }
 
 model Order {
@@ -47,8 +52,9 @@ model Order {
   updatedAt   DateTime     @updatedAt
   version    Int          @default(0)
   // products    Product[]    @relation("ProductOrders")
-  productId  String
-  product     Product      @relation("ProductOrders",fields: [productId], references: [id])
+  //productId  String
+  //product     Product      @relation("ProductOrders",fields: [productId], references: [id])
+  orderItems OrderItem[]
 
   @@map("orders")
 }

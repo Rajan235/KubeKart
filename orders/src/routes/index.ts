@@ -7,11 +7,10 @@ import { prisma } from "../utils/prisma/prisma";
 const router = express.Router();
 
 router.get("/api/orders", requireAuth, async (req: Request, res: Response) => {
-  const orders = await prisma.order
-    .find({
-      userId: req.currentUser!.id,
-    })
-    .populate("product");
+  const orders = await prisma.order.findMany({
+    where: { userId: req.currentUser!.id },
+    include: { orderItems: true },
+  });
 
   res.send(orders);
 });
