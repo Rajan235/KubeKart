@@ -3,6 +3,7 @@ import express from "express";
 import { currentUser } from "./middlewares/current-user";
 import { NotFoundError } from "./utils/errors/not-found-error";
 import { errorHandler } from "./middlewares/error-handler";
+import { orderRoutes } from "./routes";
 
 const app = express();
 
@@ -19,11 +20,7 @@ app.use(
 
 app.use(currentUser);
 
-app.use(deleteOrderRouter);
-app.use(indexOrderRouter);
-app.use(newOrderRouter);
-app.use(showOrderRouter);
-
+app.use(orderRoutes);
 app.all("/*splat", (req, res, next) => {
   next(new NotFoundError());
 });

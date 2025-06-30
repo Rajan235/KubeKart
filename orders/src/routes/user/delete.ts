@@ -1,8 +1,11 @@
 import express, { Request, Response } from "express";
-import { requireAuth } from "../middlewares/require-auth";
-import { NotFoundError } from "../utils/errors/not-found-error";
-import { NotAuthorizedError } from "../utils/errors/not-authorized-error";
-import { prisma } from "../utils/prisma/prisma";
+import { requireAuth, requireRole } from "../../middlewares/require-auth";
+import { NotFoundError } from "../../utils/errors/not-found-error";
+import { NotAuthorizedError } from "../../utils/errors/not-authorized-error";
+import { prisma } from "../../utils/prisma/prisma";
+import { OrderStatus } from "@prisma/client";
+import { asyncHandler } from "../../utils/async-handler";
+import { OrderResponse } from "../../types/dtos/order-response.dto";
 
 // import { Order, OrderStatus } from '../models/order';
 // import { OrderCancelledPublisher } from '../events/publishers/order-cancelled-publisher';
@@ -11,9 +14,10 @@ import { prisma } from "../utils/prisma/prisma";
 const router = express.Router();
 
 router.delete(
-  "/api/orders/:orderId",
+  "/api/user/orders/:orderId",
   requireAuth,
-  async (req: Request, res: Response) => {
+  requireRole("USER"),
+  asyncHandler(async (req: Request, res: Response) => {
     const { orderId } = req.params;
 
     const order = await prisma.order.findUnique({
@@ -26,6 +30,12 @@ router.delete(
     }
     if (order.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
+    }
+    if (
+      order.status === OrderStatus.COMPLETED ||
+      order.status === OrderStatus.CANCELLED
+    ) {
+      return res.status(400).send({ message: "Cannot cancel this order" });
     }
     const updatedOrder = await prisma.order.update({
       where: { id: orderId },
@@ -45,8 +55,8 @@ router.delete(
     //   }
     // });
 
-    res.status(204).send(updatedOrder);
-  }
+    res.status(204).send(updatedOrder as OrderResponse);
+  })
 );
 
 export { router as deleteOrderRouter };

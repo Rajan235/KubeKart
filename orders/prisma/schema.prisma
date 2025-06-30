@@ -31,6 +31,7 @@ model OrderItem {
   productName        String
   productPrice       Float
   quantity  Int
+  sellerId  String
   totalPrice Float
   version    Int      @default(0)
   createdAt   DateTime @default(now())

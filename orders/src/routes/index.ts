@@ -1,18 +1,38 @@
-import express, { Request, Response } from "express";
+import express from "express";
+// User routes
+import { newOrderRouter } from "./user/new";
+import { showOrderRouter } from "./user/show";
+import { deleteOrderRouter } from "./user/delete";
+import { indexOrderRouter } from "./user/index";
 
-// import { Order } from "../models/order";
-import { requireAuth } from "../middlewares/require-auth";
-import { prisma } from "../utils/prisma/prisma";
+// Seller routes
+import { listSellerOrdersRouter } from "./seller/listSellerOrders";
+import { showSellerOrderRouter } from "./seller/showSellerOrder";
+import { updateOrderStatusRouter } from "./seller/updateOrderStatus";
+
+//  Admin routes
+import { listAllOrders } from "./admin/listAllOrders";
+import { showOrderById } from "./admin/showOrderById";
+import { updateOrder } from "./admin/updateOrder";
+import { deleteOrder } from "./admin/deleteOrder";
 
 const router = express.Router();
 
-router.get("/api/orders", requireAuth, async (req: Request, res: Response) => {
-  const orders = await prisma.order.findMany({
-    where: { userId: req.currentUser!.id },
-    include: { orderItems: true },
-  });
+// Mount user routes
+router.use(newOrderRouter);
+router.use(showOrderRouter);
+router.use(deleteOrderRouter);
+router.use(indexOrderRouter);
 
-  res.send(orders);
-});
+// Mount seller routes
+router.use(listSellerOrdersRouter);
+router.use(showSellerOrderRouter);
+router.use(updateOrderStatusRouter);
 
-export { router as indexOrderRouter };
+// Mount admin routes
+router.use(listAllOrders);
+router.use(showOrderById);
+router.use(updateOrder);
+router.use(deleteOrder);
+
+export { router as orderRoutes };

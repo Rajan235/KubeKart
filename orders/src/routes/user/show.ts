@@ -1,15 +1,17 @@
 import express, { Request, Response } from "express";
 
-import { requireAuth } from "../middlewares/require-auth";
-import { NotFoundError } from "../utils/errors/not-found-error";
-import { NotAuthorizedError } from "../utils/errors/not-authorized-error";
-import { prisma } from "../utils/prisma/prisma";
+import { requireAuth, requireRole } from "../../middlewares/require-auth";
+import { NotFoundError } from "../../utils/errors/not-found-error";
+import { NotAuthorizedError } from "../../utils/errors/not-authorized-error";
+import { prisma } from "../../utils/prisma/prisma";
+import { OrderResponse } from "../../types/dtos/order-response.dto";
 
 const router = express.Router();
 
 router.get(
-  "/api/orders/:orderId",
+  "/api/user/orders/:orderId",
   requireAuth,
+  requireRole("USER"),
   async (req: Request, res: Response) => {
     const order = await prisma.order.findUnique({
       where: { id: req.params.orderId },
@@ -23,7 +25,7 @@ router.get(
       throw new NotAuthorizedError();
     }
 
-    res.send(order);
+    res.send(order as OrderResponse);
   }
 );
 
