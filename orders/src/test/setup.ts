@@ -1,60 +1,48 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
+import { execSync } from "child_process";
+
 import jwt from "jsonwebtoken";
+import { PrismaClient } from "../../prisma/src/generated/test-prisma-client";
+import { sqltag } from "../../prisma/src/generated/test-prisma-client/runtime/library";
+
+const prisma = new PrismaClient();
 
 declare global {
-  var signin: () => string[];
+  var signin: (role?: string) => string;
 }
-jest.mock("../nats-wrapper");
 
-let mongo: any;
 beforeAll(async () => {
-  process.env.JWT_KEY = "asdfasdf";
+  process.env.JWT_KEY = "NewSecretKeyForJWTSigningPurposes12345678";
+  process.env.NODE_ENV = "test";
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-  mongo = await MongoMemoryServer.create();
-  const mongoUri = mongo.getUri();
-
-  await mongoose.connect(mongoUri, {});
+  // Run migration on test DB before tests
+  execSync(
+    "npx prisma migrate reset --force --skip-seed --schema=prisma/test/schema.prisma"
+  );
 });
 
 beforeEach(async () => {
   jest.clearAllMocks();
-  if (mongoose.connection.db) {
-    const collections = await mongoose.connection.db.collections();
+  const tables = await prisma.$queryRaw<Array<{ name: string }>>(
+    sqltag`SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';`
+  );
 
-    for (let collection of collections) {
-      await collection.deleteMany({});
-    }
+  for (const { name } of tables) {
+    await prisma.$executeRawUnsafe(`DELETE FROM "${name}";`);
   }
 });
 
 afterAll(async () => {
-  if (mongo) {
-    await mongo.stop();
-  }
-  await mongoose.connection.close();
+  await prisma.$disconnect();
 });
 
-global.signin = () => {
-  // Build a JWT payload.  { id, email }
+global.signin = (role = "ADMIN") => {
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: crypto.randomUUID(), // you can use faker or uuid
     email: "test@test.com",
+    role,
   };
 
-  // Create the JWT!
   const token = jwt.sign(payload, process.env.JWT_KEY!);
-
-  // Build session Object. { jwt: MY_JWT }
-  const session = { jwt: token };
-
-  // Turn that session into JSON
-  const sessionJSON = JSON.stringify(session);
-
-  // Take JSON and encode it as base64
-  const base64 = Buffer.from(sessionJSON).toString("base64");
-
-  // return a string thats the cookie with the encoded data
-  return [`session=${base64}`];
+  return `Bearer ${token}`;
 };
