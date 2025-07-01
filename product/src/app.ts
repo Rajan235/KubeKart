@@ -1,12 +1,10 @@
 import cookieSession from "cookie-session";
 import express from "express";
 import { currentUser } from "./middlewares/current-user";
-import { createProductRouter } from "./routes/new";
-import { indexProductRouter } from "./routes";
-import { updateProductRouter } from "./routes/update";
-import { showProductRouter } from "./routes/show";
+
 import { NotFoundError } from "./utils/errors/not-found-error";
 import { errorHandler } from "./middlewares/error-handler";
+import { productRoutes } from "./routes/indexRoutes";
 
 const app = express();
 
@@ -20,10 +18,11 @@ app.use(
 );
 
 app.use(currentUser);
-app.use(createProductRouter);
-app.use(showProductRouter);
-app.use(indexProductRouter);
-app.use(updateProductRouter);
+// app.use(createProductRouter);
+// app.use(showProductRouter);
+// app.use(indexProductRouter);
+// app.use(updateProductRouter);
+app.use(productRoutes);
 
 // app.all("*", async (req, res) => {
 //   throw new NotFoundError();
