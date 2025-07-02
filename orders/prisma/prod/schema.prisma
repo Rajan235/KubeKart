@@ -59,3 +59,15 @@ model Order {
 
   @@map("orders")
 }
+
+model Product {
+  id          String   @id
+  name        String
+  price       Float
+  sellerId    String
+  version     Int
+  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime     @default(now())
+
+  @@map("products")
+}

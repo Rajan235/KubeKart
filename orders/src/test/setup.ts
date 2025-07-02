@@ -1,8 +1,12 @@
+jest.mock("../utils/prisma/prisma", () => ({
+  prisma: new (require("../utils/prisma/prisma.test").PrismaClient)(),
+}));
 import { execSync } from "child_process";
 
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "../../prisma/src/generated/test-prisma-client";
-import { sqltag } from "../../prisma/src/generated/test-prisma-client/runtime/library";
+
+import { PrismaClient } from "../generated/test-prisma-client";
+import { sqltag } from "../generated/test-prisma-client/runtime/library";
 
 const prisma = new PrismaClient();
 
