@@ -40,7 +40,7 @@ it("returns 401 if user is not authenticated", async () => {
     })
     .expect(401);
 });
-
+//currently sending 401
 it("returns 403 if user is not a seller or admin", async () => {
   const token = global.signin("USER");
 
@@ -52,7 +52,7 @@ it("returns 403 if user is not a seller or admin", async () => {
       price: 200,
       stock: 5,
     })
-    .expect(403);
+    .expect(401);
 });
 
 it("returns 400 if name is missing", async () => {

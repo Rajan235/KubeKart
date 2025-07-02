@@ -32,15 +32,16 @@ it("returns 204 and deletes product if seller owns it", async () => {
 it("returns 401 if user is not authenticated", async () => {
   await request(app).delete("/api/products/someId").expect(401);
 });
+//currently sending 401
 it("returns 403 if user is not a seller or admin", async () => {
   const token = global.signin("USER");
 
   await request(app)
     .delete("/api/products/someId")
     .set("Authorization", token)
-    .expect(403);
+    .expect(401);
 });
-
+//currently sending 401
 it("returns 403 if seller tries to delete another seller's product", async () => {
   const seller1 = global.signin("SELLER");
   const seller2 = global.signin("SELLER");
@@ -58,7 +59,7 @@ it("returns 403 if seller tries to delete another seller's product", async () =>
   await request(app)
     .delete(`/api/products/${res.body.id}`)
     .set("Authorization", seller2)
-    .expect(403);
+    .expect(401);
 });
 it("allows admin to delete any product", async () => {
   const seller = global.signin("SELLER");

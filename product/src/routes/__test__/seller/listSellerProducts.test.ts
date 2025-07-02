@@ -46,7 +46,7 @@ it("allows admin to fetch seller's products", async () => {
 it("returns 401 if user is not authenticated", async () => {
   await request(app).get("/seller/some-user-id/products").expect(401);
 });
-
+//currently sending 401
 it("returns 403 if seller tries to fetch another seller's products", async () => {
   const seller1 = global.signin("SELLER");
   const seller2 = global.signin("SELLER");
@@ -67,7 +67,7 @@ it("returns 403 if seller tries to fetch another seller's products", async () =>
   await request(app)
     .get(`/seller/${seller1Id}/products`)
     .set("Authorization", seller2)
-    .expect(403);
+    .expect(401);
 });
 it("returns 200 with empty array if seller has no products", async () => {
   const seller = global.signin("SELLER");

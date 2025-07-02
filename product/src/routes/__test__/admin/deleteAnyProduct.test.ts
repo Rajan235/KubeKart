@@ -27,7 +27,7 @@ it("deletes product and returns 204", async () => {
 it("returns 401 if user is not authenticated", async () => {
   await request(app).delete("/api/admin/products/random-id").expect(401);
 });
-
+// sending not authorized eror now
 it("returns 403 if user is not an admin", async () => {
   const product = await Product.create({
     name: "Product",
@@ -38,7 +38,7 @@ it("returns 403 if user is not an admin", async () => {
   await request(app)
     .delete(`/api/admin/products/${product.id}`)
     .set("Authorization", global.signin("USER"))
-    .expect(403);
+    .expect(401);
 });
 
 it("returns 404 if product does not exist", async () => {

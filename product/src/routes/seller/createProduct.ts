@@ -4,6 +4,7 @@ import { requireAuth, requireRole } from "../../middlewares/require-auth";
 import { validateRequest } from "../../middlewares/validate-request";
 import { Product, ProductAttributes } from "../../models/product";
 import { CreateProductValidator } from "../../validators/createProduct.validator";
+import { BadRequestError } from "../../utils/errors/bad-request-error";
 
 const router = express.Router();
 
@@ -23,6 +24,13 @@ router.post(
     } = req.body as ProductAttributes;
 
     // const userId = req.currentUser?.id ?? "";
+    // implement this
+    const existingProduct = await Product.findOne({
+      name: new RegExp(`^${name}$`, "i"),
+    });
+    if (existingProduct) {
+      throw new BadRequestError("Product name already exists");
+    }
 
     const product = Product.build({
       name,

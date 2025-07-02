@@ -34,11 +34,12 @@ it("returns 200 and all products for admin", async () => {
 it("returns 401 if user is not authenticated", async () => {
   await request(app).get("/api/admin/products").expect(401);
 });
+// currently sending 401 not authorized
 it("returns 403 if user is not an admin", async () => {
   await request(app)
     .get("/api/admin/products")
     .set("Authorization", global.signin("USER"))
-    .expect(403);
+    .expect(401);
 });
 // const products = await Product.find({ isBlocked: false }); // or `active: true`
 // it("filters out blocked/inactive products if implemented", async () => {

@@ -27,7 +27,7 @@ router.put(
 
     if (
       product.userId !== req.currentUser!.id &&
-      req.currentUser!.role !== "admin"
+      req.currentUser!.role !== "ADMIN"
     ) {
       throw new NotAuthorizedError();
     }

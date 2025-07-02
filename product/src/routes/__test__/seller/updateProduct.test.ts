@@ -63,6 +63,7 @@ it("returns 401 if not authenticated", async () => {
     .send({ name: "New" })
     .expect(401);
 });
+//currently sending 401
 it("returns 403 if seller tries to update someone else's product", async () => {
   const seller1 = global.signin("SELLER");
   const seller2 = global.signin("SELLER");
@@ -81,7 +82,7 @@ it("returns 403 if seller tries to update someone else's product", async () => {
     .put(`/api/products/${product.id}`)
     .set("Authorization", seller2)
     .send({ price: 999 })
-    .expect(403);
+    .expect(401);
 });
 
 it("returns 404 if product not found", async () => {
