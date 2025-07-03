@@ -61,7 +61,7 @@ model Order {
 }
 
 model Product {
-  id          String   @id
+  id          String   @id @default(uuid())
   name        String
   price       Float
   sellerId    String

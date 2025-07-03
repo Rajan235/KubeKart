@@ -5,13 +5,15 @@
 // * [x] 400 invalid status or body
 // * [x] 404 if order not found
 import request from "supertest";
-import { prismaTest } from "../../../utils/prisma/prisma.test";
+import { prisma } from "../../../utils/prisma/prisma";
 import { app } from "../../../app";
+import { CreateOrderDto } from "../../../types/dtos/create-order.dto";
+import { randomUUID } from "crypto";
 
 const buildOrder = async (sellerId: string) => {
-  const product = await prismaTest.product.create({
+  const product = await prisma.product.create({
     data: {
-      id: `prod_${Math.random()}`,
+      id: randomUUID(),
       name: "Test Product",
       price: 100,
       sellerId,
@@ -20,13 +22,19 @@ const buildOrder = async (sellerId: string) => {
   });
 
   const user = global.signin("USER");
+  const items: CreateOrderDto = {
+    items: [
+      {
+        productId: product.id,
+        quantity: 2,
+      },
+    ],
+  };
 
   const res = await request(app)
-    .post("/api/orders")
+    .post("/api/user/orders")
     .set("Authorization", user)
-    .send({
-      items: [{ productId: product.id, quantity: 1 }],
-    });
+    .send(items);
 
   return { order: res.body, sellerId, product };
 };
@@ -64,7 +72,7 @@ it("403 if not SELLER", async () => {
 });
 
 it("403 if seller doesn’t own the product", async () => {
-  const { order } = await buildOrder("another_seller");
+  const { order } = await buildOrder(randomUUID());
 
   const fakeSeller = global.signin("SELLER");
 

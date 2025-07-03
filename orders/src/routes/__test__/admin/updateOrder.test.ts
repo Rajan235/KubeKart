@@ -7,12 +7,13 @@
 // * [x] 400 invalid body or status
 import request from "supertest";
 import { app } from "../../../app";
-import { prismaTest } from "../../../utils/prisma/prisma.test";
+
 import { OrderStatus } from "@prisma/client";
+import { prisma } from "../../../utils/prisma/prisma";
 
 // Helper to create an order
 const createOrder = async (userId: string) => {
-  const product = await prismaTest.product.create({
+  const product = await prisma.product.create({
     data: {
       id: "prod_123",
       name: "Test Product",
@@ -22,7 +23,7 @@ const createOrder = async (userId: string) => {
     },
   });
 
-  const order = await prismaTest.order.create({
+  const order = await prisma.order.create({
     data: {
       userId,
       status: OrderStatus.CREATED,

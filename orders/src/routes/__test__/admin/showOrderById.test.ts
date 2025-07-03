@@ -6,11 +6,11 @@
 // * [x] 404 if order not found
 import request from "supertest";
 import { app } from "../../../app";
-import { prismaTest } from "../../../utils/prisma/prisma.test";
+import { prisma } from "../../../utils/prisma/prisma";
 import { OrderStatus } from "@prisma/client";
 
 const buildOrder = async () => {
-  const product = await prismaTest.product.create({
+  const product = await prisma.product.create({
     data: {
       id: "prod_test_1",
       name: "Admin Test Product",
@@ -19,7 +19,7 @@ const buildOrder = async () => {
     },
   });
 
-  const order = await prismaTest.order.create({
+  const order = await prisma.order.create({
     data: {
       userId: "test_user",
       status: OrderStatus.CREATED,

@@ -6,12 +6,12 @@
 // * [x] 404 if order not found
 import request from "supertest";
 import { app } from "../../../app";
-import { prismaTest } from "../../../utils/prisma/prisma.test";
+import { prisma } from "../../../utils/prisma/prisma";
 import { OrderStatus } from "@prisma/client";
 
 // Helper function to create an order
 const createOrder = async () => {
-  const product = await prismaTest.product.create({
+  const product = await prisma.product.create({
     data: {
       id: "prod_123",
       name: "Test Product",
@@ -21,7 +21,7 @@ const createOrder = async () => {
     },
   });
 
-  const order = await prismaTest.order.create({
+  const order = await prisma.order.create({
     data: {
       userId: "user_123",
       status: OrderStatus.CREATED,
@@ -56,7 +56,7 @@ it("returns 200 on successful cancellation", async () => {
   expect(res.body.message).toBe("Order cancelled");
   expect(res.body.order.status).toBe("CANCELLED");
 
-  const updated = await prismaTest.order.findUnique({
+  const updated = await prisma.order.findUnique({
     where: { id: order.id },
   });
   expect(updated!.status).toBe(OrderStatus.CANCELLED);
@@ -91,7 +91,7 @@ it("returns 404 if order not found", async () => {
 //     const adminToken = global.signin("ADMIN");
 //     const order = await createOrder();
 
-//     await prismaTest.order.update({
+//     await prisma.order.update({
 //       where: { id: order.id },
 //       data: { status: OrderStatus.CANCELLED },
 //     });

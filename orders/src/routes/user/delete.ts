@@ -6,6 +6,7 @@ import { prisma } from "../../utils/prisma/prisma";
 import { OrderStatus } from "@prisma/client";
 import { asyncHandler } from "../../utils/async-handler";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
+import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-error";
 
 // import { Order, OrderStatus } from '../models/order';
 // import { OrderCancelledPublisher } from '../events/publishers/order-cancelled-publisher';
@@ -29,7 +30,7 @@ router.delete(
       throw new NotFoundError();
     }
     if (order.userId !== req.currentUser!.id) {
-      throw new NotAuthorizedError();
+      throw new ForbiddenRequestError();
     }
     if (
       order.status === OrderStatus.COMPLETED ||

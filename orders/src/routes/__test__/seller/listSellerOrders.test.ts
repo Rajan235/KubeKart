@@ -4,13 +4,14 @@
 // * [x] returns only seller-owned product orders not done need thinking
 import request from "supertest";
 import { app } from "../../../app";
-import { prismaTest } from "../../../utils/prisma/prisma.test";
+import { prisma } from "../../../utils/prisma/prisma";
+import { randomUUID } from "crypto";
 
 // Helper to create a product and order as a user
 const createOrderForSeller = async (sellerId: string, userToken: string) => {
-  const product = await prismaTest.product.create({
+  const product = await prisma.product.create({
     data: {
-      id: `prod_${Math.random()}`,
+      id: randomUUID(),
       name: "Test Product",
       price: 100,
       sellerId,
@@ -19,7 +20,7 @@ const createOrderForSeller = async (sellerId: string, userToken: string) => {
   });
 
   const res = await request(app)
-    .post("/api/orders")
+    .post("/api/user/orders")
     .set("Authorization", userToken)
     .send({
       items: [
@@ -41,13 +42,14 @@ it("returns 200 with list of seller's orders", async () => {
   const sellerId = JSON.parse(
     Buffer.from(sellerToken.split(" ")[1].split(".")[1], "base64").toString()
   ).id;
+  // const sellerId = randomUUID();
 
   // Create 2 orders for this seller
   await createOrderForSeller(sellerId, buyerToken);
   await createOrderForSeller(sellerId, buyerToken);
 
   // Create 1 order for a different seller (should not be returned)
-  await createOrderForSeller("other-seller-id", buyerToken);
+  await createOrderForSeller(randomUUID(), buyerToken);
 
   const res = await request(app)
     .get("/api/seller/orders")

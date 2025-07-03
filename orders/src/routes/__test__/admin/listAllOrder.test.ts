@@ -5,12 +5,12 @@
 // * [x] 403 if not ADMIN
 import request from "supertest";
 import { app } from "../../../app";
-import { prismaTest } from "../../../utils/prisma/prisma.test";
+import { prisma } from "../../../utils/prisma/prisma";
 import { OrderStatus } from "@prisma/client";
 
 // Utility to create a test order
 const createOrder = async (userId: string, productId: string) => {
-  return prismaTest.order.create({
+  return prisma.order.create({
     data: {
       userId,
       status: OrderStatus.CREATED,
@@ -34,7 +34,7 @@ const createOrder = async (userId: string, productId: string) => {
 it("returns 200 and lists all orders for admin", async () => {
   const adminToken = global.signin("ADMIN");
 
-  const product = await prismaTest.product.create({
+  const product = await prisma.product.create({
     data: {
       id: "prod_abc",
       name: "Test Product",

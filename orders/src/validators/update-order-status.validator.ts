@@ -1,5 +1,9 @@
 import { body } from "express-validator";
 
 export const updateOrderStatusValidator = [
-  body("status").isIn(["COMPLETED", "CANCELLED"]).withMessage("Invalid status"),
+  body("status")
+    .notEmpty()
+    .withMessage("Status is required")
+    .isIn(["CREATED", "PENDING", "COMPLETED", "CANCELLED", "AWAITING_PAYMENT"])
+    .withMessage("Invalid status"),
 ];

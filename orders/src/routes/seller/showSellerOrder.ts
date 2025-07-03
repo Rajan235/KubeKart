@@ -4,6 +4,7 @@ import { NotFoundError } from "../../utils/errors/not-found-error";
 import { NotAuthorizedError } from "../../utils/errors/not-authorized-error";
 import { prisma } from "../../utils/prisma/prisma";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
+import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-error";
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get(
     );
 
     if (!sellerOwnsAnyOrderItem) {
-      throw new NotAuthorizedError();
+      throw new ForbiddenRequestError();
     }
     res.send(order as OrderResponse);
   }
