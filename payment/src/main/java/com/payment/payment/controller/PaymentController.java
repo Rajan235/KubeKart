@@ -2,6 +2,7 @@ package com.payment.payment.controller;
 
 import java.util.Map;
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,11 +14,15 @@ import com.payment.payment.service.PaymentService;
 import com.stripe.exception.StripeException;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+
 @RestController
-@RequestMapping("/api/payment/public")
+@RequestMapping("/api/payment")
 public class PaymentController {
+
+
 private final PaymentService paymentService;
 
     @PostMapping("/create-checkout-session")

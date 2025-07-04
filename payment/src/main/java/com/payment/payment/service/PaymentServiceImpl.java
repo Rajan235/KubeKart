@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -49,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
         Session session = Session.create(params);
 
         Payment payment = new Payment();
-        payment.setId(session.getPaymentIntent());
+        payment.setId(UUID.randomUUID().toString());
         payment.setSessionId(session.getId());
         payment.setOrderId(request.getOrderId());
         payment.setUserId(request.getUserId());

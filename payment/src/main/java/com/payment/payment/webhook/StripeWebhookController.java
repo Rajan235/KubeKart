@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/webhooks")
 @RequiredArgsConstructor
 public class StripeWebhookController {
+
     private final PaymentRepository repository;
 
     @Value("${stripe.webhook-secret}")
@@ -25,27 +26,55 @@ public class StripeWebhookController {
     public ResponseEntity<String> handleStripeEvent(@RequestBody String payload,
                                                     @RequestHeader("Stripe-Signature") String sigHeader) {
         Event event;
+        System.out.println("💥 Received Stripe webhook");
 
         try {
             event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
         } catch (Exception e) {
+            
             return ResponseEntity.badRequest().body("Invalid signature");
         }
 
-        if ("checkout.session.completed".equals(event.getType())) {
-            Session session = (Session) event.getDataObjectDeserializer()
-                                             .getObject()
-                                             .orElseThrow();
+        // System.out.println("👉 Event Type: " + event.getType());
 
-            String sessionId = session.getId();
-
-            repository.findBySessionId(sessionId).ifPresent(payment -> {
-                payment.setStatus("SUCCESS");
-                repository.save(payment);
-                // Optionally emit Kafka event here
-            });
+        switch (event.getType()) {
+            case "checkout.session.completed":
+                handleCheckoutSessionCompleted(event);
+                break;
+            case "payment_intent.succeeded":
+            case "charge.succeeded":
+                // Optional: log or extend handling if needed
+                // System.out.println("ℹ️ Received event: " + event.getType() + " — handled elsewhere or ignored.");
+                break;
+            default:
+                // System.out.println("ℹ️ Unhandled event type: " + event.getType());
+                break;
         }
 
         return ResponseEntity.ok("Received");
+    }
+
+    private void handleCheckoutSessionCompleted(Event event) {
+        var optionalObject = event.getDataObjectDeserializer().getObject();
+        if (optionalObject.isEmpty()) {
+            //System.err.println("❌ Failed to deserialize checkout.session.completed event");
+            return;
+        }
+
+        Session session = (Session) optionalObject.get();
+        String sessionId = session.getId();
+        //System.out.println("✅ Session ID: " + sessionId);
+
+        // repository.findBySessionId(sessionId).ifPresentOrElse(payment -> {
+        //     payment.setStatus("SUCCESS");
+        //     repository.save(payment);
+        //     //System.out.println("✅ Payment updated in DB");
+        // }, () -> {
+        //     System.err.println("❌ No Payment found for session ID: " + sessionId);
+        // });
+        repository.findBySessionId(sessionId).ifPresent(payment -> {
+            payment.setStatus("SUCCESS");
+            repository.save(payment);
+        });
     }
 }

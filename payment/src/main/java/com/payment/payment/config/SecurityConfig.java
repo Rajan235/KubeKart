@@ -22,9 +22,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/payment/public/**").permitAll()  // public
-                .requestMatchers("/api/payment/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/payment/user/**").hasAnyRole("USER", "ADMIN")
+                // .requestMatchers("/api/payment/public/**").permitAll()  // public
+                // .requestMatchers("/api/webhooks/stripe").permitAll()
+                .requestMatchers("/api/payment/public/create-checkout-session").hasRole("USER")
+                .requestMatchers("/api/webhooks/stripe").permitAll()
+
+                // .requestMatchers("/api/payment/admin/**").hasRole("ADMIN")
+                // .requestMatchers("/api/payment/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

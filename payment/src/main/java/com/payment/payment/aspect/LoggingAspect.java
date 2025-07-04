@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Component
 public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
-    private final ObjectMapper objectMapper = new ObjectMapper();// thread safety
+    private static final ObjectMapper objectMapper = new ObjectMapper();// thread safety
 
     @Value("${logging.aop.verbose:false}")
     private boolean verbose;// Controlled via application.properties or yml
@@ -28,7 +28,7 @@ public class LoggingAspect {
     /**
      * Pointcut to log all controller methods in the com.auth.auth.controller package
      */
-    @Pointcut("execution(* com.cart.cart.controller.*.*(..)) || execution(* com.cart.cart.service.*.*(..))")
+    @Pointcut("execution(* com.payment.payment.controller.*.*(..)) || execution(* com.payment.payment.service.*.*(..))")
 
     public void controllerMethods(){}
 
