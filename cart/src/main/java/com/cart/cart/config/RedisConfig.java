@@ -7,6 +7,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.cart.cart.model.Cart;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,23 +22,32 @@ public class RedisConfig {
 
      @Bean
     public RedisTemplate<String, Cart> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Cart> template = new RedisTemplate<>();
+       RedisTemplate<String, Cart> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        Jackson2JsonRedisSerializer<Cart> serializer = new Jackson2JsonRedisSerializer<>(Cart.class);
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.EVERYTHING);
-        serializer.setObjectMapper(mapper);
+        mapper.activateDefaultTyping(
+            mapper.getPolymorphicTypeValidator(),
+            ObjectMapper.DefaultTyping.NON_FINAL
+        );
+
+        Jackson2JsonRedisSerializer<Cart> serializer = new Jackson2JsonRedisSerializer<Cart>(mapper, Cart.class);
+        
 
         template.setDefaultSerializer(serializer);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
         template.afterPropertiesSet();
+
         return template;
     }
     @Bean
 public RedisTemplate<String, Object> genericRedisTemplate(RedisConnectionFactory connectionFactory) {
     RedisTemplate<String, Object> template = new RedisTemplate<>();
-    template.setConnectionFactory(connectionFactory);
-    return template;
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        return template;
 }
 
     
