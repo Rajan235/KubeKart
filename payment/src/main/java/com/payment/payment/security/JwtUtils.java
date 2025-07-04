@@ -2,9 +2,9 @@ package com.payment.payment.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+// import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.util.Date;
+// import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,20 +15,20 @@ public class JwtUtils {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-     @Value("${jwt.expiration}") // e.g., 86400000 ms = 1 day
-    private long jwtExpiration;
+    //  @Value("${jwt.expiration}") // e.g., 86400000 ms = 1 day
+    // private long jwtExpiration;
 
-    public String generateToken(String email, String role, String id) {
-        return Jwts.builder()
-                .setSubject(email)
-                .claim("email", email)
-                .claim("role", role)
-                .claim("id", id)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
-                .compact();
-    }
+    // public String generateToken(String email, String role, String id) {
+    //     return Jwts.builder()
+    //             .setSubject(email)
+    //             .claim("email", email)
+    //             .claim("role", role)
+    //             .claim("id", id)
+    //             .setIssuedAt(new Date())
+    //             .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+    //             .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes())
+    //             .compact();
+    // }
 
 
     public Claims parseToken(String token) {

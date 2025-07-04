@@ -1,30 +1,30 @@
-package com.payment.payment.config;
+// package com.payment.payment.config;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+// import org.springframework.context.annotation.Configuration;
+// import org.springframework.web.servlet.HandlerInterceptor;
+// import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+// import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import lombok.RequiredArgsConstructor;
+// import lombok.RequiredArgsConstructor;
 
-//import com.cart.cart.security.CurrentUserInterceptor;
+// //import com.cart.cart.security.CurrentUserInterceptor;
 
 
-@Configuration
-@RequiredArgsConstructor
-public class WebMvcConfig implements WebMvcConfigurer {
+// @Configuration
+// @RequiredArgsConstructor
+// public class WebMvcConfig implements WebMvcConfigurer {
 
-    // private final CurrentUserInterceptor currentUserInterceptor;
+//     // private final CurrentUserInterceptor currentUserInterceptor;
 
-    // @Override
-    // public void addInterceptors(InterceptorRegistry registry) {
-    //     registry.addInterceptor(currentUserInterceptor)
-    //             .addPathPatterns("/api/**"); // adjust your base path
-    // }
-    private final HandlerInterceptor currentUserInterceptor;
+//     // @Override
+//     // public void addInterceptors(InterceptorRegistry registry) {
+//     //     registry.addInterceptor(currentUserInterceptor)
+//     //             .addPathPatterns("/api/**"); // adjust your base path
+//     // }
+//     private final HandlerInterceptor currentUserInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(currentUserInterceptor).addPathPatterns("/api/**");
-    }
-}
+//     @Override
+//     public void addInterceptors(InterceptorRegistry registry) {
+//         registry.addInterceptor(currentUserInterceptor).addPathPatterns("/api/**");
+//     }
+// }
