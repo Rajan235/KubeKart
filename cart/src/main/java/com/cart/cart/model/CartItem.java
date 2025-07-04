@@ -3,10 +3,12 @@ package com.cart.cart.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CartItem {
     // @Id
     // @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)

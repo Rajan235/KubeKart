@@ -3,6 +3,12 @@ package com.cart.cart.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 // import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
+import java.security.Key;
+
+//import java.security.Key;
 
 // import java.util.Date;
 
@@ -12,8 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtils {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    //@Value("${jwt.secret}")
+    //private String jwtSecret="NewSecretKeyForJWTSigningPurposes12345678";
+    private String jwtSecret="TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg=";
 
     //  @Value("${jwt.expiration}") // e.g., 86400000 ms = 1 day
     // private long jwtExpiration;
@@ -32,8 +39,16 @@ public class JwtUtils {
 
 
     public Claims parseToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret.getBytes())
+        //Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+        Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+
+
+
+        return Jwts.parserBuilder()
+                // .setSigningKey("NewSecretKeyForJWTSigningPurposes12345678")
+                .setSigningKey(key)
+                
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
