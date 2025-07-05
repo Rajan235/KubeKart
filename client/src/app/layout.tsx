@@ -31,11 +31,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={manrope.variable}>
-      {/* <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body> */}
       <body>
         {/* <Navbar />
         <main>{children}</main> */}

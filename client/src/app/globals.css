@@ -52,8 +52,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   /* --font-sans: var(--font-geist-sans); */
-  --font-sans: "Manrope", sans-serif;
-  --font-mono: var(--font-geist-mono);
+  /* --font-sans: "Manrope", sans-serif;
+  --font-mono: var(--font-geist-mono); */
   /* --color-primary: #4ade80; /* emerald-400 */
   /*--color-custom: #ff5722; deep orange */
 
@@ -97,11 +97,18 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 /* @layer base {
-  h1 {
-    @apply text-4xl font-bold text-custom;
+   h1 {
+    @apply text-4xl font-bold tracking-tight;
+  } 
+  html {
+    font-family: "Manrope", sans-serif;
   }
 } */
-
+/* @layer utilities {
+  .font-sans {
+    font-family: "Manrope", sans-serif;
+  }
+} */
 .dark {
   --background: oklch(0.147 0.004 49.25);
   --foreground: oklch(0.985 0.001 106.423);
@@ -136,17 +143,17 @@
   --sidebar-ring: oklch(0.553 0.013 58.071);
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     /* background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans); */
+    font-family: var(--font-sans);
     @apply bg-background text-foreground font-sans;
   }
-}
+} */
 /* globals.css
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
