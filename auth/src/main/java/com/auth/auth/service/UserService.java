@@ -1,12 +1,17 @@
 package com.auth.auth.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.auth.auth.dao.UserRepo;
+import com.auth.auth.kafka.events.UserCreatedEventDto;
+import com.auth.auth.kafka.validator.JsonSchemaValidator;
 import com.auth.auth.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,17 +21,34 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     
     private final UserRepo repo;
-    
-    
     private final PasswordEncoder encoder;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${schema.user.created.path}")
+    private final String schemaPath;
 
-
+    @Value("${topic.user-created}")
+    private String userCreatedTopic;
 
 
     public User saveUser(User user) {
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        return repo.save(user);
+        User savedUser= repo.save(user);
+        try {
+            UserCreatedEventDto event = new UserCreatedEventDto(savedUser.getUserId(), savedUser.getEmail(),savedUser.getRole());
+
+            String json = objectMapper.writeValueAsString(event);
+            //String schemaPath="../../shared-schemas/auth/user-created.schema.json"; 
+            JsonSchemaValidator.validate(json, schemaPath);
+
+            kafkaTemplate.send(userCreatedTopic, json);
+            System.out.println("✅ Published user-created event: " + json);
+        } catch (Exception e) {
+           
+            System.err.println("❌ Failed to publish user-created event: " + e.getMessage());
+        }
+        return savedUser;
     }
 
 

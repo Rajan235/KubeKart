@@ -1,9 +1,12 @@
 package com.auth.auth.model;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -19,8 +22,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private int userId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userId", columnDefinition = "UUID", updatable = false, nullable = false)
+    private UUID userId;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
