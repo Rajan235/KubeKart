@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 const manrope = Manrope({
   subsets: ["latin"],
   weight: ["400", "600", "700", "800"],
-  variable: "--font-sans",
+  variable: "--font-manrope",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
       <body
-        className={`${geistSans.variable}  ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${manrope.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
           <MainLayout>{children}</MainLayout>

@@ -13,7 +13,7 @@ type Role = "USER" | "SELLER" | "ADMIN" | null;
 const roleLinks = {
   USER: [
     { label: "Home", href: "/" },
-    { label: "Products", href: "/products" },
+    { label: "Products", href: "/product" },
     { label: "Cart", href: "/cart" },
     { label: "Orders", href: "/orders" },
   ],
@@ -40,31 +40,14 @@ export default function Navbar() {
 
   useEffect(() => {
     setRole("USER");
-    setIsLoggedIn(true);
+    setIsLoggedIn(false);
   }, []);
 
   const links = role ? roleLinks[role] : [];
 
   return (
     <header className="w-full bg-beige/95 backdrop-blur-md border-b border-olive/20 shadow-sm sticky top-0 z-50">
-      <nav
-        className="max-w-7xl mx-auto  py-1
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      "
-      >
+      <nav className="max-w-7xl mx-auto  py-1 ">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Logo />

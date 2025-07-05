@@ -1,12 +1,135 @@
 "use client";
+interface Product {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  userId: string;
+  stock?: number;
+}
+const sampleProducts: Product[] = [
+  {
+    name: "Wireless Mouse",
+    description:
+      "Ergonomic wireless mouse with USB receiver and adjustable DPI.",
+    price: 899,
+    category: "Electronics",
+    userId: "user123",
+    stock: 50,
+  },
+  {
+    name: "Leather Journal",
+    description: "Handcrafted leather journal with 200 unlined pages.",
+    price: 499,
+    category: "Stationery",
+    userId: "user456",
+    stock: 30,
+  },
+  {
+    name: "Bluetooth Speaker",
+    description:
+      "Portable Bluetooth speaker with deep bass and long battery life.",
+    price: 1299,
+    category: "Electronics",
+    userId: "user789",
+    stock: 20,
+  },
+  {
+    name: "Running Shoes",
+    description: "Lightweight and breathable running shoes for men.",
+    price: 2499,
+    category: "Footwear",
+    userId: "user321",
+    stock: 100,
+  },
+  {
+    name: "Organic Green Tea",
+    description:
+      "Pack of 100 organic green tea bags with natural antioxidants.",
+    price: 299,
+    category: "Grocery",
+    userId: "user111",
+  },
+  {
+    name: "Noise Cancelling Headphones",
+    description: "Over-ear headphones with active noise cancellation and mic.",
+    price: 4599,
+    category: "Electronics",
+    userId: "user222",
+    stock: 40,
+  },
+  {
+    name: "Yoga Mat",
+    description: "Eco-friendly yoga mat with non-slip surface and cushioning.",
+    price: 799,
+    category: "Fitness",
+    userId: "user333",
+    stock: 60,
+  },
+  {
+    name: "Smartwatch",
+    description: "Fitness smartwatch with heart rate monitor and GPS tracking.",
+    price: 2999,
+    category: "Wearables",
+    userId: "user444",
+    stock: 15,
+  },
+  {
+    name: "LED Desk Lamp",
+    description:
+      "Rechargeable LED desk lamp with touch control and brightness settings.",
+    price: 699,
+    category: "Home & Living",
+    userId: "user555",
+    stock: 25,
+  },
+  {
+    name: "Cotton T-Shirt",
+    description: "Plain white 100% cotton t-shirt, comfortable and breathable.",
+    price: 399,
+    category: "Clothing",
+    userId: "user666",
+    stock: 80,
+  },
+];
 
 export default function ProductsPage() {
   return (
-    <div className="bg-[#fefaf3] min-h-screen px-6 py-16">
+    <div className="bg-beige min-h-screen px-6 py-16">
       <h1 className="text-4xl font-bold text-olive mb-10 text-center">
         All Products
       </h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        {sampleProducts.map((product, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-6 flex flex-col"
+          >
+            <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
+              <span className="text-5xl">📦</span>
+            </div>
+            <h2 className="text-xl font-semibold text-olive mb-2">
+              {product.name}
+            </h2>
+            <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+              {product.description}
+            </p>
+            <div className="mt-auto">
+              <p className="text-lg font-bold text-olive mb-1">
+                ₹{product.price}
+              </p>
+              <p className="text-xs text-gray-500">{product.category}</p>
+              {product.stock !== undefined && (
+                <p className="text-xs text-gray-400">
+                  In stock: {product.stock}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-// oproduct grid
+// sample products
