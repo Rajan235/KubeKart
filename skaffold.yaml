@@ -16,6 +16,26 @@ build:
             dest: /app/target/classes
           - src: "src/main/resources/**"
             dest: /app/src/main/resources
+    - image: cart-service
+      context: cart
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "target/classes/**"
+            dest: /app/target/classes
+          - src: "src/main/resources/**"
+            dest: /app/src/main/resources
+    - image: payment-service
+      context: payment
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "target/classes/**"
+            dest: /app/target/classes
+          - src: "src/main/resources/**"
+            dest: /app/src/main/resources
     - image: product-service
       context: product
       docker:
@@ -25,7 +45,7 @@ build:
           - src: "src/**/*.ts"
             dest: .
     - image: order-service
-      context: order
+      context: orders
       docker:
         dockerfile: Dockerfile
       sync:

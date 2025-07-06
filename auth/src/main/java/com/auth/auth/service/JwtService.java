@@ -1,23 +1,23 @@
 package com.auth.auth.service;
 
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+//import java.security.NoSuchAlgorithmException;
+//import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+// import javax.crypto.KeyGenerator;
+// import javax.crypto.SecretKey;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.auth.auth.model.User;
+// import com.auth.auth.model.User;
 import com.auth.auth.model.UserPrincipal;
 
 import io.jsonwebtoken.Claims;

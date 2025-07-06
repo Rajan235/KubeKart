@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+// import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -38,8 +38,8 @@ public class SecurityConfig {
 	
 	@Bean
 	public AuthenticationProvider authProvider() {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setUserDetailsService(userDetailsService);
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+    // provider.setUserDetailsService(userDetailsService);
     provider.setPasswordEncoder(passwordEncoder());
     return provider;
 	}
