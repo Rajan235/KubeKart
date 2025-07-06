@@ -18,10 +18,23 @@ spec:
           ports:
             - containerPort: 8081
           env:
-            - name: SPRING_REDIS_HOST
-              value: cart-redis-service
-            - name: SPRING_REDIS_PORT
-              value: "6379"
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: cart-config
+                  key: REDIS_HOST
+
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: cart-config
+                  key: REDIS_PORT
+
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cart-secret
+                  key: JWT_KEY
 ---
 apiVersion: v1
 kind: Service

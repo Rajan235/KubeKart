@@ -55,24 +55,46 @@ build:
 
 manifests:
   rawYaml:
-    - k8s/auth-postgres-deployment.yaml
-    - k8s/auth-service-deployment.yaml
-    - k8s/cart-redis-deployment.yaml
-    - k8s/cart-service-deployment.yaml
-    - k8s/client-deployment.yaml
+    # AUTH
+    - k8s/auth/auth-postgres-deployment.yaml
+    - k8s/auth/auth-service-deployment.yaml
+    - k8s/auth/auth-configmap.yaml
+    - k8s/auth/auth-secret.yaml
+
+    # CART
+    - k8s/cart/cart-redis-deployment.yaml
+    - k8s/cart/cart-service-deployment.yaml
+    - k8s/cart/cart-configmap.yaml
+    - k8s/cart/cart-secret.yaml
+
+    # PAYMENT
+    - k8s/payment/payment-postgres-deployment.yaml
+    - k8s/payment/payment-service-deployment.yaml
+    - k8s/payment/payment-configmap.yaml
+    - k8s/payment/payment-secret.yaml
+
+    # PRODUCT
+    - k8s/product/product-mongo-deployment.yaml
+    - k8s/product/product-service-deployment.yaml
+    - k8s/product/product-configmap.yaml
+    - k8s/product/product-secret.yaml
+
+    # ORDERS
+    - k8s/orders/order-postgres-deployment.yaml
+    - k8s/orders/order-service-deployment.yaml
+    - k8s/orders/order-configmap.yaml
+    - k8s/orders/order-secret.yaml
+
+    # INFRA
+    - k8s/kafka-deployment.yaml
     - k8s/ingress-service-deployment.yaml
-    - k8s/kafka-deployment.yaml # (fix typo in filename to kafka-deployment.yaml)
-    - k8s/order-postgres-deployment.yaml
-    - k8s/order-service-deployment.yaml
-    - k8s/payment-postgres-deployment.yaml
-    - k8s/payment-service-deployment.yaml
-    - k8s/product-mongo-deployment.yaml
-    - k8s/product-service-deployment.yaml
+    - k8s/client-deployment.yaml
 deploy:
   kubectl:
     defaultNamespace: default
 
 portForward:
+  # AUTH
   - resourceType: service
     resourceName: auth-service
     port: 8081
@@ -82,6 +104,7 @@ portForward:
     port: 5432
     localPort: 5434
 
+  # CART
   - resourceType: service
     resourceName: cart-service
     port: 8081
@@ -91,6 +114,7 @@ portForward:
     port: 6379
     localPort: 6379
 
+  # PAYMENT
   - resourceType: service
     resourceName: payment-service
     port: 8081
@@ -100,6 +124,7 @@ portForward:
     port: 5432
     localPort: 5435
 
+  # PRODUCT
   - resourceType: service
     resourceName: product-service
     port: 4000
@@ -109,6 +134,7 @@ portForward:
     port: 27017
     localPort: 27018
 
+  # ORDER
   - resourceType: service
     resourceName: order-service
     port: 4000
@@ -118,6 +144,7 @@ portForward:
     port: 5432
     localPort: 5436
 
+  # KAFKA
   - resourceType: service
     resourceName: kafka
     port: 9092

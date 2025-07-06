@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-config
+data:
+  REDIS_HOST: cart-redis-service
+  REDIS_PORT: "6379"
