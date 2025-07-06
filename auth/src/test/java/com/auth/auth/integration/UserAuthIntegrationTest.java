@@ -26,6 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.UUID;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -189,7 +191,7 @@ void testAdminEndpointWithUserRole_shouldFail() throws Exception {
 }
 @Test
 void mockCurrentUserWithoutJWT() {
-    User mockUser = new User(1, "mock", "pass", "mock@email.com", Role.ADMIN);
+    User mockUser = new User(UUID.randomUUID(), "mock", "pass", "mock@email.com", Role.ADMIN);
     UserPrincipal mockPrincipal = new UserPrincipal(mockUser);
 
     SecurityContext context = SecurityContextHolder.createEmptyContext();

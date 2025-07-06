@@ -112,6 +112,12 @@
 			<version>0.11.5</version>
 			
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/me.paulschwarz/spring-dotenv -->
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>4.0.0</version>
+		</dependency>
 		<!-- JJWT Jackson JSON Processor -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -153,6 +159,18 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!-- <plugin>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>dotenv-maven-plugin</artifactId>
+      <version>2.2.0</version>
+      <executions>
+        <execution>
+          <goals>
+            <goal>dotenv</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin> -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

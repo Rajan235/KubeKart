@@ -6,7 +6,7 @@ build:
   local:
     push: false
   artifacts:
-    - image: auth-service
+    - image: auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -16,7 +16,7 @@ build:
             dest: /app/target/classes
           - src: "src/main/resources/**"
             dest: /app/src/main/resources
-    - image: cart-service
+    - image: cart
       context: cart
       docker:
         dockerfile: Dockerfile
@@ -26,7 +26,7 @@ build:
             dest: /app/target/classes
           - src: "src/main/resources/**"
             dest: /app/src/main/resources
-    - image: payment-service
+    - image: payment
       context: payment
       docker:
         dockerfile: Dockerfile
@@ -36,7 +36,7 @@ build:
             dest: /app/target/classes
           - src: "src/main/resources/**"
             dest: /app/src/main/resources
-    - image: product-service
+    - image: product
       context: product
       docker:
         dockerfile: Dockerfile
@@ -44,7 +44,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: order-service
+    - image: order
       context: orders
       docker:
         dockerfile: Dockerfile
@@ -52,6 +52,10 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: client
+      context: client
+      docker:
+        dockerfile: Dockerfile
 
 manifests:
   rawYaml:

@@ -62,7 +62,8 @@ spec:
     spec:
       containers:
         - name: kafka
-          image: confluentinc/cp-kafka:7.6.0
+          #image: confluentinc/cp-kafka:7.6.0
+          image: confluentinc/cp-kafka:6.2.0
           ports:
             - containerPort: 9092
           env:
@@ -76,3 +77,9 @@ spec:
               value: PLAINTEXT://kafka:9092
             - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
               value: "1"
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: PLAINTEXT://kafka:9092
+            - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: PLAINTEXT://kafka:9092

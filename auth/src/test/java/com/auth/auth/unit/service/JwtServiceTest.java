@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
@@ -32,7 +34,7 @@ public class JwtServiceTest {
 
         // Generate a token
         User user = new User();
-        user.setUserId(1);
+        user.setUserId(UUID.randomUUID());
         user.setUsername("testuser");
         user.setPassword("testpassword");
         user.setEmail("test@example.com");

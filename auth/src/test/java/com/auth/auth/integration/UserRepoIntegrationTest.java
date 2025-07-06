@@ -12,6 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.UUID;
+
 @DataJpaTest
 @ActiveProfiles("test")
 public class UserRepoIntegrationTest {
@@ -21,8 +23,8 @@ public class UserRepoIntegrationTest {
 
     @Test
     void testUsernameMustBeUnique() {
-        User u1 = new User(0, "sameuser", "pass1", "u1@example.com", Role.USER);
-        User u2 = new User(0, "sameuser", "pass2", "u2@example.com", Role.USER);
+        User u1 = new User(UUID.randomUUID(), "sameuser", "pass1", "u1@example.com", Role.USER);
+        User u2 = new User(UUID.randomUUID(),"sameuser", "pass2", "u2@example.com", Role.USER);
 
         userRepo.save(u1);
         assertThrows(DataIntegrityViolationException.class, () -> userRepo.saveAndFlush(u2));

@@ -5,6 +5,7 @@ package com.auth.auth.controller;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,9 @@ public class UserController {
     private AuthenticationManager authenticationManager;
      @Autowired
     private KafkaEventPublisher eventPublisher;
+
+    @Value("${schema.user.created.path}")
+private String userCreatedSchemaPath;
 
     
     @GetMapping("/")
@@ -113,12 +117,12 @@ public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest
 
      try {
         String json = objectMapper.writeValueAsString(event);
-        String schemaPath = Paths.get(System.getProperty("user.dir"))
-                         .resolve("../shared-schemas/auth/user-created.schema.json")
-                         .normalize()
-                         .toAbsolutePath()
-                         .toString();
-        JsonSchemaValidator.validate(json, schemaPath);
+        // String schemaPath = Paths.get(System.getProperty("user.dir"))
+        //                  .resolve("../shared-schemas/auth/user-created.schema.json")
+        //                  .normalize()
+        //                  .toAbsolutePath()
+        //                  .toString();
+        JsonSchemaValidator.validate(json, userCreatedSchemaPath);
         eventPublisher.publish("user-created", user.getUserId().toString(), json);
         System.out.println("✅ Published user-created event");
     } catch (Exception e) {

@@ -29,7 +29,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
     import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
     import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-    import static org.mockito.ArgumentMatchers.any;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
 
     @WebMvcTest(UserController.class)
     
@@ -85,7 +87,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
             request.setPassword("password");
 
             User user = new User();
-            user.setUserId(1);
+            user.setUserId(UUID.randomUUID());
             user.setUsername("testuser");
             user.setEmail("test@email.com");
             user.setRole(Role.USER);
