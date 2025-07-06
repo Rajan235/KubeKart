@@ -8,13 +8,13 @@ import { UserPayload } from "../types/jwt_payload";
 //   role: string;
 // }
 
-// declare global {
-//   namespace Express {
-//     interface Request {
-//       currentUser?: UserPayload;
-//     }
-//   }
-// }
+declare global {
+  namespace Express {
+    interface Request {
+      currentUser?: UserPayload;
+    }
+  }
+}
 
 export const currentUser = (
   req: Request,

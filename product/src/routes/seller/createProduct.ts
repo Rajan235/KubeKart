@@ -41,6 +41,7 @@ router.post(
       category: category ?? "",
       stock: stock ?? 0,
     });
+
     await product.save();
 
     // Uncomment and implement event publishing if needed

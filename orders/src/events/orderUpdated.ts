@@ -19,8 +19,10 @@ export const orderUpdated = async (order: OrderResponse) => {
       productPrice: item.productPrice,
       quantity: item.quantity,
       totalPrice: item.totalPrice,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
+      // createdAt: item.createdAt,
+      // updatedAt: item.updatedAt,
+      createdAt: new Date(item.createdAt).toISOString(), // ✅ fix here
+      updatedAt: new Date(item.updatedAt).toISOString(), // ✅ and here
       version: item.version,
       orderId: item.orderId,
       sellerId: item.sellerId,

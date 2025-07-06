@@ -8,9 +8,9 @@ export const orderCreated = async (order: OrderResponse) => {
     id: order.id,
     userId: order.userId,
     status: order.status,
-    expiresAt: order.expiresAt,
-    createdAt: order.createdAt,
-    updatedAt: order.updatedAt,
+    expiresAt: new Date(order.expiresAt).toISOString(),
+    createdAt: new Date(order.createdAt).toISOString(),
+    updatedAt: new Date(order.updatedAt).toISOString(),
     version: order.version,
     orderItems: order.orderItems.map((item: any) => ({
       id: item.id,
@@ -19,8 +19,8 @@ export const orderCreated = async (order: OrderResponse) => {
       productPrice: item.productPrice,
       quantity: item.quantity,
       totalPrice: item.totalPrice,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
+      createdAt: new Date(item.createdAt).toISOString(), // ✅ fix here
+      updatedAt: new Date(item.updatedAt).toISOString(), // ✅ and here
       version: item.version,
       orderId: item.orderId,
       sellerId: item.sellerId,

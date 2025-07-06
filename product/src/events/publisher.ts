@@ -12,8 +12,8 @@ export const publishEvent = async (topic: string, payload: any) => {
       ],
     });
 
-    console.log(`📤 Event sent to topic "${topic}"`);
+    console.log(` Event sent to topic "${topic}"`);
   } catch (error) {
-    console.error(`❌ Failed to publish event to ${topic}:`, error);
+    console.error(` Failed to publish event to ${topic}:`, error);
   }
 };

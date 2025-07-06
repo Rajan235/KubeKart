@@ -29,10 +29,11 @@ export const productCreated = async (product: any) => {
     category: product.category,
     orderId: product.orderId || null,
     stock: product.stock,
-    createdAt: product.createdAt,
-    updatedAt: product.updatedAt,
+    createdAt: new Date(product.createdAt).toISOString(), // ✅ fix here
+    updatedAt: new Date(product.updatedAt).toISOString(), // ✅ and here
   };
 
   validateWithSchema(schema, eventPayload); // ✅ Validate before sending
+
   await publishEvent("productCreated", eventPayload);
 };
