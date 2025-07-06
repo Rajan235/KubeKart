@@ -18,15 +18,9 @@ app.use(
 );
 
 app.use(currentUser);
-// app.use(createProductRouter);
-// app.use(showProductRouter);
-// app.use(indexProductRouter);
-// app.use(updateProductRouter);
+
 app.use(productRoutes);
 
-// app.all("*", async (req, res) => {
-//   throw new NotFoundError();
-// });
 app.all("/*splat", (req, res, next) => {
   next(new NotFoundError());
 });

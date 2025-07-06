@@ -14,7 +14,7 @@ interface ProductAttributes {
 
 //describe the properties that a Product Document has as it exists in MongoDB
 //used to define the shape of the document in MongoDB and type checking
-interface ProductDoc extends mongoose.Document {
+export interface ProductDoc extends mongoose.Document {
   name: string;
   price: number;
   userId: string;

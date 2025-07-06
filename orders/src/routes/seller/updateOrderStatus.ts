@@ -14,7 +14,7 @@ import { orderUpdated } from "../../events/orderUpdated";
 const router = express.Router();
 
 router.patch(
-  "/api/seller/orders/:orderId/status",
+  "/api/orders/seller/:orderId/status",
   requireAuth,
   requireRole("SELLER"),
   updateOrderStatusValidator,

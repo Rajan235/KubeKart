@@ -8,7 +8,7 @@ import { OrderResponse } from "../../types/dtos/order-response.dto";
 const router = express.Router();
 //list orders for a user
 router.get(
-  "/api/user/orders",
+  "/api/orders/user",
   requireAuth,
   requireRole("USER"),
   async (req: Request, res: Response) => {

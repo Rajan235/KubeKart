@@ -1,5 +1,5 @@
 import { validateWithSchema } from "../validators/validateEventSchema";
-import schema from "../../../shared-schemas/order/order-updated.schema.json";
+const schema = require(process.env.KAFKA_TOPIC_ORDER_UPDATED_SCHEMA_PATH!);
 import { publishEvent } from "./publisher";
 import { OrderResponse } from "../types/dtos/order-response.dto";
 
@@ -30,5 +30,5 @@ export const orderUpdated = async (order: OrderResponse) => {
   };
 
   validateWithSchema(schema, eventPayload); // ✅ Validate before sending
-  await publishEvent("orderUpdated", eventPayload);
+  await publishEvent(process.env.KAFKA_TOPIC_ORDER_UPDATED!, eventPayload);
 };

@@ -21,6 +21,7 @@ app.use(
 app.use(currentUser);
 
 app.use(orderRoutes);
+
 app.all("/*splat", (req, res, next) => {
   next(new NotFoundError());
 });

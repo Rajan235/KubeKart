@@ -16,7 +16,7 @@ import { orderUpdated } from "../../events/orderUpdated";
 const router = express.Router();
 
 router.delete(
-  "/api/user/orders/:orderId",
+  "/api/orders/user/:orderId",
   requireAuth,
   requireRole("USER"),
   asyncHandler(async (req: Request, res: Response) => {
@@ -45,17 +45,7 @@ router.delete(
         status: "CANCELLED",
       },
     });
-    // order.status = prisma.OrderStatus.Cancelled;
-    // await order.save();
 
-    // publishing an event saying this was cancelled!
-    // new OrderCancelledPublisher(natsWrapper.client).publish({
-    //   id: order.id,
-    //   version: order.version,
-    //   ticket: {
-    //     id: order.ticket.id
-    //   }
-    // });
     await orderUpdated(updatedOrder as OrderResponse);
 
     res.status(204).send(updatedOrder as OrderResponse);

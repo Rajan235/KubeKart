@@ -7,7 +7,7 @@ const router = express.Router();
 
 // DELETE /api/admin/products/:id
 router.delete(
-  "/api/admin/products/:id",
+  "/api/products/admin/:id",
   requireAuth,
   requireRole("ADMIN"),
   async (req: Request, res: Response) => {

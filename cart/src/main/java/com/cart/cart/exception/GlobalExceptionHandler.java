@@ -14,31 +14,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    // @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    // public ResponseEntity<String> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-    //     return ResponseEntity.badRequest().body("Invalid role value. Allowed: USER, SELLER, ADMIN");
-    // }
-
-    //  // Handles @Valid errors
-    // @ExceptionHandler(MethodArgumentNotValidException.class)
-    // public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
-    //     Map<String, String> errors = new HashMap<>();
-
-    //     for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-    //         errors.put(error.getField(), error.getDefaultMessage());
-    //     }
-
-    //     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    // }
-
-    // // Optional: handle all other exceptions
-    // @ExceptionHandler(Exception.class)
-    // public ResponseEntity<Map<String, String>> handleAllOtherErrors(Exception ex) {
-    //     Map<String, String> error = new HashMap<>();
-    //     error.put("error", ex.getMessage());
-    //     return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // Handles @Valid errors (like missing fields)
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();

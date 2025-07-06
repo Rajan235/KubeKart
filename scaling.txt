@@ -128,3 +128,6 @@ If your goal is:
 ---
 
 Would you like a **diagram** of your current architecture and where the missing services would fit in? Or a roadmap on how to add them step-by-step?
+
+
+set product and order routes 

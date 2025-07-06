@@ -1,7 +1,7 @@
 apiVersion: skaffold/v4beta13
 kind: Config
 metadata:
-  name: auth-service
+  name: levomart-platform
 build:
   local:
     push: false
@@ -55,11 +55,19 @@ build:
 
 manifests:
   rawYaml:
+    - k8s/auth-postgres-deployment.yaml
     - k8s/auth-service-deployment.yaml
-    - k8s/product-service-deployment.yaml
-    - k8s/product-mongo-deployment.yaml
-    - k8s/order-service-deployment.yaml
+    - k8s/cart-redis-deployment.yaml
+    - k8s/cart-service-deployment.yaml
+    - k8s/client-deployment.yaml
+    - k8s/ingress-service-deployment.yaml
+    - k8s/kafka-deployment.yaml # (fix typo in filename to kafka-deployment.yaml)
     - k8s/order-postgres-deployment.yaml
+    - k8s/order-service-deployment.yaml
+    - k8s/payment-postgres-deployment.yaml
+    - k8s/payment-service-deployment.yaml
+    - k8s/product-mongo-deployment.yaml
+    - k8s/product-service-deployment.yaml
 deploy:
   kubectl:
     defaultNamespace: default
@@ -68,12 +76,49 @@ portForward:
   - resourceType: service
     resourceName: auth-service
     port: 8081
-    namespace: default
+    localPort: 8081
+  - resourceType: service
+    resourceName: auth-postgres-service
+    port: 5432
+    localPort: 5434
+
+  - resourceType: service
+    resourceName: cart-service
+    port: 8081
+    localPort: 8082
+  - resourceType: service
+    resourceName: cart-redis-service
+    port: 6379
+    localPort: 6379
+
+  - resourceType: service
+    resourceName: payment-service
+    port: 8081
+    localPort: 8083
+  - resourceType: service
+    resourceName: payment-postgres-service
+    port: 5432
+    localPort: 5435
+
+  - resourceType: service
+    resourceName: product-service
+    port: 4000
+    localPort: 4000
   - resourceType: service
     resourceName: product-mongo-service
     port: 27017
     localPort: 27018
+
+  - resourceType: service
+    resourceName: order-service
+    port: 4000
+    localPort: 4001
   - resourceType: service
     resourceName: order-postgres-service
     port: 5432
-    localPort: 5433
+    localPort: 5436
+
+  - resourceType: service
+    resourceName: kafka
+    port: 9092
+    localPort: 9092

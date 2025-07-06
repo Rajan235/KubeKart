@@ -18,7 +18,7 @@ const router = express.Router();
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
 router.post(
-  "/api/user/orders",
+  "/api/orders/user",
   requireAuth,
   requireRole("USER"),
   createOrderValidator,

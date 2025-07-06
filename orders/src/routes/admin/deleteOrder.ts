@@ -12,7 +12,7 @@ import { OrderResponse } from "../../types/dtos/order-response.dto";
 const router = express.Router();
 
 router.delete(
-  "/api/admin/orders/:id",
+  "/api/orders/admin/:id",
   requireAuth,
   requireRole("ADMIN"),
   asyncHandler(async (req: Request, res: Response) => {

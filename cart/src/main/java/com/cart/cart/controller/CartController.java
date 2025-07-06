@@ -65,29 +65,7 @@ public class CartController {
         cartService.clearCart(userId);
         return ResponseEntity.ok().build();
     }
-    // @PostMapping("/place-order")
-    // public ResponseEntity<String> placeOrder() {
-    //     String userId = userContextHolder.getCurrentUser().getUserId();
-    //     CartResponseDto cart = cartService.getCart(userId);
-
-    //     if (cart.getItems().isEmpty()) {
-    //         return ResponseEntity.badRequest().body("Cart is empty");
-    //     }
-
-    //     PlaceOrderRequestDto orderRequest = PlaceOrderRequestDto.builder()
-    //         .userId(userId)
-    //         .items(cart.getItems())
-    //         .build();
-
-    //     // Send to Order Service (internal REST call)
-    //     String orderServiceUrl = "http://ORDER-SERVICE/api/orders/create"; // or use Eureka
-    //     try {
-    //         ResponseEntity<String> response = restTemplate.postForEntity(orderServiceUrl, orderRequest, String.class);
-    //         return ResponseEntity.ok(response.getBody());
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Order creation failed: " + e.getMessage());
-    //     }
-    // }
+    
 
      
 }

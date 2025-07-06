@@ -5,7 +5,7 @@ import { Product } from "../../models/product";
 const router = express.Router();
 
 router.get(
-  "/seller/:userId/products",
+  "/api/products/seller/:userId",
   requireAuth,
   requireRole("ADMIN", "SELLER"),
   async (req: Request, res: Response) => {

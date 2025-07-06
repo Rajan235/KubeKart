@@ -8,6 +8,8 @@ import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
 
+import org.springframework.beans.factory.annotation.Value;
+
 //import java.security.Key;
 
 // import java.util.Date;
@@ -18,9 +20,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtils {
 
-    //@Value("${jwt.secret}")
-    //private String jwtSecret="NewSecretKeyForJWTSigningPurposes12345678";
-    private String jwtSecret="TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg=";
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+    // private String jwtSecret="TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg=";
 
     //  @Value("${jwt.expiration}") // e.g., 86400000 ms = 1 day
     // private long jwtExpiration;

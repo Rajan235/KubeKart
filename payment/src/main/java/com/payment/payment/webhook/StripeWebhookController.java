@@ -10,6 +10,7 @@ import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import lombok.RequiredArgsConstructor;
 
+import java.nio.file.Paths;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import com.stripe.model.PaymentIntent;
 
 @RestController
-@RequestMapping("/api/webhooks")
+@RequestMapping("/api/payment/webhooks")
 @RequiredArgsConstructor
 public class StripeWebhookController {
 
     private final PaymentRepository repository;
+
+    private final ObjectMapper objectMapper;
 
     @Autowired
     private KafkaEventPublisher eventPublisher;
@@ -70,38 +73,60 @@ public class StripeWebhookController {
 
         return ResponseEntity.ok("Received");
     }
-    private void handlePaymentFailure(Event event) {
+    
+
+private void handlePaymentFailure(Event event) {
     var optionalObject = event.getDataObjectDeserializer().getObject();
     if (optionalObject.isEmpty()) return;
 
-    Session session = (Session) optionalObject.get(); // or PaymentIntent if handling `payment_intent.failed`
-    String sessionId = session.getId();
-
-    repository.findBySessionId(sessionId).ifPresent(payment -> {
-        payment.setStatus("FAILED");
-        repository.save(payment);
-
-        Map<String, Object> payload = Map.of(
-            "id", payment.getId(),
-            "orderId", payment.getOrderId(),
-            "userId", payment.getUserId(),
-            "amount", payment.getAmount(),
-            "currency", payment.getCurrency(),
-            "status", "failed",
-            "sessionId", payment.getSessionId(),
-            "createdAt", payment.getCreatedAt().toString(),
-            "failureReason", "Payment failed or expired"
-        );
-
-        try {
-            String json = new ObjectMapper().writeValueAsString(payload);
-            JsonSchemaValidator.validate(json, "shared-schemas/payment/payment-failed.schema.json");
-            eventPublisher.publish("payment-failed", payment.getId(), json);
-        } catch (Exception e) {
-            System.err.println("❌ Failed to publish payment-failed event: " + e.getMessage());
+    if (event.getType().startsWith("payment_intent")) {
+        PaymentIntent intent = (PaymentIntent) optionalObject.get();
+        String sessionId = intent.getMetadata().get("sessionId"); // if you store sessionId in metadata
+        if (sessionId == null) {
+            System.err.println("❌ No sessionId in metadata");
+            return;
         }
-    });
+
+        repository.findBySessionId(sessionId).ifPresent(payment -> {
+            payment.setStatus("FAILED");
+            repository.save(payment);
+
+            Map<String, Object> payload = Map.of(
+                "id", payment.getId(),
+                "orderId", payment.getOrderId(),
+                "userId", payment.getUserId(),
+                "amount", payment.getAmount(),
+                "currency", payment.getCurrency(),
+                "status", "failed",
+                "sessionId", payment.getSessionId(),
+                "createdAt", payment.getCreatedAt().toString(),
+                "failureReason", "Payment failed or expired"
+            );
+
+            try {
+                String json = objectMapper.writeValueAsString(payload);
+                String schemaPath = Paths.get(System.getProperty("user.dir"))
+                         .resolve("${kafka.paymentSucceeded.schema}")
+                         .normalize()
+                         .toAbsolutePath()
+                         .toString();
+                JsonSchemaValidator.validate(json, schemaPath);
+                eventPublisher.publish("${kafka.topic.paymentFailed}", payment.getId(), json);
+            } catch (Exception e) {
+                System.err.println("❌ Failed to publish payment-failed event: " + e.getMessage());
+            }
+        });
+
+    } else if (event.getType().startsWith("checkout.session")) {
+        Session session = (Session) optionalObject.get();
+        String sessionId = session.getId();
+        // handle as before
+    } else {
+        System.err.println("⚠️ Unsupported failure type: " + event.getType());
+    }
 }
+
+
 
 
     private void handleCheckoutSessionCompleted(Event event) {
@@ -127,20 +152,29 @@ public class StripeWebhookController {
             repository.save(payment);
              // Prepare event payload
             PaymentSucceededEvent paymentSucceededEvent  = new PaymentSucceededEvent(
-    payment.getId(),
-    payment.getOrderId(),
-    payment.getUserId(),
-    payment.getAmount(),
-    payment.getCurrency(),
-    "success",
-    payment.getSessionId(),
-    payment.getCreatedAt()
-);
+                payment.getId(),
+                payment.getOrderId(),
+                payment.getUserId(),
+                payment.getAmount(),
+                payment.getCurrency(),
+                "success",
+                payment.getSessionId(),
+                payment.getCreatedAt()
+            );
 
-            try {
-        String json = new ObjectMapper().writeValueAsString(paymentSucceededEvent );
-        JsonSchemaValidator.validate(json, "shared-schemas/payment/payment-succeeded.schema.json");
-        eventPublisher.publish("payment-succeeded", payment.getId(), json);
+        try {
+        String json = objectMapper.writeValueAsString(paymentSucceededEvent );
+       
+
+        String schemaPath = Paths.get(System.getProperty("user.dir"))
+                         .resolve("${kafka.paymentSucceeded.schema}")
+                         .normalize()
+                         .toAbsolutePath()
+                         .toString();
+
+        JsonSchemaValidator.validate(json, schemaPath);
+        eventPublisher.publish("${kafka.topic.paymentSucceeded}", payment.getId(), json);
+        System.out.println("✅ Event sent to topic: payment-succeeded");
         } catch (Exception e) {
             System.err.println("❌ Event publish failed: " + e.getMessage());
         }

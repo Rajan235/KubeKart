@@ -30,7 +30,8 @@ export const currentUser = (
   // }
   const token = authHeader.replace("Bearer ", "").trim();
   const jwt_key = Buffer.from(
-    "TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg=",
+    // "TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg=",
+    process.env.JWT_KEY!,
     "base64"
   ).toString("utf-8");
 

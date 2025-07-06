@@ -6,7 +6,7 @@ const router = express.Router();
 
 // GET /api/admin/products
 router.get(
-  "/api/admin/products",
+  "/api/products/admin",
   requireAuth,
   requireRole("ADMIN"),
   async (req: Request, res: Response) => {

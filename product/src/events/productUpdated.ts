@@ -1,8 +1,9 @@
 import { validateWithSchema } from "../validators/validateEventSchema";
 import schema from "../../../shared-schemas/product/product-created.schema.json";
 import { publishEvent } from "./publisher";
+import { ProductDoc } from "../models/product";
 
-export const productUpdated = async (product: any) => {
+export const productUpdated = async (product: ProductDoc) => {
   const eventPayload = {
     id: product.id,
     name: product.name,
@@ -17,5 +18,5 @@ export const productUpdated = async (product: any) => {
   };
 
   validateWithSchema(schema, eventPayload); // ✅ Validate before sending
-  await publishEvent("productUpdated", eventPayload);
+  await publishEvent("product-updated", eventPayload);
 };

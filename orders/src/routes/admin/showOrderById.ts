@@ -9,7 +9,7 @@ import { OrderResponse } from "../../types/dtos/order-response.dto";
 const router = express.Router();
 
 router.get(
-  "/api/admin/orders/:id",
+  "/api/orders/admin/:id",
   requireAuth,
   requireRole("ADMIN"),
   async (req, res) => {

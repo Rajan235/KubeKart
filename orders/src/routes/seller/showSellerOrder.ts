@@ -9,7 +9,7 @@ import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-erro
 const router = express.Router();
 
 router.get(
-  "/api/seller/orders/:orderId",
+  "/api/orders/seller/:orderId",
   requireAuth,
   requireRole("SELLER"),
   async (req, res) => {

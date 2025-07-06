@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-service
+  name: payment
 spec:
   replicas: 1
   selector:
@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
         - name: payment-container
-          image: payment-service:latest # Skaffold will tag this
+          image: payment:latest # Skaffold will tag this
           ports:
             - containerPort: 8081
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://host.docker.internal:5432/mydb
+              value: jdbc:postgresql://payment-postgres-service:5432/paymentDb
             - name: SPRING_DATASOURCE_USERNAME
               value: postgres
             - name: SPRING_DATASOURCE_PASSWORD

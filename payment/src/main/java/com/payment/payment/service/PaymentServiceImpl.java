@@ -43,8 +43,8 @@ public class PaymentServiceImpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
             .addAllLineItem(lineItems)
             .setMode(SessionCreateParams.Mode.PAYMENT)
-            .setSuccessUrl("http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}")
-            .setCancelUrl("http://localhost:3000/cancel")
+            .setSuccessUrl("${CHECKOUT_SUCCESS_URL}")
+            .setCancelUrl("${CHECKOUT_CANCEL_URL}")
             .build();
 
         Session session = Session.create(params);

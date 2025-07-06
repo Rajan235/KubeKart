@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-service-deployment
+  name: order-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order-service
+      app: order
   template:
     metadata:
       labels:
-        app: order-service
+        app: order
     spec:
       containers:
-        - name: order-service
-          image: order-service:latest
+        - name: order-container
+          image: order:latest
           ports:
             - containerPort: 4000
           env:
@@ -24,17 +24,17 @@ spec:
                   name: jwt-secret
                   key: jwt-key
             - name: POSTGRES_URI
-              value: postgresql://user:password@localhost:5432/your_database
+              value: postgresql://postgres:5533@order-postgres-service:5432/ordersDb
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: order-service-service
+  name: order-service
 spec:
   selector:
-    app: order-service
+    app: order
   ports:
-    - name: order-service
+    - name: order
       protocol: TCP
       port: 4000
       targetPort: 4000

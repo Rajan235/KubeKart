@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cart-service
+  name: cart
 spec:
   replicas: 1
   selector:
@@ -14,16 +14,14 @@ spec:
     spec:
       containers:
         - name: cart-container
-          image: cart-service:latest # Skaffold will tag this
+          image: cart:latest # Skaffold will tag this
           ports:
             - containerPort: 8081
           env:
-            - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://host.docker.internal:5432/mydb
-            - name: SPRING_DATASOURCE_USERNAME
-              value: postgres
-            - name: SPRING_DATASOURCE_PASSWORD
-              value: "5533"
+            - name: SPRING_REDIS_HOST
+              value: cart-redis-service
+            - name: SPRING_REDIS_PORT
+              value: "6379"
 ---
 apiVersion: v1
 kind: Service
