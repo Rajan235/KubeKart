@@ -106,7 +106,7 @@ export default function ProductsPage() {
             key={index}
             className="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-6 flex flex-col"
           >
-            <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
+            {/* <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
               <span className="text-5xl">📦</span>
             </div>
             <h2 className="text-xl font-semibold text-olive mb-2">
@@ -123,6 +123,57 @@ export default function ProductsPage() {
               {product.stock !== undefined && (
                 <p className="text-xs text-gray-400">
                   In stock: {product.stock}
+                </p>
+              )}
+            </div> */}
+            <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
+              <span className="text-5xl">📦</span>
+            </div>
+            <h2 className="text-xl font-semibold text-olive mb-2">
+              {product.name}
+            </h2>
+            <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+              {product.description}
+            </p>
+            <div className="mt-auto space-y-2">
+              <p className="text-lg font-bold text-olive">₹{product.price}</p>
+              <p className="text-xs text-gray-500">{product.category}</p>
+              {product.stock !== undefined && (
+                <p className="text-xs text-gray-400">
+                  In stock: {product.stock}
+                </p>
+              )}
+
+              {/* Quantity and Add to Cart */}
+              {product.stock && product.stock > 0 ? (
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="number"
+                    min={1}
+                    max={product.stock}
+                    defaultValue={1}
+                    className="w-16 border rounded-lg px-2 py-1 text-sm"
+                    onChange={(e) =>
+                      (product.quantityToAdd = Math.min(
+                        product.stock || 1,
+                        Math.max(1, Number(e.target.value))
+                      ))
+                    }
+                  />
+                  <button
+                    className="bg-olive text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-olive/90 transition"
+                    onClick={() => {
+                      const qty = product.quantityToAdd || 1;
+                      alert(`Added ${qty} of ${product.name} to cart!`);
+                      // In real app: call `addToCart(product, qty)`
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              ) : (
+                <p className="text-sm text-red-500 mt-2 font-medium">
+                  Out of Stock
                 </p>
               )}
             </div>
