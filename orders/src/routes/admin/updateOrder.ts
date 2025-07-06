@@ -10,6 +10,7 @@ import { NotFoundError } from "../../utils/errors/not-found-error";
 import { updateOrderValidator } from "../../validators/update-order.validator";
 import { UpdateOrderRequest } from "../../types/dtos/update-order-request.dto";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
+import { orderUpdated } from "../../events/orderUpdated";
 
 const router = express.Router();
 
@@ -35,6 +36,8 @@ router.patch(
         expiresAt: expiresAt ? new Date(expiresAt) : undefined,
       },
     });
+    if (!updated) throw new NotFoundError();
+    await orderUpdated(updated as OrderResponse);
 
     res.send(updated as OrderResponse);
   }

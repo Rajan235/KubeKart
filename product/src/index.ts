@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { app } from "./app";
+import { initKafka } from "./events/kafka";
 
 const start = async () => {
   // if (!process.env.JWT_KEY) {
@@ -16,6 +17,11 @@ const start = async () => {
     console.log("Connected to MongoDb");
   } catch (err) {
     console.error(err);
+  }
+  try {
+    await initKafka();
+  } catch (error) {
+    console.log(error);
   }
   app.listen(4000, () => {
     console.log("Listening on port 4000!");

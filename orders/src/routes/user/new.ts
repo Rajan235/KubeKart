@@ -11,6 +11,7 @@ import { asyncHandler } from "../../utils/async-handler";
 import { createOrderValidator } from "../../validators/create-order.validator";
 import { CreateOrderDto } from "../../types/dtos/create-order.dto";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
+import { orderCreated } from "../../events/orderCreated.";
 
 const router = express.Router();
 
@@ -69,6 +70,7 @@ router.post(
 
     // Publish event (optional here)
     // new OrderCreatedPublisher(natsWrapper.client).publish({...})
+    await orderCreated(order as OrderResponse);
 
     res.status(201).send(order as OrderResponse);
   })

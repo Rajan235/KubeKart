@@ -10,6 +10,7 @@ import { OrderResponse } from "../../types/dtos/order-response.dto";
 import { updateWithVersion } from "../../utils/prisma/updateWithVersion";
 import { validateRequest } from "../../middlewares/validate-request";
 import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-error";
+import { orderUpdated } from "../../events/orderUpdated";
 const router = express.Router();
 
 router.patch(
@@ -53,6 +54,9 @@ router.patch(
     const updated = await prisma.order.findUnique({
       where: { id: order.id },
     });
+
+    if (!updated) throw new NotFoundError();
+    await orderUpdated(updated as OrderResponse);
 
     res.send(updated as OrderResponse);
   }

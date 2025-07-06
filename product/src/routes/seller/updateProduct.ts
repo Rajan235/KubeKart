@@ -6,6 +6,7 @@ import { NotAuthorizedError } from "../../utils/errors/not-authorized-error";
 import { NotFoundError } from "../../utils/errors/not-found-error";
 import { Product } from "../../models/product";
 import { updateProductValidator } from "../../validators/updateProduct.validator";
+import { productUpdated } from "../../events/productUpdated";
 
 //import { productUpdatedPublisher } from "../events/publishers/product-updated-publisher";
 //import { natsWrapper } from "../nats-wrapper";
@@ -53,6 +54,7 @@ router.put(
     //   userId: product.userId,
     //   version: product.version,
     // });
+    await productUpdated(product);
 
     res.send(product);
   }

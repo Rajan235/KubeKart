@@ -123,6 +123,18 @@
     <artifactId>stripe-java</artifactId>
     <version>29.2.0</version>
 </dependency>
+<!-- JSON Schema Validator -->
+<dependency>
+  <groupId>com.networknt</groupId>
+  <artifactId>json-schema-validator</artifactId>
+  <version>1.0.76</version>
+</dependency>
+
+<!-- Jackson (if not already) -->
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
+</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

@@ -1,4 +1,5 @@
 import { app } from "./app";
+import { initKafka, kafka } from "./events/kafka";
 
 const start = async () => {
   if (!process.env.JWT_KEY) {
@@ -10,6 +11,7 @@ const start = async () => {
   try {
     // await mongoose.connect(process.env.MONGO_URI);
     // console.log("Connected to MongoDb");
+    await initKafka();
   } catch (err) {
     console.error(err);
   }

@@ -6,6 +6,8 @@ import { requireAuth, requireRole } from "../../middlewares/require-auth";
 import { NotFoundError } from "../../utils/errors/not-found-error";
 import { OrderStatus } from "@prisma/client";
 import { asyncHandler } from "../../utils/async-handler";
+import { orderUpdated } from "../../events/orderUpdated";
+import { OrderResponse } from "../../types/dtos/order-response.dto";
 
 const router = express.Router();
 
@@ -28,6 +30,8 @@ router.delete(
       where: { id: req.params.id },
       data: { status: OrderStatus.CANCELLED },
     });
+    if (!cancelledOrder) throw new NotFoundError();
+    await orderUpdated(cancelledOrder as OrderResponse);
 
     res.status(200).send({ message: "Order cancelled", order: cancelledOrder });
   })
