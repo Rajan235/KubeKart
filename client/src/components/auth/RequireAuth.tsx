@@ -9,14 +9,14 @@ export default function RequireAuth({
 }: {
   children: React.ReactNode;
 }) {
-  const { token } = useAuth();
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!token) {
+    if (!isLoggedIn) {
       router.push("/auth/login"); // Redirect to login if not authenticated
     }
-  }, [token]);
+  }, [isLoggedIn, router]);
 
-  return <>{token ? children : null}</>;
+  return <>{isLoggedIn ? children : null}</>;
 }

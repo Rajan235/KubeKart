@@ -281,3 +281,16 @@ export default function FeaturedProducts() {
     </section>
   );
 }
+{
+  /* <Link href={`/product/${product.id}`}>
+  <div className="hover:scale-[1.01] transition-transform"> */
+}
+{
+  /* Card layout */
+}
+{
+  /* <h2 className="font-bold">{product.name}</h2>
+    <p>₹{product.price}</p>
+  </div>
+</Link> */
+}

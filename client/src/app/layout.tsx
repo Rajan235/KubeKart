@@ -4,7 +4,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/components/layouts/MainLayout";
 import { AuthProvider } from "@/context/AuthContext";
-
+import { Toaster } from "sonner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -36,6 +36,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${manrope.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster position="top-center" richColors />
         <AuthProvider>
           <MainLayout>{children}</MainLayout>
         </AuthProvider>

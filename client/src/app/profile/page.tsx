@@ -1,6 +1,6 @@
 "use client";
 
-import ProfileCard from "@/components/layouts/ProfileCard";
+//import ProfileCard from "@/components/layouts/ProfileCard";
 import ProfileDashboard from "@/components/layouts/ProfileDashboard";
 
 export default function ProfilePage() {
