@@ -1,4 +1,7 @@
 "use client";
+
+import { useState } from "react";
+
 interface Product {
   name: string;
   description: string;
@@ -94,6 +97,16 @@ const sampleProducts: Product[] = [
 ];
 
 export default function ProductsPage() {
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
+
+  const handleQuantityChange = (productId: string, value: number) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: Math.max(1, value), // Minimum 1
+    }));
+  };
+
+  const getQty = (productId: string) => quantities[productId] || 1;
   return (
     <div className="bg-beige min-h-screen px-6 py-16">
       <h1 className="text-4xl font-bold text-olive mb-10 text-center">
@@ -152,18 +165,22 @@ export default function ProductsPage() {
                     min={1}
                     max={product.stock}
                     defaultValue={1}
+                    value={getQty(product.name)}
                     className="w-16 border rounded-lg px-2 py-1 text-sm"
                     onChange={(e) =>
-                      (product.quantityToAdd = Math.min(
-                        product.stock || 1,
-                        Math.max(1, Number(e.target.value))
-                      ))
+                      // (product.quantityToAdd = Math.min(
+                      //   product.stock || 1,
+                      //   Math.max(1, Number(e.target.value))
+                      // ))
+                      handleQuantityChange(product.name, Number(e.target.value))
                     }
                   />
                   <button
                     className="bg-olive text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-olive/90 transition"
                     onClick={() => {
-                      const qty = product.quantityToAdd || 1;
+                      // const qty = product.quantityToAdd || 1;
+                      // alert(`Added ${qty} of ${product.name} to cart!`);
+                      const qty = getQty(product.name);
                       alert(`Added ${qty} of ${product.name} to cart!`);
                       // In real app: call `addToCart(product, qty)`
                     }}

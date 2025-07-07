@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,8 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
+    @Autowired
+    private UserContext userContext;
 
     // public JwtAuthenticationFilter(JwtUtils jwtUtils) {
     //     this.jwtUtils = jwtUtils;
@@ -55,13 +58,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 // ✅ 2. Set to UserContext (request scoped)
-                ServletRequestAttributes attributes =
-                        (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+                // ServletRequestAttributes attributes =
+                //         (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-                if (attributes != null) {
-                    UserContext userContext = new UserContext(userId, email, role);
-                    attributes.setAttribute("userContext", userContext, RequestAttributes.SCOPE_REQUEST);
-                }
+                // if (attributes != null) {
+                //     // UserContext userContext = new UserContext(userId, email, role);
+                //     userContext.setUserId(userId);
+                //     userContext.setEmail(email);
+                //     userContext.setRole(role);
+                //     attributes.setAttribute("userContext", userContext, RequestAttributes.SCOPE_REQUEST);
+                // }
+                userContext.setUserId(userId);
+                userContext.setEmail(email);
+                userContext.setRole(role);
 
 
             } catch (Exception e) {

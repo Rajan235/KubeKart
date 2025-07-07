@@ -1,10 +1,12 @@
 package com.payment.payment.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.payment.payment.dao.PaymentRepository;
 import com.payment.payment.dtos.PaymentRequest;
 import com.payment.payment.model.Payment;
+import com.payment.payment.security.UserContext;
 import com.stripe.exception.StripeException;
 
 import com.stripe.model.checkout.Session;
@@ -21,8 +23,18 @@ import java.util.UUID;
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository repository;
 
+    private final UserContext userContext;
+    @Value("${CHECKOUT_SUCCESS_URL}}")
+private String checkoutSuccessUrl;
+
+@Value("${CHECKOUT_CANCEL_URL}")
+private String checkoutCancelUrl;
+
     @Override
     public String createStripeCheckoutSession(PaymentRequest request) throws StripeException {
+        System.out.println(userContext.getUserId());
+        System.out.println(request.getUserId());
+        if(!request.getUserId().equals(userContext.getUserId())) throw new RuntimeException("Unauthorized");
         List<SessionCreateParams.LineItem> lineItems = List.of(
             SessionCreateParams.LineItem.builder()
                 .setQuantity(1L)
@@ -43,8 +55,8 @@ public class PaymentServiceImpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
             .addAllLineItem(lineItems)
             .setMode(SessionCreateParams.Mode.PAYMENT)
-            .setSuccessUrl("${CHECKOUT_SUCCESS_URL}")
-            .setCancelUrl("${CHECKOUT_CANCEL_URL}")
+            .setSuccessUrl(checkoutSuccessUrl)
+            .setCancelUrl(checkoutCancelUrl)
             .build();
 
         Session session = Session.create(params);

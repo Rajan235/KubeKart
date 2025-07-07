@@ -15,6 +15,7 @@ import org.springframework.web.context.annotation.RequestScope;
 public class UserContext {
     private String userId;
     private String email;
+    
     private String role;
 
     //public UserContext() {}

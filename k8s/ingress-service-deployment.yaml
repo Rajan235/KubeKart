@@ -32,7 +32,7 @@ spec:
                 name: cart-service
                 port:
                   number: 8081
-          - path: /api/product(/|$)(.*)
+          - path: /api/products(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:

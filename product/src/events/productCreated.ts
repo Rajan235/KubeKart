@@ -1,8 +1,27 @@
 import { validateWithSchema } from "../validators/validateEventSchema";
-import schema from "../../../shared-schemas/product/product-created.schema.json";
+const schemaPath = process.env.KAFKA_TOPIC_PRODUCT_CREATED_SCHEMA_PATH;
+
+if (!schemaPath) {
+  throw new Error("KAFKA_TOPIC_Product_CREATED_SCHEMA_PATH is not defined");
+}
+
+const schema = require(schemaPath);
 import { publishEvent } from "./publisher";
 import { ProductDoc } from "../models/product";
 
+// interface ProductEvent1 {
+//   id: string;
+//   name: string;
+//   price: number;
+//   userId: string;
+//   description?: string;
+//   category?: string;
+//   orderId?: string;
+//   stock?: number;
+//   createdAt: Date;
+//   updatedAt: Date;
+//   version: number; // for optimistic concurrency control
+// }
 export const productCreated = async (product: ProductDoc) => {
   const eventPayload = {
     id: product.id,

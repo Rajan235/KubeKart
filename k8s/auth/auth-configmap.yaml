@@ -5,4 +5,4 @@ metadata:
 data:
   DB_URL: jdbc:postgresql://auth-postgres-service:5432/authDb
   DB_USER: postgres
-  KAFKA_BROKERS: kafka:9092
+  KAFKA_BROKERS: kafka-broker:9092

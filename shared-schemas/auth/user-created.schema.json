@@ -12,7 +12,7 @@
     },
     "role": {
       "type": "string",
-      "enum": ["user", "seller", "admin"]
+      "enum": ["USER", "SELLER", "ADMIN"]
     }
   },
   "required": ["userId", "email", "role"]

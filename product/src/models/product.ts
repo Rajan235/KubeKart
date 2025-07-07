@@ -26,6 +26,9 @@ export interface ProductDoc extends mongoose.Document {
   updatedAt: Date;
   version: number; // for optimistic concurrency control
 }
+export interface ProductEvent extends ProductDoc {
+  id: string;
+}
 // describe the properties that a Product Model has stactic methods
 //allow us to create custome methods for product model
 //custome model class to create custome methods

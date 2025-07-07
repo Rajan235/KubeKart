@@ -1,5 +1,5 @@
 import { validateWithSchema } from "../validators/validateEventSchema";
-import schema from "../../../shared-schemas/product/product-created.schema.json";
+const schema = require(process.env.KAFKA_TOPIC_PRODUCT_UPDATED_SCHEMA_PATH!);
 import { publishEvent } from "./publisher";
 import { ProductDoc } from "../models/product";
 

@@ -1,5 +1,6 @@
 package com.cart.cart.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,10 +15,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class RedisConfig {
-
+    @Value("${spring.data.redis.host}")
+    private String RedisHost;
+    @Value("${spring.data.redis.port}")
+    private Integer RedisPort;
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration("localhost", 6379));
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(RedisHost, RedisPort));
     }
 
      @Bean

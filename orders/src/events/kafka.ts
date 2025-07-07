@@ -16,5 +16,3 @@ export const initKafka = async () => {
   await producer.connect();
   console.log("Kafka Producer Connected");
 };
-// kafka-topics.sh --create --topic orderCreated --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-// kafka-topics.sh --create --topic orderUpdated --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1

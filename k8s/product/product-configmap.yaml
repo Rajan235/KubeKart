@@ -6,4 +6,6 @@ data:
   MONGO_URI: mongodb://product-mongo-service:27017/productdb
   PORT: "4000"
   KAFKA_CLIENT_ID: product-service
-  KAFKA_BROKERS_ADDRESS: kafka:9092
+  KAFKA_BROKERS_ADDRESS: kafka-broker:9092
+  KAFKA_TOPIC_PRODUCT_CREATED_SCHEMA_PATH: /app/shared-schemas/product/product-created.schema.json
+  KAFKA_TOPIC_PRODUCT_UPDATED_SCHEMA_PATH: /app/shared-schemas/product/product-updated.schema.json

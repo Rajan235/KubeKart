@@ -150,6 +150,6 @@ portForward:
 
   # KAFKA
   - resourceType: service
-    resourceName: kafka
+    resourceName: kafka-broker
     port: 9092
     localPort: 9092

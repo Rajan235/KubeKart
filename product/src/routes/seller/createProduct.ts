@@ -5,7 +5,7 @@ import { validateRequest } from "../../middlewares/validate-request";
 import { Product, ProductAttributes } from "../../models/product";
 import { CreateProductValidator } from "../../validators/createProduct.validator";
 import { BadRequestError } from "../../utils/errors/bad-request-error";
-import { productCreated } from "../../events/productCreated.";
+import { productCreated } from "../../events/productCreated";
 
 const router = express.Router();
 
@@ -55,6 +55,7 @@ router.post(
     //   version: product.version,
     // });
     await productCreated(product);
+    console.log("Product createad");
 
     res.status(201).send(product);
   }

@@ -36,6 +36,14 @@ public class StripeWebhookController {
 
     @Value("${stripe.webhook-secret}")
     private String webhookSecret;
+    @Value("${kafka.paymentSucceeded.schema}")
+private String paymentSucceededSchemaPath;
+@Value("${kafka.paymentFailed.schema}")
+private String paymentFailedSchemaPath;
+@Value("${kafka.paymentSucceeded.topic}")
+private String paymentSucceededEventTopic;
+@Value("${kafka.paymentFailed.topic}")
+private String paymentFailedEventTopic;
 
     @PostMapping("/stripe")
     public ResponseEntity<String> handleStripeEvent(@RequestBody String payload,
@@ -75,7 +83,7 @@ public class StripeWebhookController {
     }
     
 
-private void handlePaymentFailure(Event event) {
+    private void handlePaymentFailure(Event event) {
     var optionalObject = event.getDataObjectDeserializer().getObject();
     if (optionalObject.isEmpty()) return;
 
@@ -105,12 +113,12 @@ private void handlePaymentFailure(Event event) {
 
             try {
                 String json = objectMapper.writeValueAsString(payload);
-                String schemaPath = Paths.get(System.getProperty("user.dir"))
-                         .resolve("${kafka.paymentSucceeded.schema}")
-                         .normalize()
-                         .toAbsolutePath()
-                         .toString();
-                JsonSchemaValidator.validate(json, schemaPath);
+                // String schemaPath = Paths.get(System.getProperty("user.dir"))
+                //          .resolve("${kafka.paymentSucceeded.schema}")
+                //          .normalize()
+                //          .toAbsolutePath()
+                //          .toString();
+                JsonSchemaValidator.validate(json, paymentFailedSchemaPath);
                 eventPublisher.publish("${kafka.topic.paymentFailed}", payment.getId(), json);
             } catch (Exception e) {
                 System.err.println("❌ Failed to publish payment-failed event: " + e.getMessage());
@@ -124,7 +132,7 @@ private void handlePaymentFailure(Event event) {
     } else {
         System.err.println("⚠️ Unsupported failure type: " + event.getType());
     }
-}
+    }
 
 
 
@@ -166,13 +174,13 @@ private void handlePaymentFailure(Event event) {
         String json = objectMapper.writeValueAsString(paymentSucceededEvent );
        
 
-        String schemaPath = Paths.get(System.getProperty("user.dir"))
-                         .resolve("${kafka.paymentSucceeded.schema}")
-                         .normalize()
-                         .toAbsolutePath()
-                         .toString();
+        // String schemaPath = Paths.get(System.getProperty("user.dir"))
+        //                  .resolve("${kafka.paymentSucceeded.schema}")
+        //                  .normalize()
+        //                  .toAbsolutePath()
+        //                  .toString();
 
-        JsonSchemaValidator.validate(json, schemaPath);
+        JsonSchemaValidator.validate(json, paymentSucceededSchemaPath);
         eventPublisher.publish("${kafka.topic.paymentSucceeded}", payment.getId(), json);
         System.out.println("✅ Event sent to topic: payment-succeeded");
         } catch (Exception e) {

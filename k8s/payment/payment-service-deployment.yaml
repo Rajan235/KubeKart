@@ -75,7 +75,14 @@ spec:
                 configMapKeyRef:
                   name: payment-config
                   key: KAFKA_BROKERS
-
+          volumeMounts:
+            - name: shared-schemas-volume
+              mountPath: /app/shared-schemas
+      volumes:
+        - name: shared-schemas-volume
+          hostPath:
+            path: /run/desktop/mnt/host/d/projects/op_project_1/shared-schemas
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
