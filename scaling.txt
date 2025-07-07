@@ -131,3 +131,4 @@ Would you like a **diagram** of your current architecture and where the missing 
 
 
 set product and order routes 
+remove hardcoded values of topic everwhere

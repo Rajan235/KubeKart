@@ -72,6 +72,30 @@ spec:
                   name: order-config
                   key: KAFKA_TOPIC_ORDER_UPDATED_SCHEMA_PATH
 
+            - name: KAFKA_TOPIC_PRODUCT_UPDATED_SCHEMA_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: KAFKA_TOPIC_PRODUCT_UPDATED_SCHEMA_PATH
+
+            - name: KAFKA_TOPIC_PRODUCT_CREATED_SCHEMA_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: KAFKA_TOPIC_PRODUCT_CREATED_SCHEMA_PATH
+
+            - name: KAFKA_TOPIC_PAYMENT_SUCCEEDED_SCHEMA_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: KAFKA_TOPIC_PAYMENT_SUCCEEDED_SCHEMA_PATH
+
+            - name: KAFKA_TOPIC_PAYMENT_FAILED_SCHEMA_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: order-config
+                  key: KAFKA_TOPIC_PAYMENT_FAILED_SCHEMA_PATH
+
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

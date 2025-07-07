@@ -5,3 +5,4 @@ metadata:
 data:
   REDIS_HOST: cart-redis-service
   REDIS_PORT: "6379"
+  KAFKA_BROKERS: kafka-broker:9092

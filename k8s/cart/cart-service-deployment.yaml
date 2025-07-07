@@ -29,6 +29,11 @@ spec:
                 configMapKeyRef:
                   name: cart-config
                   key: REDIS_PORT
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: KAFKA_BROKERS
 
             - name: JWT_KEY
               valueFrom:

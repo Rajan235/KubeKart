@@ -6,7 +6,7 @@ export const kafka = new Kafka({
 });
 
 export const producer = kafka.producer();
-
+export const consumer = kafka.consumer({ groupId: "order-service-group" });
 // const producer = kafka.producer({
 //   acks: 1, // wait for at least one broker to acknowledge the message
 //   retries: 3, // retry sending the message up to 3 times

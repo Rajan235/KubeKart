@@ -32,9 +32,9 @@ private String checkoutCancelUrl;
 
     @Override
     public String createStripeCheckoutSession(PaymentRequest request) throws StripeException {
-        System.out.println(userContext.getUserId());
-        System.out.println(request.getUserId());
-        if(!request.getUserId().equals(userContext.getUserId())) throw new RuntimeException("Unauthorized");
+        // System.out.println(userContext.getUserId());
+        // System.out.println(request.getUserId());
+        // if(!request.getUserId().equals(userContext.getUserId())) throw new RuntimeException("Unauthorized");
         List<SessionCreateParams.LineItem> lineItems = List.of(
             SessionCreateParams.LineItem.builder()
                 .setQuantity(1L)
