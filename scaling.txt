@@ -132,3 +132,240 @@ Would you like a **diagram** of your current architecture and where the missing 
 
 set product and order routes 
 remove hardcoded values of topic everwhere
+
+That’s a **great observation**, and the answer depends on how you want your system to behave **in terms of inventory accuracy vs. user experience**.
+
+Let me explain it clearly with pros and best practices.
+
+---
+
+## ✅ Should Product Service Listen to Order Events?
+
+Yes — **your Product service should listen to order events** to manage stock levels **decoupled** from other services. That’s exactly what **event-driven microservices** architecture is for.
+
+---
+
+## 🔍 When to Reduce Stock: `CREATED` or `COMPLETED`?
+
+| Timing                                                | Description                                                                    | Pros                                                   | Cons                                                                 |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------ | -------------------------------------------------------------------- |
+| **On Order Created**                                  | Reduce stock as soon as the order is created                                   | Prevents overselling                                   | If payment fails or order is cancelled, you'll need to restore stock |
+| **On Order Completed (after successful payment)**     | Reduce stock only when payment succeeds                                        | No stock loss on abandoned carts or failed payments    | Risk of overselling if many users place orders at the same time      |
+| **Hybrid: Reserve on Created, Finalize on Completed** | Reduce (or mark as reserved) on created, finalize or restore on payment result | Best of both worlds — high reliability and flexibility | Slightly more complex logic                                          |
+
+---
+
+## 🔧 Recommended Best Practice: **Reserve stock on `CREATED`, finalize on `COMPLETED` or `CANCELLED`**
+
+### ✅ On `OrderCreated` event:
+
+* **Mark stock as reserved** or reduce `availableStock` count in the `Product` service
+* Helps prevent overselling while payment is pending
+
+### ✅ On `OrderCompleted`:
+
+* No change if already reduced
+* Optionally mark it as finalized internally
+
+### ❌ On `OrderCancelled` or Payment Failure:
+
+* Restore the reserved stock
+
+---
+
+## 🔨 Implementation Plan for Product Service
+
+### 1. Listen to these events in Product Service:
+
+* `order-created` ✅ reduce stock
+* `order-cancelled` or `payment-failed` ❌ restore stock
+
+### 2. Your `Product` model may need:
+
+```ts
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  sellerId    String
+  stock       Int      // total available stock
+  reserved    Int      @default(0) // optional, if you want to track reserved stock separately
+  version     Int      @default(0)
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+```
+
+---
+
+## 🧠 Example Workflow
+
+* Order created:
+
+  * Product service receives event → reduce stock by quantity
+* Payment failed / order cancelled:
+
+  * Product service receives event → restore stock
+* Order updated (e.g., quantity increased):
+
+  * Product service receives event → adjust stock difference
+
+---
+
+## ✅ Final Summary
+
+| Event                                 | Product Action                                         |
+| ------------------------------------- | ------------------------------------------------------ |
+| `order-created`                       | **Reduce stock** immediately to prevent overselling    |
+| `order-updated`                       | **Adjust stock** (diff between old and new quantities) |
+| `payment-failed` or `order-cancelled` | **Restore stock**                                      |
+
+This model is used by major platforms like Amazon, Flipkart, etc. — because it ensures inventory is always consistent without making users wait.
+
+Let me know — I can help write the exact `orderCreatedListener.ts` for Product Service with Prisma code to reduce stock.
+Great questions, Rajan! Let's break this down step by step:
+
+---
+
+## ✅ 1. **Webhooks in Your `skaffold` Kubernetes Setup (Stripe, etc.)**
+
+### 🧠 Webhook = Stripe (or any external service) → sends HTTP request → your API
+
+But here's the problem in local Kubernetes:
+
+> **Stripe can’t reach your local service inside the Kubernetes cluster directly.**
+
+So you need a **way to expose your service to the internet**.
+
+---
+
+### ✅ **Solutions for Webhooks in Local Dev (K8s + Skaffold)**
+
+### 🔁 Option 1: Use `ngrok` (Recommended for Stripe)
+
+1. Start your cluster using `skaffold dev`
+
+2. Start `ngrok` to expose the Stripe webhook endpoint:
+
+   ```bash
+   ngrok http 4000   # if your webhook service runs on port 4000
+   ```
+
+3. Update your **Stripe webhook** endpoint to:
+
+   ```
+   https://your-ngrok-id.ngrok.io/api/payment/webhooks/stripe
+   ```
+
+4. Your controller (already implemented):
+
+   ```java
+   @PostMapping("/api/payment/webhooks/stripe")
+   ```
+
+> 🔐 Use the `STRIPE_WEBHOOK_SECRET` env var as you already do, for verifying Stripe signature.
+
+---
+
+### 💡 Bonus: `ngrok` can be added to your `skaffold.yaml` as a background process too, but usually devs run it separately.
+
+---
+
+## ✅ 2. Do You Need to Manually Create Kafka Topics?
+
+> ❗**Yes — in most setups**, Kafka doesn't auto-create topics in production-safe environments.
+
+### 🧠 You have 3 options:
+
+| Option                    | Tool                                                            | Description                         |
+| ------------------------- | --------------------------------------------------------------- | ----------------------------------- |
+| ✅ **Manual**              | Run once with `kafka-topics.sh`                                 | Create all topics needed            |
+| ✅ **Startup Script**      | Shell script or Kubernetes Job                                  | Runs when cluster spins up          |
+| ✅ **Auto-create enabled** | Set `auto.create.topics.enable=true` (Not recommended for prod) | Kafka will create topics if missing |
+
+### ✅ Recommended for dev (run once):
+
+```bash
+# SSH into Kafka container (or exec into pod)
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic order-created --partitions 1 --replication-factor 1
+kafka-topics.sh --create --topic payment-succeeded --bootstrap-server localhost:9092
+# and so on for all topics
+```
+
+---
+
+## ✅ 3. `orderCreatedListener.ts` for Product Service to Reduce Stock
+
+Here's the **complete listener with Prisma**:
+
+### 📁 `events/orderCreatedListener.ts` in Product Service
+
+```ts
+import { consumer } from "./kafka";
+import schema from "../schemas/orderCreatedSchema.json";
+import { validateWithSchema } from "../validators/validateEventSchema";
+import { prisma } from "../utils/prisma";
+
+export const listenOrderCreated = async () => {
+  await consumer.subscribe({ topic: "order-created", fromBeginning: false });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      if (!message.value) return;
+
+      const payload = JSON.parse(message.value.toString());
+
+      try {
+        validateWithSchema(schema, payload);
+
+        // Loop over each order item
+        for (const item of payload.orderItems) {
+          await prisma.product.update({
+            where: { id: item.productId },
+            data: {
+              stock: {
+                decrement: item.quantity,
+              },
+              version: {
+                increment: 1,
+              },
+            },
+          });
+        }
+
+        console.log(`✅ Stock updated for order ${payload.id}`);
+      } catch (err) {
+        console.error("❌ Failed to process order-created event:", err);
+      }
+    },
+  });
+};
+```
+
+---
+
+### 📦 Notes:
+
+* Use **pessimistic locking** (`version`) if you expect race conditions (optional now).
+* Add schema validation (you already have that JSON Schema ready).
+* Ensure the `product` model has `stock` and `version` fields in your `prisma.schema`.
+
+---
+
+## ✅ Summary (TL;DR):
+
+| Task                                         | Done?                                                         | Notes |
+| -------------------------------------------- | ------------------------------------------------------------- | ----- |
+| Webhooks in local dev                        | ✅ Use `ngrok` to expose webhook endpoint                      |       |
+| Kafka topics                                 | 🔧 Manually create once or via startup script                 |       |
+| Listen to `order-created` in Product Service | ✅ Done with code above                                        |       |
+| Reduce stock                                 | ✅ On `order-created`, optionally restore on `order-cancelled` |       |
+
+---
+
+Would you like me to write the code for:
+
+* `orderCancelledListener.ts` to restore stock?
+* Or help you auto-create Kafka topics via a Kubernetes Job or `InitContainer`?
+
+Let me know — happy to continue.

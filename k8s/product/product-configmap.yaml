@@ -9,3 +9,5 @@ data:
   KAFKA_BROKERS_ADDRESS: kafka-broker:9092
   KAFKA_TOPIC_PRODUCT_CREATED_SCHEMA_PATH: /app/shared-schemas/product/product-created.schema.json
   KAFKA_TOPIC_PRODUCT_UPDATED_SCHEMA_PATH: /app/shared-schemas/product/product-updated.schema.json
+  KAFKA_TOPIC_ORDER_CREATED_SCHEMA_PATH: /app/shared-schemas/order/order-created.schema.json
+  KAFKA_TOPIC_ORDER_UPDATED_SCHEMA_PATH: /app/shared-schemas/order/order-updated.schema.json

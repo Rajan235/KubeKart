@@ -32,7 +32,7 @@ spec:
             - name: KAFKA_BROKERS
               valueFrom:
                 configMapKeyRef:
-                  name: auth-config
+                  name: cart-config
                   key: KAFKA_BROKERS
 
             - name: JWT_KEY

@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import { app } from "./app";
-import { initKafka } from "./events/kafka";
+import { consumer, initKafka, producer } from "./events/kafka";
 import dotenv from "dotenv";
+import { listenOrderCreated } from "./events/orderCreatedListener";
+import { listenOrderUpdated } from "./events/orderUpdatedListener";
 
 dotenv.config();
 
@@ -20,6 +22,11 @@ const start = async () => {
   }
   try {
     await initKafka();
+    consumer.connect();
+    console.log("✅ Kafka Consumer Connected");
+
+    // ✅ Start all listeners
+    await Promise.all([listenOrderCreated(), listenOrderUpdated()]);
   } catch (error) {
     console.log(error);
   }
@@ -30,3 +37,16 @@ const start = async () => {
 };
 
 start();
+process.on("SIGINT", async () => {
+  console.log("🛑 Caught SIGINT. Shutting down gracefully...");
+  await producer.disconnect();
+  await consumer.disconnect();
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  console.log("🛑 Caught SIGTERM. Shutting down gracefully...");
+  await producer.disconnect();
+  await consumer.disconnect();
+  process.exit(0);
+});
