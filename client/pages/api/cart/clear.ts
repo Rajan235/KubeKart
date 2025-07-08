@@ -6,6 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "DELETE") return res.status(405).end();
+  console.log("hi from bff cart clear 1");
 
   try {
     const authHeader = req.headers.authorization || "";

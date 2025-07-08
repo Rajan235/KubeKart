@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.payment.payment.dao.PaymentRepository;
 import com.payment.payment.dtos.PaymentRequest;
 import com.payment.payment.model.Payment;
+import com.payment.payment.model.PaymentStatus;
 import com.payment.payment.security.UserContext;
 import com.stripe.exception.StripeException;
 
@@ -24,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository repository;
 
     private final UserContext userContext;
-    @Value("${CHECKOUT_SUCCESS_URL}}")
+    @Value("${CHECKOUT_SUCCESS_URL}")
 private String checkoutSuccessUrl;
 
 @Value("${CHECKOUT_CANCEL_URL}")
@@ -68,7 +69,7 @@ private String checkoutCancelUrl;
         payment.setUserId(request.getUserId());
         payment.setAmount(request.getAmount());
         payment.setCurrency(request.getCurrency());
-        payment.setStatus("PENDING");
+        payment.setStatus(PaymentStatus.PENDING);
 
         repository.save(payment);
 

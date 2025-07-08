@@ -22,6 +22,7 @@ router.post(
       description = "",
       category = "",
       stock = 0,
+      imageUrl = "",
     } = req.body as ProductAttributes;
 
     // const userId = req.currentUser?.id ?? "";
@@ -40,20 +41,11 @@ router.post(
       description: description ?? "",
       category: category ?? "",
       stock: stock ?? 0,
+      imageUrl: imageUrl ?? "",
     });
 
     await product.save();
 
-    // Uncomment and implement event publishing if needed
-    // await new productCreatedPublisher(natsWrapper.client).publish({
-    //   id: product.id,
-    //   name: product.name,
-    //   price: product.price,
-    //   userId: product.userId,
-    //   description: product.description,
-    //   category: product.category,
-    //   version: product.version,
-    // });
     await productCreated(product);
     console.log("Product createad");
 

@@ -13,6 +13,7 @@ export const productUpdated = async (product: ProductDoc) => {
     category: product.category,
     orderId: product.orderId || null,
     stock: product.stock,
+    imageUrl: product.imageUrl || null,
     createdAt: new Date(product.createdAt).toISOString(), // ✅ fix here
     updatedAt: new Date(product.updatedAt).toISOString(), // ✅ and here
   };

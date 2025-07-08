@@ -15,8 +15,10 @@ export default async function handler(
     //   headers: { "Content-Type": "application/json" },
     //   body: JSON.stringify(req.body),
     // });
+    console.log("hi from bff");
+    console.log(req.body);
     const response = await axios.post(
-      "http://auth-service:8080/api/auth/register",
+      "http://auth-service:8081/api/auth/register",
       req.body
     );
     const data = await response.data;

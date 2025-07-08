@@ -27,6 +27,9 @@
     "stock": {
       "type": "number"
     },
+    "imageUrl": {
+      "type": ["string", "null"]
+    },
     "createdAt": {
       "type": "string",
       "format": "date-time"
@@ -34,6 +37,9 @@
     "updatedAt": {
       "type": "string",
       "format": "date-time"
+    },
+    "version": {
+      "type": "number"
     }
   },
   "required": ["id", "name", "price", "userId"]

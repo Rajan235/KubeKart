@@ -78,6 +78,7 @@ public ResponseEntity<UserDto> getCurrentUser() {
             UserDto userDto = new UserDto();
             userDto.setUsername(user.getUsername());
             userDto.setEmail(user.getEmail());
+            userDto.setRole(user.getRole());
             return ResponseEntity.ok(userDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

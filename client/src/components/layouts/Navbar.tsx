@@ -9,7 +9,7 @@ import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
 import Logo from "./Logo";
 import { useAuth } from "@/context/AuthContext";
 
-//type Role = "USER" | "SELLER" | "ADMIN" | null;
+type Role = "USER" | "SELLER" | "ADMIN" | null;
 
 const roleLinks = {
   USER: [
@@ -33,12 +33,39 @@ const roleLinks = {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user, logout, isLoading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  //const [loading, setLoading] = useState(true);
+
   // const [role, setRole] = useState<Role>(null);
   //const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const role = user?.role ?? null;
+
+  if (isLoading) {
+    return (
+      <div className="w-full bg-beige/90 backdrop-blur-md border-b border-olive/20 shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto py-4 px-6 flex justify-between items-center">
+          <Logo />
+          <div className="flex items-center gap-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-2 border-olive border-t-transparent"></div>
+            <span className="text-olive font-medium">
+              Checking login status...
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  console.log("🧠 Navbar Auth Values:", {
+    isLoggedIn,
+    user,
+    role: user?.role,
+    isLoading,
+  });
+
+  const role = user?.role?.toUpperCase() as Role;
+  console.log("✅ Final Role in Navbar:", role);
+
   const links = role ? roleLinks[role] : [];
 
   // useEffect(() => {
@@ -76,20 +103,24 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center">
             {!isLoggedIn ? (
               <div className="flex gap-4">
-                <Button
-                  variant="outline"
-                  className="border-2 border-olive text-olive hover:bg-olive hover:text-beige transition-colors px-6 py-2"
-                >
-                  Login
-                </Button>
-                <Button className="bg-olive text-beige hover:bg-olive/90 transition-colors px-6 py-2">
-                  Sign Up
-                </Button>
+                <Link href="/auth/login">
+                  <Button
+                    variant="outline"
+                    className="border-2 border-olive text-olive hover:bg-olive hover:text-beige transition-colors px-6 py-2"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button className="bg-olive text-beige hover:bg-olive/90 transition-colors px-6 py-2">
+                    Sign Up
+                  </Button>
+                </Link>
               </div>
             ) : (
               <div className="relative">
                 <button
-                  onClick={() => setDropdownOpen((prev) => prev)}
+                  onClick={() => setDropdownOpen((prev) => !prev)}
                   className="flex items-center gap-3 px-6 py-3 rounded-full bg-olive text-beige hover:bg-olive/90 transition-colors"
                 >
                   <FaUserCircle className="text-xl" />
@@ -152,30 +183,38 @@ export default function Navbar() {
               <div className="border-t border-olive/20 pt-4 mt-4">
                 {!isLoggedIn ? (
                   <div className="flex flex-col gap-3">
-                    <Button
-                      variant="outline"
-                      className="border-2 border-olive text-olive hover:bg-olive hover:text-beige"
-                    >
-                      Login
-                    </Button>
-                    <Button className="bg-olive text-beige hover:bg-olive/90">
-                      Sign Up
-                    </Button>
+                    <Link href="/auth/login">
+                      <Button
+                        variant="outline"
+                        className="border-2 border-olive text-olive hover:bg-olive hover:text-beige"
+                      >
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href="/auth/register">
+                      <Button className="bg-olive text-beige hover:bg-olive/90">
+                        Sign Up
+                      </Button>
+                    </Link>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-3">
                     <Link
                       href="/profile"
                       className="text-olive hover:text-olive/80 transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
                       My Profile
                     </Link>
-                    <Link
-                      href="/logout"
-                      className="text-red-600 hover:text-red-700 transition-colors"
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="text-red-600 hover:text-red-700 transition-colors text-left"
                     >
                       Logout
-                    </Link>
+                    </button>
                   </div>
                 )}
               </div>

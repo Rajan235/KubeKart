@@ -39,6 +39,7 @@ router.put(
       "description",
       "category",
       "stock",
+      "imageUrl",
     ];
     updatableFields.forEach((field) => {
       if (req.body[field] !== undefined) {
@@ -47,13 +48,7 @@ router.put(
       }
     });
     await product.save();
-    // new productUpdatedPublisher(natsWrapper.client).publish({
-    //   id: product.id,
-    //   title: product.title,
-    //   price: product.price,
-    //   userId: product.userId,
-    //   version: product.version,
-    // });
+
     await productUpdated(product);
 
     res.send(product);

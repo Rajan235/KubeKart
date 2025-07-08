@@ -15,16 +15,6 @@ export const listenOrderUpdated = async () => {
       try {
         validateWithSchema(schema, payload);
 
-        // if (payload.status === "CANCELLED") {
-        //   for (const item of payload.orderItems) {
-        //     await prisma.product.update({
-        //       where: { id: item.productId },
-        //       data: {
-        //         stock: { increment: item.quantity },
-        //       },
-        //     });
-        //   }
-
         if (payload.status === "CANCELLED") {
           for (const item of payload.orderItems) {
             await Product.updateOne(

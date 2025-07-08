@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: levomart.dev
+    - host: levomart.local
       http:
         paths:
           - path: /api/payment(/|$)(.*)
@@ -46,8 +46,8 @@ spec:
                 name: order-service
                 port:
                   number: 4000
-          - path: /(.*)
-            pathType: ImplementationSpecific
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: client-service

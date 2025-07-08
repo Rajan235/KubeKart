@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { Card, CardContent } from "../ui/card";
 import { Label } from "../ui/label";

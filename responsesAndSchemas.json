@@ -1,0 +1,183 @@
+{
+  "ProductService id included when request send along with version": {
+    "ProductDoc": {
+      "id": "string",
+      "name": "string",
+      "price": "number",
+      "userId": "string",
+      "description": "string (optional)",
+      "category": "string (optional)",
+      "orderId": "string (optional)",
+      "stock": "number (optional)",
+      "imageUrl": "string (optional)",
+      "createdAt": "Date",
+      "updatedAt": "Date",
+      "version": "number"
+    },
+    "ProductAttributesforcreaterequest": {
+      "name": "string",
+      "description": "string",
+      "price": "number",
+      "category": "string",
+      "userId": "string",
+      "stock": "number (optional)",
+      "imageUrl": "string (optional)"
+    }
+  },
+  "OrderService": {
+    "Product": {
+      "id": "string",
+      "name": "string",
+      "price": "number",
+      "userId": "string",
+      "version": "number",
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime"
+    },
+    "OrderStatusEnum": [
+      "CREATED",
+      "PENDING",
+      "COMPLETED",
+      "CANCELLED",
+      "AWAITING_PAYMENT"
+    ],
+    "OrderItem": {
+      "id": "string",
+      "orderId": "string",
+      "productId": "string",
+      "productName": "string",
+      "productPrice": "number",
+      "quantity": "number",
+      "sellerId": "string",
+      "totalPrice": "number",
+      "version": "number",
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime"
+    },
+    "Order": {
+      "id": "string",
+      "userId": "string",
+      "status": "OrderStatusEnum",
+      "expiresAt": "DateTime (optional)",
+      "createdAt": "DateTime",
+      "updatedAt": "DateTime",
+      "version": "number",
+      "orderItems": "Array<OrderItem>"
+    },
+    "OrderItemDto": {
+      "productId": "string",
+      "quantity": "number"
+    },
+    "CreateOrderDto": {
+      "items": "Array<OrderItemDto>"
+    },
+    "OrderItemResponse": {
+      "id": "string",
+      "productId": "string",
+      "productName": "string",
+      "productPrice": "number",
+      "quantity": "number",
+      "totalPrice": "number",
+      "createdAt": "Date",
+      "updatedAt": "Date",
+      "version": "number",
+      "orderId": "string",
+      "sellerId": "string"
+    },
+    "OrderResponse": {
+      "id": "string",
+      "userId": "string",
+      "status": "string",
+      "expiresAt": "Date",
+      "createdAt": "Date",
+      "updatedAt": "Date",
+      "version": "number",
+      "orderItems": "Array<OrderItemResponse>"
+    },
+    "UpdateOrderRequest": {
+      "status": "OrderStatusEnum",
+      "expiresAt": "string (optional, ISO format)"
+    }
+  },
+  "PaymentService": {
+    "PaymentStatusEnum": ["PENDING", "SUCCESS", "FAILED"],
+    "Payment": {
+      "id": "string",
+      "orderId": "string",
+      "userId": "string",
+      "amount": "number",
+      "currency": "string",
+      "status": "PaymentStatusEnum",
+      "sessionId": "string",
+      "createdAt": "Instant",
+      "updatedAt": "Instant"
+    },
+    "PaymentRequest": {
+      "orderId": "string",
+      "userId": "string",
+      "amount": "number",
+      "currency": "string"
+    }
+  },
+
+  "CartService": {
+    "CartItem": {
+      "productId": "string",
+      "productName": "string",
+      "productPrice": "number",
+      "sellerId": "string",
+      "totalPrice": "number",
+      "quantity": "number"
+    },
+    "Cart": {
+      "userId": "string",
+      "items": "Array<CartItem>"
+    },
+    "AddToCartRequest": {
+      "productId": "string",
+      "quantity": "number",
+      "productName": "string",
+      "productPrice": "number",
+      "sellerId": "string"
+    },
+    "CartItemResponseDto": {
+      "productId": "string",
+      "productName": "string",
+      "sellerId": "string",
+      "price": "number",
+      "quantity": "number",
+      "totalPrice": "number"
+    },
+    "CartResponseDto": {
+      "userId": "string",
+      "items": "Array<CartItemResponseDto>",
+      "totalItems": "number",
+      "cartTotal": "number"
+    }
+  },
+  "UserService": {
+    "RoleEnum": ["ADMIN", "USER", "SELLER"],
+    "User": {
+      "userId": "UUID",
+      "username": "string",
+      "password": "string",
+      "email": "string",
+      "role": "RoleEnum"
+    },
+    "LoginRequest": {
+      "username": "string",
+      "password": "string"
+    },
+    "RegisterRequest": {
+      "username": "string",
+      "email": "string",
+      "password": "string",
+      "role": "RoleEnum"
+    },
+    "UserDto": {
+      "username": "string",
+      "email": "string",
+      "role": "RoleEnum"
+    }
+  }
+}

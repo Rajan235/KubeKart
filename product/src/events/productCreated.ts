@@ -9,19 +9,6 @@ const schema = require(schemaPath);
 import { publishEvent } from "./publisher";
 import { ProductDoc } from "../models/product";
 
-// interface ProductEvent1 {
-//   id: string;
-//   name: string;
-//   price: number;
-//   userId: string;
-//   description?: string;
-//   category?: string;
-//   orderId?: string;
-//   stock?: number;
-//   createdAt: Date;
-//   updatedAt: Date;
-//   version: number; // for optimistic concurrency control
-// }
 export const productCreated = async (product: ProductDoc) => {
   const eventPayload = {
     id: product.id,
@@ -32,6 +19,7 @@ export const productCreated = async (product: ProductDoc) => {
     category: product.category,
     orderId: product.orderId || null,
     stock: product.stock,
+    imageUrl: product.imageUrl || null,
     createdAt: new Date(product.createdAt).toISOString(), // ✅ fix here
     updatedAt: new Date(product.updatedAt).toISOString(), // ✅ and here
   };

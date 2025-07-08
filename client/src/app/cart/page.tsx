@@ -188,17 +188,10 @@ import CartSummary from "@/components/layouts/CartSummary";
 import { useCart } from "@/hooks/useCart";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
-import { useRouter } from "next/router";
-import { CreateOrderDto, OrderItemDto } from "@/types/cart";
+import { useRouter } from "next/navigation";
 
-// interface CartItem {
-//   id: string;
-//   productId: string;
-//   name: string;
-//   imageUrl?: string;
-//   price: number;
-//   quantity: number;
-// }
+import Logo from "@/components/layouts/Logo";
+import { CreateOrderDto, OrderItemDto } from "@/types/order";
 
 export default function CartPage() {
   useProtectedRoute(); // must be logged in
@@ -218,9 +211,10 @@ export default function CartPage() {
       const res = await axiosInstance.post("/order/create", payload);
       const { paymentUrl } = res.data;
 
-      if (paymentUrl) {
-        window.location.href = paymentUrl; // Stripe or similar
+      if (paymentUrl && typeof paymentUrl === "string") {
+        window.location.href = paymentUrl;
       } else {
+        console.trace("⚠️ paymentUrl is undefined or not a string", paymentUrl);
         toast.success("Order placed successfully");
         router.push("/orders");
       }
@@ -276,7 +270,20 @@ export default function CartPage() {
   //   0
   // );
 
-  if (loading) return <div className="text-center mt-10">Loading cart...</div>;
+  if (loading) {
+    //return <div className="text-center mt-10">Loading cart...</div>
+    return (
+      <div className="w-full bg-beige/90 backdrop-blur-md border-b border-olive/20 shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto py-4 px-6 flex justify-between items-center">
+          <Logo />
+          <div className="flex items-center gap-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-2 border-olive border-t-transparent"></div>
+            <span className="text-olive font-medium">Loading cart...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (!items.length) return <EmptyState />;
 
   return (
@@ -342,7 +349,7 @@ export default function CartPage() {
           //   </div>
           // </li>
           <CartItemCard
-            key={item.id}
+            key={item.productId}
             item={item}
             onQuantityChange={updateQuantity}
             onRemove={removeItem}

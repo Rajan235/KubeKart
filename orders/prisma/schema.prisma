@@ -27,7 +27,7 @@ model OrderItem {
   orderId    String
   order     Order    @relation(fields: [orderId], references: [id])
   // denormalized fields to avoid joins
-  productId  String
+  productId          String
   productName        String
   productPrice       Float
   quantity  Int
@@ -37,8 +37,6 @@ model OrderItem {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  
-
   @@map("order_items")
 }
 
@@ -46,15 +44,10 @@ model Order {
   id         String       @id @default(uuid())
   userId     String
   status      OrderStatus  @default(CREATED)
- // totalPrice  Float
- expiresAt   DateTime?
-  
+  expiresAt   DateTime?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   version    Int          @default(0)
-  // products    Product[]    @relation("ProductOrders")
-  //productId  String
-  //product     Product      @relation("ProductOrders",fields: [productId], references: [id])
   orderItems OrderItem[]
 
   @@map("orders")
@@ -64,7 +57,7 @@ model Product {
   id          String   @id @default(uuid())
   name        String
   price       Float
-  sellerId    String
+  userId    String
   version     Int           @default(0)
   updatedAt   DateTime     @updatedAt
   createdAt   DateTime     @default(now())

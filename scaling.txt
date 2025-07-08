@@ -362,10 +362,13 @@ export const listenOrderCreated = async () => {
 | Reduce stock                                 | ✅ On `order-created`, optionally restore on `order-cancelled` |       |
 
 ---
-
+implemented ✅ This is Good Practice (Known as Data Duplication for Read Optimization)
 Would you like me to write the code for:
 
 * `orderCancelledListener.ts` to restore stock?
 * Or help you auto-create Kafka topics via a Kubernetes Job or `InitContainer`?
 
 Let me know — happy to continue.
+//send prioduct deleted event
+
+listen in cart product updated event and change the values of cart items 

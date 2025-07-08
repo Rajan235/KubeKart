@@ -3,14 +3,6 @@ import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import { CartItem } from "@/types/cart";
 
-// export type CartItem = {
-//   id: string;
-//   name: string;
-//   price: number;
-//   quantity: number;
-//   imageUrl?: string;
-// };
-
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +30,7 @@ export function useCart() {
 
   const removeItem = async (id: string) => {
     try {
-      await axiosInstance.post("/cart/remove", { id });
+      await axiosInstance.post(`/cart/remove/${id}`, { id });
       fetchCart();
       toast.success("Item removed");
     } catch {
@@ -51,7 +43,7 @@ export function useCart() {
   }, []);
 
   const total = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.productPrice * item.quantity,
     0
   );
 

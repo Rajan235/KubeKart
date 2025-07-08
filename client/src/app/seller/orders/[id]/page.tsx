@@ -10,7 +10,7 @@ import { SellerOrder } from "@/types/order";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function SellerOrderDetailsPage() {
-  const { id } = useParams();
+  const id = useParams();
   const [order, setOrder] = useState<SellerOrder | null>(null);
   const [loading, setLoading] = useState(true);
 

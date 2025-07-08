@@ -6,4 +6,5 @@ export const CreateProductValidator = [
   body("description").optional().isString(),
   body("category").optional().isString(),
   body("stock").optional().isInt({ min: 0 }),
+  body("imageUrl").optional().isString(),
 ];

@@ -15,8 +15,9 @@ export default async function handler(
     //   headers: { "Content-Type": "application/json" },
     //   body: JSON.stringify(req.body),
     // });
+    console.log(req.body);
     const response = await axios.post(
-      "http://auth-service:8080/api/auth/login",
+      "http://auth-service:8081/api/auth/login",
       req.body
     );
 

@@ -27,6 +27,7 @@ router.delete(
     }
 
     await product.deleteOne();
+    //send prioduct deleted event
 
     res.status(204).send("producted deleted succesfully"); // 204 No Content
   }

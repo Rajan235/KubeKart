@@ -7,6 +7,10 @@ export default async function handler(
 ) {
   if (req.method !== "GET") return res.status(405).end();
   const { id } = req.query;
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ message: "Invalid product ID" });
+  }
+  console.log("hi from bff handeler product specific id ");
 
   try {
     const response = await axios.get(

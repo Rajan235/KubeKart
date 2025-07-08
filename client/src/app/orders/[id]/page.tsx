@@ -23,7 +23,7 @@ type Order = {
 };
 
 export default function OrderDetailPage() {
-  const { id } = useParams();
+  const id = useParams();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 

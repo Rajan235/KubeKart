@@ -11,7 +11,7 @@ import ProductForm from "@/components/ProductForm";
 import { Button } from "@/components/ui/button";
 
 export default function ProductPage() {
-  const { id } = useParams();
+  const id = useParams();
   const router = useRouter();
   const [product, setProduct] = useState<SellerProduct | null>(null);
 

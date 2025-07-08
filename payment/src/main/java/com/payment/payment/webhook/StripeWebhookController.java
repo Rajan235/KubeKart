@@ -5,12 +5,14 @@ import com.payment.payment.dao.PaymentRepository;
 import com.payment.payment.kafka.KafkaEventPublisher;
 import com.payment.payment.kafka.events.PaymentSucceededEvent;
 import com.payment.payment.kafka.validator.JsonSchemaValidator;
+import com.payment.payment.model.PaymentStatus;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +39,13 @@ public class StripeWebhookController {
     @Value("${stripe.webhook-secret}")
     private String webhookSecret;
     @Value("${kafka.paymentSucceeded.schema}")
-private String paymentSucceededSchemaPath;
-@Value("${kafka.paymentFailed.schema}")
-private String paymentFailedSchemaPath;
-@Value("${kafka.paymentSucceeded.topic}")
-private String paymentSucceededEventTopic;
-@Value("${kafka.paymentFailed.topic}")
-private String paymentFailedEventTopic;
+    private String paymentSucceededSchemaPath;
+    @Value("${kafka.paymentFailed.schema}")
+    private String paymentFailedSchemaPath;
+    @Value("${kafka.paymentSucceeded.topic}")
+    private String paymentSucceededEventTopic;
+    @Value("${kafka.paymentFailed.topic}")
+    private String paymentFailedEventTopic;
 
     @PostMapping("/stripe")
     public ResponseEntity<String> handleStripeEvent(@RequestBody String payload,
@@ -96,7 +98,9 @@ private String paymentFailedEventTopic;
         }
 
         repository.findBySessionId(sessionId).ifPresent(payment -> {
-            payment.setStatus("FAILED");
+            payment.setStatus(PaymentStatus.FAILED);
+            payment.setUpdatedAt(Instant.now());
+
             repository.save(payment);
 
             Map<String, Object> payload = Map.of(
@@ -113,13 +117,17 @@ private String paymentFailedEventTopic;
 
             try {
                 String json = objectMapper.writeValueAsString(payload);
+
+
                 // String schemaPath = Paths.get(System.getProperty("user.dir"))
                 //          .resolve("${kafka.paymentSucceeded.schema}")
                 //          .normalize()
                 //          .toAbsolutePath()
                 //          .toString();
+
+
                 JsonSchemaValidator.validate(json, paymentFailedSchemaPath);
-                eventPublisher.publish("${kafka.topic.paymentFailed}", payment.getId(), json);
+                eventPublisher.publish(paymentFailedEventTopic, payment.getId(), json);
             } catch (Exception e) {
                 System.err.println("❌ Failed to publish payment-failed event: " + e.getMessage());
             }
@@ -155,8 +163,12 @@ private String paymentFailedEventTopic;
         // }, () -> {
         //     System.err.println("❌ No Payment found for session ID: " + sessionId);
         // });
+
+
         repository.findBySessionId(sessionId).ifPresent(payment -> {
-            payment.setStatus("SUCCESS");
+            payment.setStatus(PaymentStatus.SUCCESS);
+            payment.setUpdatedAt(Instant.now());
+
             repository.save(payment);
              // Prepare event payload
             PaymentSucceededEvent paymentSucceededEvent  = new PaymentSucceededEvent(
@@ -181,7 +193,7 @@ private String paymentFailedEventTopic;
         //                  .toString();
 
         JsonSchemaValidator.validate(json, paymentSucceededSchemaPath);
-        eventPublisher.publish("${kafka.topic.paymentSucceeded}", payment.getId(), json);
+        eventPublisher.publish(paymentSucceededEventTopic, payment.getId(), json);
         System.out.println("✅ Event sent to topic: payment-succeeded");
         } catch (Exception e) {
             System.err.println("❌ Event publish failed: " + e.getMessage());

@@ -8,21 +8,24 @@ export interface AdminProduct {
 export interface Product {
   id: string;
   name: string;
-  description: string;
+  description?: string;
+  userId: string;
   price: number;
-  category: string;
+  category?: string;
+  orderId?: string;
   imageUrl?: string;
-  stock: number;
-  sellerId: string;
-  createdAt: string;
+  stock?: number;
+  version: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 export interface SellerProduct {
   id: string;
   name: string;
-  category: string;
+  category?: string;
   price: number;
-  stock: number;
-  description: string;
+  stock?: number;
+  description?: string;
   imageUrl?: string;
   userId: string;
 }

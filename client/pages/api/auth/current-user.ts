@@ -22,7 +22,7 @@ export default async function handler(
     //   }
     // );
     const response = await axios.get(
-      "http://auth-service:8080/api/auth/current-user",
+      "http://auth-service:8081/api/auth/current-user",
       { headers: { Authorization: authHeader } }
     );
 

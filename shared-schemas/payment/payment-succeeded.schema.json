@@ -10,10 +10,11 @@
     "currency": { "type": "string" },
     "status": {
       "type": "string",
-      "enum": ["success"]
+      "enum": ["SUCCESS"]
     },
     "sessionId": { "type": "string" },
-    "createdAt": { "type": "string", "format": "date-time" }
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
   },
   "required": [
     "id",

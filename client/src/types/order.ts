@@ -1,18 +1,45 @@
 // /types/order.ts
 export type OrderStatus =
+  | "CREATED"
   | "PENDING"
-  | "PAID"
   | "CANCELLED"
   | "COMPLETED"
-  | "DELIVERED"
-  | "SHIPPED";
+  | "AWAITING_PAYMENT";
+
+//   export type OrderItem = {
+//   id: string;
+//   orderId: string;
+//   productId: string;
+//   productName: string;
+//   productPrice: number;
+//   quantity: number;
+//   totalPrice: number;
+//   sellerId: string;
+//   version: number;
+//   createdAt: string;
+//   updatedAt: string;
+// };
 
 export type OrderItem = {
   productId: string;
-  name: string;
+  productName: string;
+  productPrice: number;
   quantity: number;
-  price: number;
+  totalPrice: number;
+  sellerId: string;
 };
+
+// export type Order = {
+//   id: string;
+//   userId: string;
+//   items: OrderItem[];
+//   status: OrderStatus;
+//   createdAt: string;
+//   updatedAt: string;
+//   expiresAt?: string;
+//   version: number;
+//   totalPrice: number;
+// };
 
 export type Order = {
   id: string;
@@ -28,28 +55,20 @@ export type Order = {
 //   totalPrice: number;
 //   createdAt: string;
 // }
-export interface AdminOrder {
-  id: string;
-  buyerId: string;
-  sellerId: string;
-  totalAmount: number;
-  status: string;
-  createdAt: string;
-}
 
-export interface AdminOrderDetail {
-  id: string;
-  userId: string;
-  status: string;
-  totalPrice: number;
-  createdAt: string;
-  items: {
-    productId: string;
-    name: string;
-    price: number;
-    quantity: number;
-  }[];
-}
+// export interface AdminOrderDetail {
+//   id: string;
+//   userId: string;
+//   status: string;
+//   totalPrice: number;
+//   createdAt: string;
+//   items: {
+//     productId: string;
+//     name: string;
+//     price: number;
+//     quantity: number;
+//   }[];
+// }
 export interface SellerOrderItem {
   itemId: string;
   productId: string;
@@ -63,4 +82,42 @@ export interface SellerOrder {
   orderId: string;
   buyerName: string;
   items: SellerOrderItem[];
+}
+// export interface SellerOrder {
+//   orderId: string;
+//   buyerName: string;
+//   items: SellerOrderItem[];
+// }
+// export interface SellerOrderItem {
+//   itemId: string;
+//   productId: string;
+//   productName: string;
+//   quantity: number;
+//   productPrice: number;
+//   totalPrice: number;
+// }
+
+// export interface AdminOrderDetail {
+//   id: string;
+//   userId: string;
+//   status: string;
+//   totalPrice: number;
+//   createdAt: string;
+//   items: {
+//   productId: string;
+//   productName: string;
+//   productPrice: number;
+//   quantity: number;
+//   totalPrice: number;
+//   sellerId: string;
+// }
+// [];
+// }
+export interface OrderItemDto {
+  productId: string;
+  quantity: number;
+}
+
+export interface CreateOrderDto {
+  items: OrderItemDto[];
 }

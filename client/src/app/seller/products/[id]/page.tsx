@@ -10,7 +10,7 @@ import { SellerProduct } from "@/types/product";
 import ProductForm from "@/components/ProductForm";
 
 export default function ProductPage() {
-  const { id } = useParams();
+  const id = useParams();
   const router = useRouter();
   const [product, setProduct] = useState<SellerProduct | null>(null);
 

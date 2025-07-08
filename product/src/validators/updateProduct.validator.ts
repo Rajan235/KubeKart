@@ -13,4 +13,5 @@ export const updateProductValidator = [
     .optional()
     .isInt({ min: 0 })
     .withMessage("Stock must be a non-negative integer"),
+  body("imageUrl").optional().isString(),
 ];

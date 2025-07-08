@@ -3,7 +3,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 export function useAdminRoute() {
-  const { role, loading } = useAuth();
+  const { user, isLoggedIn } = useAuth();
+  const role = user?.role;
+  const loading = !isLoggedIn;
+
   const router = useRouter();
 
   useEffect(() => {

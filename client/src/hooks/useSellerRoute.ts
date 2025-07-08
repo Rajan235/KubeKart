@@ -3,9 +3,10 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 export function useSellerRoute() {
-  const { role, loading } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const router = useRouter();
-
+  const role = user?.role;
+  const loading = !isLoggedIn;
   useEffect(() => {
     if (!loading && role !== "SELLER") {
       router.push("/");

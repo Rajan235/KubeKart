@@ -16,6 +16,7 @@ router.delete(
     if (!product) {
       throw new NotFoundError();
     }
+    //send product deleted event
 
     await product.deleteOne();
 

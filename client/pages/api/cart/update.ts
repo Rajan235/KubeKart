@@ -6,6 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "PUT") return res.status(405).end();
+  console.log("hi from bff cart update 1");
 
   try {
     const authHeader = req.headers.authorization || "";

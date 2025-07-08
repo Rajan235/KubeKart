@@ -12,7 +12,7 @@
 // }
 "use client";
 
-import Image from "next/image";
+// import Image from "next/image";
 import { format } from "date-fns";
 
 const dummyUser = {
@@ -27,13 +27,13 @@ export default function ProfileCard() {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full space-y-6 text-olive">
       <div className="flex items-center space-x-4">
-        <Image
+        {/* <Image
           src={dummyUser.profilePic}
           alt={dummyUser.name}
           width={64}
           height={64}
           className="rounded-full object-cover"
-        />
+        /> */}
         <div>
           <h2 className="text-2xl font-bold">{dummyUser.name}</h2>
           <p className="text-sm text-olive/60">{dummyUser.email}</p>

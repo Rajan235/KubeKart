@@ -6,41 +6,59 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/lib/axios";
-
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  imageUrl?: string;
-};
+import { Product } from "@/types/product";
+import Logo from "@/components/layouts/Logo";
+import { AddToCartDto } from "@/types/cart";
 
 export default function ProductPage() {
-  const { id } = useParams();
+  const id = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProduct = async () => {
-    try {
-      const res = await axiosInstance.get(`/products/${id}`);
-      setProduct(res.data);
-    } catch {
-      toast.error("Product not found");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchProduct = async () => {
+  //   try {
+  //     const res = await axiosInstance.get(`/product/${id}`);
+  //     setProduct(res.data);
+  //   } catch {
+  //     toast.error("Product not found");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
+  // useEffect(() => {
+  //   if (id) fetchProduct();
+  // }, [id]);
   useEffect(() => {
-    if (id) fetchProduct();
+    if (!id) return;
+
+    const fetchProduct = async () => {
+      try {
+        const res = await axiosInstance.get(`/product/${id}`);
+        setProduct(res.data);
+      } catch {
+        toast.error("Product not found");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
   }, [id]);
 
   const addToCart = async () => {
+    if (!product) return;
+
+    const payload: AddToCartDto = {
+      productId: product.id,
+      quantity: 1,
+      productName: product.name,
+      productPrice: product.price,
+      sellerId: product.userId,
+    };
     try {
       await axiosInstance.post("/cart/add", {
-        productId: product?.id,
-        quantity: 1,
+        payload,
       });
       toast.success("Added to cart");
     } catch {
@@ -48,8 +66,23 @@ export default function ProductPage() {
     }
   };
 
-  if (loading)
-    return <div className="mt-10 text-center">Loading product...</div>;
+  if (loading) {
+    // return <div className="mt-10 text-center">Loading product...</div>;
+    return (
+      <div className="w-full bg-beige/90 backdrop-blur-md border-b border-olive/20 shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto py-4 px-6 flex justify-between items-center">
+          <Logo />
+          <div className="flex items-center gap-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-2 border-olive border-t-transparent"></div>
+            <span className="text-olive font-medium">
+              Checking login status...
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!product)
     return <div className="mt-10 text-center">Product not found</div>;
 
