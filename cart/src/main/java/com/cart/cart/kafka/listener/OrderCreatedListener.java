@@ -20,11 +20,14 @@ public class OrderCreatedListener {
 
     private final ObjectMapper objectMapper;
     private final CartService cartService;
+    //@Value("${spring.kafka.consumer.group-id}")
+    //private String groupID;
+
 
     @Value("${kafka.orderCreated.schema}")
     private String orderCreatedSchemaPath;
 
-    @KafkaListener(topics = "order-created", groupId = "cart-service")
+    @KafkaListener(topics = "order-created",  groupId = "${spring.kafka.consumer.group-id}")
     public void listenOrderCreated(String message) {
         try {
             // ✅ Schema validation

@@ -21,7 +21,7 @@ router.patch(
   updateOrderValidator,
   validateRequest,
   async (req: Request, res: Response) => {
-    const { status, expiresAt }: UpdateOrderRequest = req.body;
+    const { status } = req.body;
 
     const order = await prisma.order.findUnique({
       where: { id: req.params.id },
@@ -33,7 +33,7 @@ router.patch(
       where: { id: req.params.id },
       data: {
         status: status as OrderStatus,
-        expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+        //expiresAt: expiresAt ? new Date(expiresAt) : undefined,
       },
     });
     if (!updated) throw new NotFoundError();

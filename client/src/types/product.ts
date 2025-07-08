@@ -16,3 +16,13 @@ export interface Product {
   sellerId: string;
   createdAt: string;
 }
+export interface SellerProduct {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+  description: string;
+  imageUrl?: string;
+  userId: string;
+}

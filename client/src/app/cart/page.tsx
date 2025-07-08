@@ -182,7 +182,7 @@
 
 import { motion } from "framer-motion";
 import { useProtectedRoute } from "@/lib/useProtectedRoute";
-import EmptyState from "@/components/layouts/EmptyState";
+import EmptyState from "@/components/layouts/cartEmptyState";
 import CartItemCard from "@/components/layouts/CartItemCard";
 import CartSummary from "@/components/layouts/CartSummary";
 import { useCart } from "@/hooks/useCart";

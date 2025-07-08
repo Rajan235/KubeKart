@@ -41,30 +41,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+
 import axiosInstance from "@/lib/axios";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import EmptyState from "@/components/layouts/EmptyState";
 
-interface SellerProduct {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-  status?: string;
-}
+import { SellerProduct } from "@/types/product";
+import { useAuth } from "@/context/AuthContext";
+import SellerProductCard from "@/components/layouts/SellerProductCard";
+import EmptyState from "@/components/layouts/EmptyState";
 
 export default function SellerProductPage() {
   const [products, setProducts] = useState<SellerProduct[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { user } = useAuth();
+  //if (user?.role !== "SELLER") return;
   const fetchProducts = async () => {
     try {
-      const res = await axiosInstance.get("/product/seller");
+      if (!user?.id || user?.role !== "SELLER") return;
+      const sellerId = user?.id;
+      const res = await axiosInstance.get(`/product/seller/${sellerId}`);
       setProducts(res.data);
     } catch {
       toast.error("Failed to fetch products");
@@ -72,20 +69,25 @@ export default function SellerProductPage() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    fetchProducts();
+  }, [user]);
 
   const deleteProduct = async (id: string) => {
     try {
-      await axiosInstance.delete(`/product/${id}`);
+      if (user?.role !== "SELLER") return;
+      await axiosInstance.delete(`/product/seller/${id}`);
       toast.success("Product deleted");
       fetchProducts(); // refresh
     } catch {
       toast.error("Failed to delete product");
     }
   };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  if (!user || user.role !== "SELLER") {
+    return (
+      <div className="text-center mt-10 text-red-600">Unauthorized Access</div>
+    );
+  }
 
   if (loading) return <div className="text-center mt-10">Loading...</div>;
   if (!products.length) return <EmptyState message="No products listed yet." />;
@@ -100,36 +102,11 @@ export default function SellerProductPage() {
 
       <div className="space-y-4">
         {products.map((product) => (
-          <Card
+          <SellerProductCard
             key={product.id}
-            className="p-4 flex items-center justify-between bg-white shadow-sm rounded-xl"
-          >
-            <div>
-              <h2 className="text-lg font-semibold text-olive">
-                {product.name}
-              </h2>
-              <p className="text-sm text-olive/70">
-                ₹{product.price} | Stock: {product.stock}
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <Link href={`/seller/products/${product.id}`}>
-                <Button variant="outline" size="sm">
-                  <FaEdit className="mr-2" />
-                  Edit
-                </Button>
-              </Link>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => deleteProduct(product.id)}
-              >
-                <FaTrash className="mr-2" />
-                Delete
-              </Button>
-            </div>
-          </Card>
+            product={product}
+            onDelete={deleteProduct}
+          />
         ))}
       </div>
     </motion.div>

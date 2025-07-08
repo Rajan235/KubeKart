@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
+type ErrorResponse = {
+  message: string;
+};
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -11,7 +14,7 @@ export default async function handler(
     const authHeader = req.headers.authorization || "";
 
     const response = await axios.post(
-      "http://order-service:4000/api/orders/create",
+      "http://order-service:8080/api/orders/user",
       req.body,
       {
         headers: {
@@ -22,10 +25,13 @@ export default async function handler(
     );
 
     res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error("Checkout error:", error?.response?.data || error.message);
-    const status = error?.response?.status || 500;
-    const message = error?.response?.data?.message || "Checkout failed";
+  } catch (error: unknown) {
+    const err = error as AxiosError<ErrorResponse>;
+
+    const status = err.response?.status || 500;
+    const message = err.response?.data?.message || "Checkout failed";
+
+    console.error("Checkout error:", message);
     res.status(status).json({ message });
   }
 }

@@ -1,5 +1,11 @@
 // /types/order.ts
-export type OrderStatus = "PENDING" | "PAID" | "CANCELLED" | "COMPLETED";
+export type OrderStatus =
+  | "PENDING"
+  | "PAID"
+  | "CANCELLED"
+  | "COMPLETED"
+  | "DELIVERED"
+  | "SHIPPED";
 
 export type OrderItem = {
   productId: string;
@@ -43,4 +49,18 @@ export interface AdminOrderDetail {
     price: number;
     quantity: number;
   }[];
+}
+export interface SellerOrderItem {
+  itemId: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+  status: string;
+}
+
+export interface SellerOrder {
+  orderId: string;
+  buyerName: string;
+  items: SellerOrderItem[];
 }

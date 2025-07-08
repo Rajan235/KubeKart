@@ -24,7 +24,7 @@ public class OrderCreatedListener {
     @Value("${kafka.orderCreated.schema}")
     private String orderCreatedSchemaPath;
 
-    @KafkaListener(topics = "order-created", groupId = "payment-service")
+    @KafkaListener(topics = "order-created", groupId = "payment-service-group")
     public void listenOrderCreated(String message) {
         try {
             // ✅ Schema validation

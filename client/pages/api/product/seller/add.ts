@@ -11,7 +11,7 @@ export default async function handler(
 
   try {
     const response = await axios.post(
-      "http://product-service:4000/api/products/seller/create",
+      "http://product-service:4000/api/products",
       req.body,
       {
         headers: {
@@ -23,5 +23,6 @@ export default async function handler(
     res.status(201).json(response.data);
   } catch (err) {
     res.status(500).json({ message: "Failed to create product" });
+    console.error("Failed to create product:", err);
   }
 }

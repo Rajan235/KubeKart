@@ -10,7 +10,7 @@ export default async function handler(
   try {
     const authHeader = req.headers.authorization || "";
     const response = await axios.post(
-      "http://order-service:8080/api/order",
+      "http://order-service:8080/api/orders/user",
       req.body,
       {
         headers: {

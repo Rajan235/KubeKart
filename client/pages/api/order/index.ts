@@ -5,13 +5,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (req.method !== "GET") return res.status(405).end();
   try {
     const authHeader = req.headers.authorization || "";
-    const response = await axios.get("http://order-service:8080/api/order", {
-      headers: {
-        Authorization: authHeader,
-      },
-    });
+    const response = await axios.get(
+      "http://order-service:8080/api/orders/user",
+      {
+        headers: {
+          Authorization: authHeader,
+        },
+      }
+    );
 
     res.status(response.status).json(response.data);
   } catch {

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { SellerProduct } from "@/types/product";
 import ProductForm from "@/components/ProductForm";
+import { Button } from "@/components/ui/button";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -33,17 +34,17 @@ export default function ProductPage() {
     if (id) fetchProduct();
   }, [id]);
 
-  const handleSubmit = async (updatedData: SellerProduct) => {
+  const handleDelete = async (updatedData: SellerProduct) => {
     try {
       if (!updatedData.id) {
         toast.error("Missing product ID");
         return;
       }
-      await axiosInstance.put(`/product/seller/${updatedData.id}`, updatedData);
-      toast.success("Product updated successfully");
-      router.push("/seller/products");
+      await axiosInstance.delete(`/product/admin/${updatedData.id}`);
+      toast.success("Product deleted successfully");
+      router.push("/admin/products");
     } catch {
-      toast.error("Failed to update product");
+      toast.error("Failed to delete product");
     }
   };
 
@@ -55,7 +56,7 @@ export default function ProductPage() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <h1 className="text-3xl font-bold text-olive mb-4">✏️ Edit Product</h1>
+      <h1 className="text-3xl font-bold text-olive mb-4">✏️ Delete Product</h1>
 
       {/* <div className="space-y-4">
         <div>
@@ -107,7 +108,13 @@ export default function ProductPage() {
           Save Changes
         </Button>
       </div> */}
-      <ProductForm initialData={product ?? undefined} onSubmit={handleSubmit} />
+      <ProductForm initialData={product ?? undefined} onSubmit={handleDelete} />
+      <Button
+        className="w-full bg-olive text-beige"
+        onClick={() => product?.id && handleDelete(product)}
+      >
+        Delete Product
+      </Button>
     </motion.div>
   );
 }

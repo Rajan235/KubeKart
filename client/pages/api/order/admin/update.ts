@@ -9,11 +9,11 @@ export default async function handler(
 
   try {
     const authHeader = req.headers.authorization || "";
-    const { id, ...data } = req.body;
+    const { id, status } = req.body;
 
     const response = await axios.patch(
-      `http://order-service:8080/api/admin/orders/${id}`,
-      data,
+      `http://order-service:8080/api/orders/admin/${id}`,
+      { status },
       {
         headers: {
           Authorization: authHeader,
