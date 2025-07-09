@@ -121,3 +121,27 @@ export interface OrderItemDto {
 export interface CreateOrderDto {
   items: OrderItemDto[];
 }
+
+export interface OrderResponse {
+  id: string;
+  userId: string;
+  status: string;
+  expiresAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  version: number;
+  orderItems: OrderItemResponse[];
+}
+export interface OrderItemResponse {
+  id: string;
+  productId: string;
+  productName: string;
+  productPrice: number;
+  quantity: number;
+  totalPrice: number;
+  createdAt: Date;
+  updatedAt: Date;
+  version: number;
+  orderId: string;
+  sellerId: string;
+}

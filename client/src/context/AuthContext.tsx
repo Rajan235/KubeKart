@@ -4,8 +4,9 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axios";
+import Role from "@/types/role";
 // Define your user and role types
-type Role = "USER" | "SELLER" | "ADMIN" | null;
+
 interface User {
   id: string;
   name: string;
@@ -61,7 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return true;
       }
     }
-    //isTokenExpired(token);
+    isTokenExpired(token);
 
     fetchUser();
   }, []);

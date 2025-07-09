@@ -1,6 +1,8 @@
-import Image from "next/image";
-import { format } from "date-fns";
-type Role = "USER" | "SELLER" | "ADMIN" | null;
+// import Image from "next/image";
+// import { format } from "date-fns";
+
+import Role from "@/types/role";
+
 interface Props {
   user: {
     id: string;
@@ -15,35 +17,33 @@ interface Props {
 
 export default function ProfileInfoCard({ user }: Props) {
   return (
-    <div className="col-span-1 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
-      <div className="flex flex-col items-center text-center">
-        <Image
-          src={user.profilePic || `https://i.pravatar.cc/150?u=${user.email}`}
-          alt="profile"
-          width={96}
-          height={96}
-          className="rounded-full mb-4"
-        />
-        <h2 className="text-xl font-bold">{user.name}</h2>
-        <p className="text-sm text-olive/60">{user.email}</p>
-        {user.role && (
-          <p className="mt-1 text-sm text-olive/60 capitalize">
-            Role: <span className="font-medium text-olive">{user.role}</span>
-          </p>
-        )}
-        {user.totalOrders !== undefined && (
-          <p className="mt-1 text-sm text-olive/60">
-            Orders:{" "}
-            <span className="font-medium text-olive">{user.totalOrders}</span>
-          </p>
-        )}
-        <p className="mt-2 text-sm text-olive/60">
+    <div className="md:w-1/3 bg-olive/90 text-white p-8 flex flex-col items-center justify-center text-center gap-3">
+      <img
+        src={user.email || `https://i.pravatar.cc/150?u=${user.email}`}
+        alt="profile"
+        className="w-28 h-28 rounded-full object-cover border-4 border-white"
+      />
+      <h2 className="text-2xl font-bold">{user.name}</h2>
+      <p className="text-white/80 text-sm">{user.email}</p>
+      <p className="text-white/60 text-sm capitalize">
+        Role: <span className="font-semibold">{user.role}</span>
+      </p>
+      {
+        <p className="text-white/60 text-sm">
+          Orders: <span className="font-semibold text-white"></span>
+        </p>
+      }
+      {
+        <p className="text-white/60 text-sm">
           Member since{" "}
-          <span className="font-medium text-olive">
-            {format(new Date(user.joinedAt!), "MMMM yyyy")}
+          <span className="font-semibold text-white">
+            {new Date().toLocaleDateString("en-IN", {
+              month: "long",
+              year: "numeric",
+            })}
           </span>
         </p>
-      </div>
+      }
     </div>
   );
 }

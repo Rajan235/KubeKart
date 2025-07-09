@@ -12,15 +12,6 @@ export default async function handler(
   }
 
   try {
-    // const response = await fetch(
-    //   "http://auth-service:8080/api/auth/current-user",
-    //   {
-    //     method: "GET",
-    //     headers: {
-    //       Authorization: authHeader,
-    //     },
-    //   }
-    // );
     const response = await axios.get(
       "http://auth-service:8081/api/auth/current-user",
       { headers: { Authorization: authHeader } }

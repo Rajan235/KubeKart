@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 //mport { useAuth } from "@/context/AuthContext";
 
 import axiosInstance from "@/lib/axios";
+import { AxiosError } from "axios";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -14,11 +15,14 @@ export default function RegisterForm() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
 
+  type ErrorResponse = {
+    message: string;
+  };
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // ✅ Stop page reload
 
     try {
-      const res = await axiosInstance.post("/auth/register", {
+      await axiosInstance.post("/auth/register", {
         username,
         email,
         password,
@@ -32,19 +36,20 @@ export default function RegisterForm() {
       // } else {
       //   alert("Registration failed");
       // }
-    } catch (err) {
-      console.error("Registration error:", err);
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>;
+      console.error("Registration error:", error);
       alert(
         "Registration failed: " +
           (err.response?.data?.message || "Unknown error")
       );
     }
-    router.push("/");
+    router.push("/auth/login");
   };
 
   return (
     <form
-      className="bg-white p-8 rounded-lg shadow-md w-full max-w-md"
+      className="bg-white p-8 rounded-xl shadow-lg border border-[#b7b7a4] w-full max-w-md"
       onSubmit={handleRegister}
     >
       <h2 className="text-2xl font-bold text-olive mb-6">Create an Account</h2>

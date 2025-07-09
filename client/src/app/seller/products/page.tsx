@@ -1,43 +1,3 @@
-// "use client";
-
-// import { useEffect, useState } from "react";
-// import axios from "@/lib/axios";
-// import { useSellerRoute } from "@/lib/useSellerRoute";
-// import Link from "next/link";
-
-// export default function SellerProductsPage() {
-//   useSellerRoute();
-//   const [products, setProducts] = useState([]);
-
-//   useEffect(() => {
-//     axios.get("/products/seller").then((res) => setProducts(res.data));
-//   }, []);
-
-//   return (
-//     <div>
-//       <h2 className="text-2xl font-semibold mb-4">Your Products</h2>
-//       <ul className="space-y-4">
-//         {products.map((p) => (
-//           <li
-//             key={p.id}
-//             className="bg-white p-4 border rounded shadow flex justify-between"
-//           >
-//             <div>
-//               <p className="font-bold">{p.name}</p>
-//               <p>₹{p.price}</p>
-//             </div>
-//             <Link
-//               href={`/seller/products/${p.id}/edit`}
-//               className="text-blue-600 underline"
-//             >
-//               Edit
-//             </Link>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
 "use client";
 
 import { useEffect, useState } from "react";
@@ -52,11 +12,16 @@ import { useAuth } from "@/context/AuthContext";
 import SellerProductCard from "@/components/layouts/SellerProductCard";
 import EmptyState from "@/components/layouts/EmptyState";
 
+import Loading from "@/components/utility-component/Loading";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
+
 export default function SellerProductPage() {
+  useProtectedRoute("SELLER");
   const [products, setProducts] = useState<SellerProduct[]>([]);
   const [loading, setLoading] = useState(true);
+
   const { user } = useAuth();
-  //if (user?.role !== "SELLER") return;
+
   const fetchProducts = async () => {
     try {
       if (!user?.id || user?.role !== "SELLER") return;
@@ -70,7 +35,9 @@ export default function SellerProductPage() {
     }
   };
   useEffect(() => {
-    fetchProducts();
+    if (user?.role === "SELLER") {
+      fetchProducts();
+    }
   }, [user]);
 
   const deleteProduct = async (id: string) => {
@@ -83,32 +50,48 @@ export default function SellerProductPage() {
       toast.error("Failed to delete product");
     }
   };
-  if (!user || user.role !== "SELLER") {
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (!products.length) {
     return (
-      <div className="text-center mt-10 text-red-600">Unauthorized Access</div>
+      <div className="flex flex-col py-20">
+        <main className="flex-1 flex items-center justify-center">
+          <EmptyState
+            title="No Products Available"
+            description="Please check back later or contact support."
+          />
+        </main>
+      </div>
     );
   }
 
-  if (loading) return <div className="text-center mt-10">Loading...</div>;
-  if (!products.length) return <EmptyState message="No products listed yet." />;
-
   return (
-    <motion.div
-      className="max-w-4xl mx-auto mt-12 px-4"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      <h1 className="text-3xl font-bold text-olive mb-6">📦 My Products</h1>
+    <section className="bg-beige py-10 px-4 min-h-screen">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-5xl mx-auto"
+      >
+        <h1 className="text-3xl font-bold text-olive mb-8 text-center">
+          🛒 My Listed Products
+        </h1>
 
-      <div className="space-y-4">
-        {products.map((product) => (
-          <SellerProductCard
-            key={product.id}
-            product={product}
-            onDelete={deleteProduct}
-          />
-        ))}
-      </div>
-    </motion.div>
+        <div className="grid gap-6">
+          {products.map((product, idx) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+            >
+              <SellerProductCard product={product} onDelete={deleteProduct} />
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
   );
 }

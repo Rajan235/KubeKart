@@ -37,14 +37,17 @@ public class OrderCreatedListener {
                 .mapToDouble(OrderCreatedEvent.OrderItem::getTotalPrice)
                 .sum();
 
-            PaymentRequest paymentRequest = new PaymentRequest();
-            paymentRequest.setOrderId(event.getId());
-            paymentRequest.setUserId(event.getUserId());
-            paymentRequest.setAmount((long) (totalAmount * 100)); // Stripe in paise/cents
-            paymentRequest.setCurrency("INR");
+            log.info("✅ Total amount for order {} is {}", event.getId(), totalAmount);
+            System.out.println("order created event received");
 
-            String checkoutUrl = paymentService.createStripeCheckoutSession(paymentRequest);
-            log.info("✅ Stripe Checkout URL: {}", checkoutUrl);
+            // PaymentRequest paymentRequest = new PaymentRequest();
+            // paymentRequest.setOrderId(event.getId());
+            // paymentRequest.setUserId(event.getUserId());
+            // paymentRequest.setAmount((long) (totalAmount * 100)); // Stripe in paise/cents
+            // paymentRequest.setCurrency("INR");
+
+            // String checkoutUrl = paymentService.createStripeCheckoutSession(paymentRequest);
+            // log.info("✅ Stripe Checkout URL: {}", checkoutUrl);
 
         } catch (Exception e) {
             log.error("❌ Failed to process order-created event: ", e);

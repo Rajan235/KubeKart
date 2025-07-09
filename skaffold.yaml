@@ -88,11 +88,13 @@ manifests:
     - k8s/orders/order-service-deployment.yaml
     - k8s/orders/order-configmap.yaml
     - k8s/orders/order-secret.yaml
+    - k8s/orders/order-migrate-job.yaml
 
     # INFRA
     - k8s/kafka-deployment.yaml
     - k8s/ingress-service-deployment.yaml
     - k8s/client-deployment.yaml
+    - k8s/kafka-topic-init-job.yaml
 deploy:
   kubectl:
     defaultNamespace: default

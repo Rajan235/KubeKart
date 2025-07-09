@@ -13,6 +13,15 @@ export interface CartItem {
   imageUrl?: string;
 }
 
+export interface CartItemResponse {
+  productId: string;
+  productName: string;
+  sellerId: string;
+  price: number;
+  quantity: number;
+  totalPrice: number;
+  imageUrl?: string;
+}
 export type AddToCartDto = {
   productId: string;
   quantity: number;

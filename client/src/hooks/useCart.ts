@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
-import { CartItem } from "@/types/cart";
+import { CartItemResponse } from "@/types/cart";
 
 export function useCart() {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItemResponse[]>([]);
+  const [totaiItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const fetchCart = async () => {
     try {
-      const res = await axiosInstance.get("/cart/index");
+      const res = await axiosInstance.get("/cart");
       setItems(res.data.items);
+      setTotalItems(res.data.totalItems);
+      console.log(res.data);
     } catch {
       toast.error("Failed to load cart");
     } finally {
@@ -43,7 +46,7 @@ export function useCart() {
   }, []);
 
   const total = items.reduce(
-    (sum, item) => sum + item.productPrice * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
@@ -53,5 +56,6 @@ export function useCart() {
     total,
     updateQuantity,
     removeItem,
+    totaiItems,
   };
 }

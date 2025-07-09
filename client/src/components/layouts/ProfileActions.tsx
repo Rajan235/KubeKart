@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { LogOut, Edit, MapPin, PackageCheck } from "lucide-react";
-import { toast } from "sonner";
 
 export default function ProfileActions() {
   const router = useRouter();
@@ -13,43 +13,45 @@ export default function ProfileActions() {
   const handleLogout = () => {
     logout();
     toast.success("Logged out successfully!");
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (
-    <div className="col-span-2 bg-white p-6 rounded-2xl shadow-md">
-      <h3 className="text-lg font-semibold mb-6">Account Actions</h3>
+    <div>
+      <h3 className="text-xl font-bold text-olive mb-6">Account Actions</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Solid Olive Button */}
         <Button
-          className="w-full flex gap-2 justify-center"
+          className="w-full flex gap-2 justify-center hover:bg-olive/90"
           onClick={() => router.push("/profile/edit")}
         >
-          <Edit className="w-4 h-4" />
-          Edit Profile
+          <Edit size={18} /> Edit Profile
         </Button>
+
+        {/* Outline buttons with olive hover background and text */}
         <Button
           variant="outline"
-          className="w-full flex gap-2 justify-center"
+          className="w-full flex gap-2 justify-center border-olive text-olive hover:bg-olive hover:text-white"
           onClick={() => router.push("/profile/address")}
         >
-          <MapPin className="w-4 h-4" />
-          Manage Address
+          <MapPin size={18} /> Manage Address
         </Button>
+
         <Button
           variant="outline"
-          className="w-full flex gap-2 justify-center"
+          className="w-full flex gap-2 justify-center border-olive text-olive hover:bg-olive hover:text-white"
           onClick={() => router.push("/orders")}
         >
-          <PackageCheck className="w-4 h-4" />
-          View Orders
+          <PackageCheck size={18} /> View Orders
         </Button>
+
+        {/* Logout with olive hover underline */}
         <Button
           variant="ghost"
-          className="text-red-600 hover:underline w-full flex gap-2 justify-center"
+          className="w-full flex gap-2 justify-center text-red-600 hover:text-olive hover:underline"
           onClick={handleLogout}
         >
-          <LogOut className="w-4 h-4" />
-          Logout
+          <LogOut size={18} /> Logout
         </Button>
       </div>
     </div>

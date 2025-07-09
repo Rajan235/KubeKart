@@ -48,6 +48,8 @@ router.delete(
 
     await orderUpdated(updatedOrder as OrderResponse);
 
+    await orderUpdated(updatedOrder as OrderResponse);
+
     res.status(204).send(updatedOrder as OrderResponse);
   })
 );

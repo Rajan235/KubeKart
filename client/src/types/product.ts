@@ -19,8 +19,8 @@ export interface Product {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface SellerProduct {
-  id: string;
+export interface ProductFormData {
+  id?: string;
   name: string;
   category?: string;
   price: number;

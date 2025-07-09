@@ -1,10 +1,9 @@
 "use client";
 
 import { Product } from "@/types/product";
-//import { useState } from "react";
-import { Button } from "../ui/button";
 
-// import Image from "next/image";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: Product;
@@ -19,13 +18,14 @@ export default function ProductCard({
   quantity,
   onQuantityChange,
 }: ProductCardProps) {
-  // const [quantity, setQuantity] = useState(1);
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-6 flex flex-col">
-      <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
-        <span className="text-5xl">📦</span>
-      </div>
-      {/* {product.imageUrl ? (
+      {/* Link wraps only non-interactive content */}
+      <Link href={`/product/${product.id}`} className="cursor-pointer group">
+        <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
+          <span className="text-5xl">📦</span>
+        </div>
+        {/* {product.imageUrl ? (
         <img
           src={product.imageUrl}
           alt={product.name}
@@ -37,10 +37,13 @@ export default function ProductCard({
         </div>
       )} */}
 
-      <h2 className="text-xl font-semibold text-olive mb-2">{product.name}</h2>
-      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-        {product.description}
-      </p>
+        <h2 className="text-xl font-semibold text-olive mb-2">
+          {product.name}
+        </h2>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          {product.description}
+        </p>
+      </Link>
       <div className="mt-auto">
         <p className="text-lg font-bold text-olive mb-1">₹{product.price}</p>
         <p className="text-xs text-gray-500">{product.category}</p>

@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 import { useAuth } from "@/context/AuthContext";
@@ -11,6 +11,7 @@ import ProductCard from "@/components/layouts/ProductCard";
 import { AxiosError } from "axios";
 import { Product } from "@/types/product";
 import { AddToCartDto } from "@/types/cart";
+import EmptyState from "@/components/layouts/EmptyState";
 
 export default function ProductsPage() {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -38,20 +39,18 @@ export default function ProductsPage() {
       toast.error("Please log in to add to cart");
       return;
     }
-    // const payload: AddToCartDto = {
-    //   productId,
-    //   quantity,
-    //   productName,
-    //   productPrice,
-    //   sellerId,
-    // };
+
+    if (payload.quantity <= 0) {
+      toast.error("Quantity must be greater than 0");
+      return;
+    }
 
     try {
       await axiosInstance.post("/cart/add", payload);
       toast.success("Added to cart!");
     } catch (error: unknown) {
       const err = error as AxiosError<{ message: string }>;
-      console.error(err);
+      console.log(err);
       toast.error(err.response?.data?.message || "Error adding to cart");
     }
   };
@@ -65,30 +64,58 @@ export default function ProductsPage() {
 
   const getQuantity = (productId: string) => quantities[productId] || 1;
 
-  if (loading) return <div className="text-center mt-10">Loading...</div>;
+  if (loading) {
+    return (
+      <motion.div
+        className="flex items-center justify-center min-h-[60vh] text-olive"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-olive border-t-transparent"></div>
+          <span className="text-lg font-medium">Loading Products...</span>
+        </div>
+      </motion.div>
+    );
+  }
+  if (!products.length) {
+    return (
+      <div className="flex flex-col py-20">
+        <main className="flex-1 flex items-center justify-center">
+          <EmptyState
+            title="No Products Available"
+            description="Please check back later or contact support."
+          />
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-beige rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            quantity={getQuantity(product.id)}
-            onQuantityChange={(qty) => handleQuantityChange(product.id, qty)}
-            onAddToCart={() =>
-              addToCart({
-                productId: product.id,
-                quantity: getQuantity(product.id),
-                productName: product.name,
-                productPrice: product.price,
-                sellerId: product.userId,
-              })
-            }
-          />
-        ))}
+    <section className="bg-beige py-6 px-6 text-olive">
+      {/* <section className="bg-beige text-olive  flex items-center justify-center px-6 "></section> */}
+      <div className="max-w-4xl mx-auto p-4 bg-beige rounded-lg">
+        <h1 className="text-2xl font-bold mb-4">Products</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              quantity={getQuantity(product.id)}
+              onQuantityChange={(qty) => handleQuantityChange(product.id, qty)}
+              onAddToCart={() =>
+                addToCart({
+                  productId: product.id,
+                  quantity: getQuantity(product.id),
+                  productName: product.name,
+                  productPrice: product.price,
+                  sellerId: product.userId,
+                })
+              }
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

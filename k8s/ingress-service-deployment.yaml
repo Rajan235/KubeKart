@@ -11,41 +11,49 @@ spec:
     - host: levomart.local
       http:
         paths:
-          - path: /api/payment(/|$)(.*)
+          - path: /api/internal/payment(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: payment-service
                 port:
                   number: 8081
-          - path: /api/auth(/|$)(.*)
+          - path: /api/internal/auth(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-service
                 port:
                   number: 8081
-          - path: /api/cart(/|$)(.*)
+          - path: /api/internal/cart(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: cart-service
                 port:
                   number: 8081
-          - path: /api/products(/|$)(.*)
+          - path: /api/internal/products(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: product-service
                 port:
                   number: 4000
-          - path: /api/orders(/|$)(.*)
+          - path: /api/internal/orders(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: order-service
                 port:
                   number: 4000
+            # BFF & frontend
+          # - path: /api(/|$)(.*)
+          #   pathType: ImplementationSpecific
+          #   backend:
+          #     service:
+          #       name: client-service
+          #       port:
+          #         number: 3000
           - path: /
             pathType: Prefix
             backend:

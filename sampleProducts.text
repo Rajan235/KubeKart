@@ -93,3 +93,14 @@ INSERT INTO product (name, price, user_id, description, category, stock) VALUES
 ('Casual T-Shirt', 499, 'user555', '100% cotton plain t-shirt for men.', 'Clothing', 150);
 mongoimport --uri="mongodb://localhost:27017/your-db" --collection=products --file=products.json --jsonArray
 
+INSERT INTO "products" ("id", "name", "price", "userId", "version", "createdAt", "updatedAt") VALUES
+('64e8f92402ea45aeac16f8e1', 'Wireless Mouse', 899, 'user123', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e2', 'Bluetooth Headphones', 1999, 'user123', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e3', 'Organic Green Tea', 349, 'seller456', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e4', 'Men''s Running Shoes', 2599, 'seller789', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e5', 'Stainless Steel Bottle', 499, 'user999', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e6', 'Gaming Keyboard', 1499, 'user123', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e7', 'Fiction Book - The Silent Patient', 399, 'seller222', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e8', 'USB-C Fast Charger', 699, 'user123', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8e9', 'Yoga Mat', 899, 'seller888', 0, NOW(), NOW()),
+('64e8f92402ea45aeac16f8ea', 'Casual T-Shirt', 499, 'user555', 0, NOW(), NOW());

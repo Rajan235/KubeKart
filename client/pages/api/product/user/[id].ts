@@ -11,6 +11,7 @@ export default async function handler(
     return res.status(400).json({ message: "Invalid product ID" });
   }
   console.log("hi from bff handeler product specific id ");
+  console.log(id);
 
   try {
     const response = await axios.get(

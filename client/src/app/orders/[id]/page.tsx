@@ -6,21 +6,7 @@ import { useParams } from "next/navigation";
 import axiosInstance from "@/lib/axios";
 import { format } from "date-fns";
 import { toast } from "sonner";
-
-type OrderItem = {
-  productId: string;
-  name: string;
-  quantity: number;
-  price: number;
-};
-
-type Order = {
-  id: string;
-  items: OrderItem[];
-  status: "PAID" | "PENDING" | "CANCELLED" | "COMPLETED";
-  createdAt: string;
-  totalPrice: number;
-};
+import { Order } from "@/types/order";
 
 export default function OrderDetailPage() {
   const id = useParams();
@@ -50,7 +36,7 @@ export default function OrderDetailPage() {
           </div>
           <span
             className={`text-sm px-3 py-1 rounded-full ${
-              order.status === "PAID"
+              order.status === "COMPLETED"
                 ? "bg-green-100 text-green-700"
                 : order.status === "PENDING"
                 ? "bg-yellow-100 text-yellow-700"
@@ -74,12 +60,12 @@ export default function OrderDetailPage() {
               className="flex justify-between border-b pb-2"
             >
               <div>
-                <p className="font-medium">{item.name}</p>
+                <p className="font-medium">{item.productName}</p>
                 <p className="text-sm text-gray-600">
-                  Qty: {item.quantity} × ₹{item.price}
+                  Qty: {item.quantity} × ₹{item.productPrice}
                 </p>
               </div>
-              <p className="font-bold">₹{item.quantity * item.price}</p>
+              <p className="font-bold">₹{item.quantity * item.productPrice}</p>
             </div>
           ))}
         </div>
@@ -103,7 +89,7 @@ export default function OrderDetailPage() {
 
   function cancelOrder(orderId: string) {
     axiosInstance
-      .delete(`/orders/${orderId}`)
+      .delete(`/order/${orderId}`)
       .then(() => {
         toast.success("Order cancelled");
         setOrder((prev) => prev && { ...prev, status: "CANCELLED" });

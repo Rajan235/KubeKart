@@ -5,4 +5,10 @@ COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
 
+RUN npx prisma generate
+
+# (Optional) Run migration in dev — can be skipped in production
+# UNCOMMENT if you want to auto-apply migrations (for dev or init setup)
+#RUN npx prisma migrate dev --name init  --skip-seed --skip-generate
+
 CMD ["npm","start"]

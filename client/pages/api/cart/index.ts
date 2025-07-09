@@ -12,7 +12,7 @@ export default async function handler(
     const authHeader = req.headers.authorization || "";
 
     const response = await axios.get(
-      "http://cart-service:8080/api/cart/user/getCart",
+      "http://cart-service:8081/api/cart/user/getCart",
       {
         headers: {
           Authorization: authHeader,

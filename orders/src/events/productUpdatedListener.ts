@@ -30,7 +30,7 @@ export const listenProductUpdated = async () => {
           data: {
             name: payload.name,
             price: payload.price,
-            sellerId: payload.userId,
+            userId: payload.userId,
             updatedAt: new Date(payload.updatedAt),
           },
         });

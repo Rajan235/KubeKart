@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // import Image from "next/image";
 import {
   Carousel,
@@ -9,43 +9,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-// const products = [
-//   {
-//     id: 1,
-//     name: "Canvas Bag",
-//     price: 19.99,
-//     image: "../../images/1.png",
-//     category: "Accessories",
-//   },
-//   {
-//     id: 2,
-//     name: "Leather Wallet",
-//     price: 24.99,
-//     image: "../../images/2.png",
-//     category: "Accessories",
-//   },
-//   {
-//     id: 3,
-//     name: "Cotton Shirt",
-//     price: 29.99,
-//     image: "../../images/3.png",
-//     category: "Clothing",
-//   },
-//   {
-//     id: 4,
-//     name: "Headphones",
-//     price: 59.99,
-//     image: "../../images/4.png",
-//     category: "Electronics",
-//   },
-//   {
-//     id: 5,
-//     name: "Sneakers",
-//     price: 49.99,
-//     image: "../../images/6.png",
-//     category: "Footwear",
-//   },
-// ];
+import Link from "next/link";
+
 interface Product {
   name: string;
   description: string;
@@ -142,9 +107,6 @@ const sampleProducts: Product[] = [
 
 export default function FeaturedProducts() {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  // useEffect(() => {
-  //     setHoveredProduct(null);
-  //   }, []);
 
   return (
     <section className="bg-beige py-6 px-6">
@@ -160,112 +122,60 @@ export default function FeaturedProducts() {
           </p>
         </div>
 
-        {/* Products Grid */}
-        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sampleProducts.map((product, index) => (
-            <div
-              key={index}
-              className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden hover:scale-105"
-              onMouseEnter={() => setHoveredProduct(index)}
-              onMouseLeave={() => setHoveredProduct(null)}
-            > */}
-        {/* Product Image */}
-        {/* <div className="relative aspect-square overflow-hidden bg-beige/30">
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-olive/40 text-6xl">📦</span>
-                </div> */}
-        {/* Category Badge */}
-        {/* <div className="absolute top-4 left-4 bg-olive/90 text-beige px-3 py-1 rounded-full text-sm font-medium">
-                  {product.category}
-                </div>
-              </div> */}
-
-        {/* Product Info */}
-        {/* <div className="p-6">
-                <h3 className="text-xl font-bold text-olive mb-3 group-hover:text-olive/80 transition-colors">
-                  {product.name}
-                </h3>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold text-olive">
-                    ${product.price}
-                  </span>
-                  <span className="text-2xl font-bold text-olive">
-                    ${product.description}
-                  </span>
-                  <span className="text-2xl font-bold text-olive">
-                    ${product.stock}
-                  </span>
-                  <button className="bg-olive text-beige px-4 py-2 rounded-full text-sm font-medium hover:bg-olive/90 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div> */}
         <Carousel
           opts={{
             align: "start",
             loop: true,
-            // slides: {
-            //   perView: 4,
-            //   spacing: 16,
-            // },
           }}
           className="w-full"
         >
           <CarouselContent>
-            {
-              sampleProducts.map((product, index) => (
-                <CarouselItem
-                  key={index}
-                  className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+            {sampleProducts.map((product, index) => (
+              <CarouselItem
+                key={index}
+                className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+              >
+                <div
+                  className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden hover:scale-105"
+                  onMouseEnter={() => setHoveredProduct(index)}
+                  onMouseLeave={() => setHoveredProduct(null)}
                 >
-                  <div
-                    className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden hover:scale-105"
-                    onMouseEnter={() => setHoveredProduct(index)}
-                    onMouseLeave={() => setHoveredProduct(null)}
-                  >
-                    {/* Product Image Placeholder */}
-                    <div className="relative aspect-square overflow-hidden bg-beige/30">
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-olive/40 text-6xl">📦</span>
-                      </div>
-                      <div className="absolute top-4 left-4 bg-olive/90 text-beige px-3 py-1 rounded-full text-sm font-medium">
-                        {product.category}
-                      </div>
+                  {/* Product Image Placeholder */}
+                  <div className="relative aspect-square overflow-hidden bg-beige/30">
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-olive/40 text-6xl">📦</span>
                     </div>
-
-                    {/* Product Info */}
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-olive mb-2 group-hover:text-olive/80">
-                        {product.name}
-                      </h3>
-                      <p className="text-gray-600 text-sm line-clamp-2 mb-4">
-                        {product.description}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold text-olive">
-                          ₹{product.price}
-                        </span>
-                        {product.stock !== undefined && (
-                          <span className="text-sm text-gray-400">
-                            In Stock: {product.stock}
-                          </span>
-                        )}
-                      </div>
-
-                      <button className="mt-4 w-full bg-olive text-beige px-4 py-2 rounded-full text-sm font-medium hover:bg-olive/90 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                        Add to Cart
-                      </button>
+                    <div className="absolute top-4 left-4 bg-olive/90 text-beige px-3 py-1 rounded-full text-sm font-medium">
+                      {product.category}
                     </div>
                   </div>
-                </CarouselItem>
-              ))
-              // <CarouselItem className="basis-1/3">...</CarouselItem>
-              // <CarouselItem className="basis-1/3">...</CarouselItem>
-              // <CarouselItem className="basis-1/3">...</CarouselItem>
-            }
+
+                  {/* Product Info */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-olive mb-2 group-hover:text-olive/80">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                      {product.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-bold text-olive">
+                        ₹{product.price}
+                      </span>
+                      {product.stock !== undefined && (
+                        <span className="text-sm text-gray-400">
+                          In Stock: {product.stock}
+                        </span>
+                      )}
+                    </div>
+
+                    <button className="mt-4 w-full bg-olive text-beige px-4 py-2 rounded-full text-sm font-medium hover:bg-olive/90 transition-colors opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
@@ -273,24 +183,13 @@ export default function FeaturedProducts() {
 
         {/* View All Products Button */}
         <div className="text-center mt-16">
-          <button className="bg-olive text-beige px-12 py-4 rounded-full text-lg font-semibold hover:bg-olive/90 transition-colors shadow-lg hover:shadow-xl">
-            View All Products
-          </button>
+          <Link href="/product">
+            <button className="bg-olive text-beige px-12 py-4 rounded-full text-lg font-semibold hover:bg-olive/90 transition-colors shadow-lg hover:shadow-xl">
+              View All Products
+            </button>
+          </Link>
         </div>
       </div>
     </section>
   );
-}
-{
-  /* <Link href={`/product/${product.id}`}>
-  <div className="hover:scale-[1.01] transition-transform"> */
-}
-{
-  /* Card layout */
-}
-{
-  /* <h2 className="font-bold">{product.name}</h2>
-    <p>₹{product.price}</p>
-  </div>
-</Link> */
 }

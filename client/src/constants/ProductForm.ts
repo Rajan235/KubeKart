@@ -1,6 +1,6 @@
-import { SellerProduct } from "@/types/product";
+import { ProductFormData } from "@/types/product";
 
-const defaultForm: SellerProduct = {
+const defaultForm: ProductFormData = {
   id: "",
   userId: "",
   name: "",

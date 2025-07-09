@@ -14,7 +14,7 @@ export default async function handler(
     const authHeader = req.headers.authorization || "";
 
     const response = await axios.post(
-      "http://order-service:8080/api/orders/user",
+      "http://payment-service:8081/api/payment/create-checkout-session  ",
       req.body,
       {
         headers: {

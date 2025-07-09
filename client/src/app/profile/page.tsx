@@ -7,7 +7,8 @@ import ProfileDashboard from "@/components/layouts/ProfileDashboard";
 export default function ProfilePage() {
   return (
     <RequireAuth>
-      <div className="min-h-screen bg-beige flex items-center justify-center px-6">
+      {/* <div className="min-h-screen bg-beige flex items-center justify-center px-6"> */}
+      <div className="min-h-screen bg-beige py-10 px-6">
         <ProfileDashboard />
       </div>
     </RequireAuth>

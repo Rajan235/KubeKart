@@ -26,7 +26,7 @@ export const listenProductCreated = async () => {
               id: payload.id,
               name: payload.name,
               price: payload.price,
-              sellerId: payload.userId, // assuming userId is the seller
+              userId: payload.userId, // assuming userId is the seller
               createdAt: new Date(payload.createdAt),
               updatedAt: new Date(payload.updatedAt),
             },

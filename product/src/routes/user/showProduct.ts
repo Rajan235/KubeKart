@@ -6,13 +6,23 @@ const router = express.Router();
 
 router.get("/api/products/:id", async (req: Request, res: Response) => {
   //const Product = await Product.findById(req.params.id);
-  const product = await Product.findById(req.params.id);
+  console.log("hi iman called specific product inside product servicew");
+  console.log(req.params);
+  const { id } = req.params;
+  id.toString();
+  console.log(id);
+  try {
+    const product = await Product.findById(req.params.id);
+    console.log(product);
 
-  if (!product) {
-    throw new NotFoundError();
+    if (!product) {
+      throw new NotFoundError();
+    }
+
+    res.send(product);
+  } catch (error) {
+    console.log(error);
   }
-
-  res.send(product);
 });
 
 export { router as showProductRouter };

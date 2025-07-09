@@ -7,7 +7,7 @@ export const createOrderValidator = [
     .withMessage("Items must be a non-empty array"),
 
   body("items.*.productId")
-    .isUUID()
+    .notEmpty()
     .withMessage("Each item must have a valid productId"),
 
   body("items.*.quantity")

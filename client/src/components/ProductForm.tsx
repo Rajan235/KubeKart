@@ -6,30 +6,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Image from "next/image";
-import { SellerProduct } from "@/types/product";
+import { ProductFormData } from "@/types/product";
 import defaultForm from "@/constants/ProductForm";
 
 interface ProductFormProps {
-  initialData?: SellerProduct;
-  onSubmit: (data: SellerProduct) => void;
+  initialData?: ProductFormData;
+  onSubmit: (data: ProductFormData) => void;
 }
 export default function ProductForm({
   initialData,
   onSubmit,
 }: ProductFormProps) {
-  const [form, setForm] = useState<SellerProduct>(
-    //{
-    //   name: "",
-    //   price: 0,
-    //   description: "",
-    //   stock: 0,
-    //   imageUrl: "",
-    //   category: "",
-    //   id: "",
-    //   userId: "",
-    // }
-    initialData || defaultForm
-  );
+  const [form, setForm] = useState<ProductFormData>(initialData || defaultForm);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {

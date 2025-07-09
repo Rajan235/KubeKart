@@ -1,25 +1,29 @@
-import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") return res.status(405).end();
+  if (req.method !== "PUT") return res.status(405).end();
+  console.log("hi from bff cart update 1");
 
   try {
     const authHeader = req.headers.authorization || "";
-    const response = await axios.post(
-      "http://order-service:8080/api/orders/user",
+
+    const response = await axios.put(
+      "http://cart-service:8081/api/cart/user/update-quantity",
       req.body,
       {
         headers: {
           Authorization: authHeader,
+          "Content-Type": "application/json",
         },
       }
     );
+
     res.status(response.status).json(response.data);
   } catch {
-    res.status(500).json({ message: "Order creation failed" });
+    res.status(500).json({ message: "Cart update failed" });
   }
 }

@@ -11,7 +11,7 @@ export function useProtectedRoute(requiredRole?: "ADMIN" | "SELLER" | "USER") {
   useEffect(() => {
     // Not logged in → redirect to login
     if (!isLoggedIn) {
-      router.push("/login");
+      router.push("/auth/login");
       return;
     }
 

@@ -41,7 +41,7 @@ export default function LoginForm() {
 
   return (
     <form
-      className="bg-white p-8 rounded-lg shadow-md w-full max-w-md"
+      className=" bg-white p-8 rounded-lg shadow-md w-full max-w-md"
       onSubmit={handleLogin}
     >
       <h2 className="text-2xl font-bold text-olive mb-6">Login to LevoMart</h2>
