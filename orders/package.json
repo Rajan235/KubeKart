@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node-dev --poll src/index.ts",
     "test": "jest --runInBand   --detectOpenHandles  ",
-    "test:ci": "jest",
+    "test:ci": "jest --coverage",
     "test1": "cross-env NODE_ENV=test dotenv -e .env.test -- jest --runInBand --detectOpenHandles"
   },
   "keywords": [],
