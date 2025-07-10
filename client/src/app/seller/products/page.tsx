@@ -7,26 +7,38 @@ import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
-import { SellerProduct } from "@/types/product";
+import { Product } from "@/types/product";
 import { useAuth } from "@/context/AuthContext";
-import SellerProductCard from "@/components/layouts/SellerProductCard";
-import EmptyState from "@/components/layouts/EmptyState";
+
+import EmptyState from "@/components/layouts/emptyStates/EmptyState";
 
 import Loading from "@/components/utility-component/Loading";
 import { useProtectedRoute } from "@/lib/useProtectedRoute";
+import SellerProductCard from "@/components/layouts/product/SellerProductCard";
 
 export default function SellerProductPage() {
   useProtectedRoute("SELLER");
-  const [products, setProducts] = useState<SellerProduct[]>([]);
+  //useProtectedRoute("SELLER");
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
 
   const fetchProducts = async () => {
     try {
-      if (!user?.id || user?.role !== "SELLER") return;
-      const sellerId = user?.id;
-      const res = await axiosInstance.get(`/product/seller/${sellerId}`);
+      console.log(user);
+      console.log(user?.userId);
+      console.log(user?.role);
+      if (!user?.userId || user?.role !== "SELLER") {
+        console.log("hefwuhfweihwefgihgih returning");
+        return;
+      }
+      const sellerId = user?.userId;
+      console.log("hefwuhfweihwefgihgih" + sellerId);
+      const res = await axiosInstance.get(
+        `/product/seller/listProducts/${sellerId}`
+      );
+      console.log(res.data);
       setProducts(res.data);
     } catch {
       toast.error("Failed to fetch products");
@@ -52,7 +64,7 @@ export default function SellerProductPage() {
   };
 
   if (loading) {
-    return <Loading />;
+    return <Loading message="Loading products" />;
   }
 
   if (!products.length) {

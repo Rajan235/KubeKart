@@ -30,6 +30,7 @@ export default async function handler(
       );
       res.status(200).json(response.data);
     } else if (req.method == "GET") {
+      if (!id) return res.status(400).json({ message: "Invalid product ID" });
       const response = await axios.get(
         `http://product-service:4000/api/products/${id}`,
         {

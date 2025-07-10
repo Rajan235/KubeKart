@@ -6,26 +6,55 @@ import { toast } from "sonner";
 
 import { motion } from "framer-motion";
 
-import { OrderStatus, SellerOrder } from "@/types/order";
-import SellerOrderCard from "@/components/layouts/SellerOrderCard";
+import { OrderResponse, OrderStatus } from "@/types/order";
+
+import Loading from "@/components/utility-component/Loading";
+import EmptyState from "@/components/layouts/emptyStates/EmptyState";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
+import SellerOrderCard from "@/components/layouts/order/SellerOrderCard";
 
 const STATUS_OPTIONS: OrderStatus[] = [
   "PENDING",
-  "PAID",
   "CANCELLED",
   "COMPLETED",
-  "DELIVERED",
-  "SHIPPED",
+  "AWAITING_PAYMENT",
 ];
+// const dummyOrderItems: OrderItemResponse[] = [
+//   {
+//     id: "dummy-item-id",
+//     productId: "product-123",
+//     productName: "Dummy Product",
+//     productPrice: 99,
+//     quantity: 1,
+//     totalPrice: 99,
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//     version: 0,
+//     orderId: "order-123",
+//     sellerId: "seller-123",
+//   },
+// ];
+// const dummyOrder: OrderResponse = {
+//   id: "dummy-id",
+//   userId: "buyer-123",
+//   status: "PENDING",
+//   expiresAt: null,
+//   createdAt: new Date(),
+//   updatedAt: new Date(),
+//   version: 0,
+//   orderItems: dummyOrderItems,
+// };
 
 export default function SellerOrdersPage() {
-  const [orders, setOrders] = useState<SellerOrder[]>([]);
+  useProtectedRoute("SELLER");
+  const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchOrders = async () => {
     try {
-      const res = await axiosInstance.get("/order/seller/index");
+      const res = await axiosInstance.get("/order/seller");
       setOrders(res.data.orders);
+      // setOrders([dummyOrder]);
     } catch {
       toast.error("Failed to load orders");
     } finally {
@@ -50,10 +79,18 @@ export default function SellerOrdersPage() {
     fetchOrders();
   }, []);
 
-  if (loading)
-    return <div className="text-center mt-10">Loading orders...</div>;
+  if (loading) return <Loading message="Loading orders..." />;
   if (!orders.length)
-    return <div className="text-center mt-10">No orders found</div>;
+    return (
+      <div className="flex flex-col py-20">
+        <main className="flex-1 flex items-center justify-center">
+          <EmptyState
+            title="No Orders Available"
+            description="Please check back later or contact support."
+          />
+        </main>
+      </div>
+    );
 
   return (
     <motion.div
@@ -66,7 +103,7 @@ export default function SellerOrdersPage() {
 
       {orders.map((order) => (
         <SellerOrderCard
-          key={order.orderId}
+          key={order.id}
           order={order}
           handleStatusChange={handleStatusChange}
           statusOptions={STATUS_OPTIONS}

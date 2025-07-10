@@ -7,13 +7,16 @@ import { toast } from "sonner";
 
 import { useAuth } from "@/context/AuthContext";
 import axiosInstance from "@/lib/axios";
-import ProductCard from "@/components/layouts/ProductCard";
+
 import { AxiosError } from "axios";
 import { Product } from "@/types/product";
 import { AddToCartDto } from "@/types/cart";
-import EmptyState from "@/components/layouts/EmptyState";
+import EmptyState from "@/components/layouts/emptyStates/EmptyState";
+import ProductCard from "@/components/layouts/product/ProductCard";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
 
 export default function ProductsPage() {
+  useProtectedRoute("USER");
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   const [products, setProducts] = useState<Product[]>([]);

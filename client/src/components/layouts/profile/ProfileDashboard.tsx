@@ -2,16 +2,6 @@
 
 import { useAuth } from "@/context/AuthContext";
 
-// const dummyUser = {
-//   id: "user123",
-//   name: "Rajan Bansal",
-//   email: "rajan@example.com",
-//   joinedAt: new Date("2024-01-10"),
-//   profilePic: "https://i.pravatar.cc/150?img=3",
-//   role: "USER",
-//   totalOrders: 5,
-// };
-
 import { motion } from "framer-motion";
 import ProfileActions from "./ProfileActions";
 import ProfileInfoCard from "./ProfileInfoCard";

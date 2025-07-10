@@ -3,6 +3,7 @@ import express from "express";
 import { currentUser } from "./middlewares/current-user";
 import { NotFoundError } from "./utils/errors/not-found-error";
 import { errorHandler } from "./middlewares/error-handler";
+import { swaggerUi, swaggerSpec } from "./swagger";
 import { orderRoutes } from "./routes";
 
 const app = express();
@@ -27,4 +28,8 @@ app.all("/*splat", (req, res, next) => {
 });
 
 app.use(errorHandler);
+if (process.env.NODE_ENV !== "production") {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
+
 export { app };

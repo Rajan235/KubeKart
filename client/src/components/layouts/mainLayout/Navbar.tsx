@@ -6,8 +6,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
-import Logo from "./Logo";
+
 import { useAuth } from "@/context/AuthContext";
+import Logo from "./Logo";
 
 type Role = "USER" | "SELLER" | "ADMIN" | null;
 

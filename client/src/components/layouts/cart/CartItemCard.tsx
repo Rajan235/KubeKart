@@ -6,23 +6,17 @@ import { Button } from "@/components/ui/button";
 import { CartItem } from "@/types/cart";
 
 type CartItemCardProps = {
-  // item: {
-  //   productId: string;
-  //   productName: string;
-  //   price: number;
-  //   quantity: number;
-  //   imageUrl?: string;
-  //   sellerId: string;
-  // };
   item: CartItem;
   onQuantityChange: (id: string, newQty: number) => void;
   onRemove: (id: string) => void;
+  onClearCart: () => void;
 };
 
 export default function CartItemCard({
   item,
   onQuantityChange,
   onRemove,
+  onClearCart,
 }: CartItemCardProps) {
   return (
     <li className="flex justify-between items-center border p-4 rounded bg-white shadow-sm">
@@ -56,6 +50,9 @@ export default function CartItemCard({
         />
         <Button variant="destructive" onClick={() => onRemove(item.productId)}>
           Remove
+        </Button>
+        <Button variant="destructive" onClick={() => onClearCart()}>
+          Clear
         </Button>
       </div>
     </li>

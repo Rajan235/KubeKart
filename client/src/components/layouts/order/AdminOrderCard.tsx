@@ -1,10 +1,14 @@
-// "use client";
+"use client";
 
-import { Card, CardContent } from "../ui/card";
-import { Label } from "../ui/label";
-
-import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { OrderStatus, SellerOrder } from "@/types/order";
+import {
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 
 interface AdminOrderCardProps {
   order: SellerOrder;

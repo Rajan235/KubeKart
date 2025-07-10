@@ -10,6 +10,8 @@ router.get(
   requireRole("ADMIN", "SELLER"),
   async (req: Request, res: Response) => {
     const { userId } = req.params;
+    console.log(userId);
+    console.log("hi fromproduct service list seller products  product");
 
     // Only allow the seller to view their own products unless they're admin
     if (req.currentUser!.id !== userId && req.currentUser!.role !== "ADMIN") {
@@ -17,6 +19,7 @@ router.get(
     }
 
     const products = await Product.find({ userId });
+    console.log(products);
 
     res.status(200).send(products);
   }

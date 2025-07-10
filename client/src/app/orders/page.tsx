@@ -1,7 +1,7 @@
 "use client";
 
-import OrderCard from "@/components/layouts/OrderCard";
-import OrderEmptyState from "@/components/layouts/orderEmptyState";
+import OrderCard from "@/components/layouts/order/OrderCard";
+import OrderEmptyState from "@/components/layouts/emptyStates/orderEmptyState";
 import axiosInstance from "@/lib/axios";
 import { useProtectedRoute } from "@/lib/useProtectedRoute";
 import { OrderResponse } from "@/types/order";
@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function OrdersPage() {
+  useProtectedRoute("USER");
   useProtectedRoute(); // must be logged in
 
   const [orders, setOrders] = useState<OrderResponse[]>([]);

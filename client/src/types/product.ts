@@ -19,8 +19,8 @@ export interface Product {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface ProductFormData {
-  id?: string;
+export interface ProductFormData extends Product {
+  id: string;
   name: string;
   category?: string;
   price: number;

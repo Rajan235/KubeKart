@@ -9,9 +9,11 @@ import axiosInstance from "@/lib/axios";
 import { Product } from "@/types/product";
 
 import { AddToCartDto } from "@/types/cart";
-import EmptyState from "@/components/layouts/EmptyState";
+import EmptyState from "@/components/layouts/emptyStates/EmptyState";
 import { motion } from "framer-motion";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
 export default function ProductPage() {
+  useProtectedRoute("USER");
   const params = useParams();
   const id = params?.id;
   const [product, setProduct] = useState<Product | null>(null);

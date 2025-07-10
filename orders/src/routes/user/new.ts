@@ -16,7 +16,36 @@ import { orderCreated } from "../../events/orderCreated.";
 const router = express.Router();
 
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
-
+/**
+ * @swagger
+ * /api/orders:
+ *   post:
+ *     summary: Create a new order
+ *     tags: [User Orders]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: string
+ *               quantity:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Order created successfully
+ *       400:
+ *         description: Invalid input
+ *
+ *   get:
+ *     summary: List current user's orders
+ *     tags: [User Orders]
+ *     responses:
+ *       200:
+ *         description: A list of orders
+ */
 router.post(
   "/api/orders/user",
   requireAuth,

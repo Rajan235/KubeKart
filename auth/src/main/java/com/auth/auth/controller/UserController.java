@@ -31,6 +31,8 @@ import com.auth.auth.service.JwtService;
 import com.auth.auth.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +43,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 
 
-
+@Tag(name = "Auth Controller", description = "Handles authentication and registration")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -75,10 +77,13 @@ public ResponseEntity<UserDto> getCurrentUser() {
         UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
         User user = userPrincipal.getUser();
         if (user != null) {
+
             UserDto userDto = new UserDto();
+            userDto.setUserId(user.getUserId());
             userDto.setUsername(user.getUsername());
             userDto.setEmail(user.getEmail());
             userDto.setRole(user.getRole());
+            
             return ResponseEntity.ok(userDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -92,7 +97,7 @@ public ResponseEntity<UserDto> getCurrentUser() {
 }
    
     
-
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
 public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
     // map to entity

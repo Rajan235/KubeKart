@@ -1,79 +1,26 @@
-// // "use client";
-
-// // import { useEffect, useState } from "react";
-// // import { useAdminRoute } from "@/lib/useAdminRoute";
-// // import axios from "@/lib/axios";
-
-// // export default function AdminProductsPage() {
-// //   useAdminRoute();
-// //   const [products, setProducts] = useState([]);
-
-// //   useEffect(() => {
-// //     axios
-// //       .get("/products/admin") // secured route
-// //       .then((res) => setProducts(res.data));
-// //   }, []);
-
-// //   return (
-// //     <div>
-// //       <h2 className="text-2xl font-semibold mb-4">All Products</h2>
-// //       <ul className="space-y-4">
-// //         {products.map((product) => (
-// //           <li key={product.id} className="p-4 border rounded bg-white">
-// //             <div className="flex justify-between">
-// //               <div>
-// //                 <p className="font-bold">{product.name}</p>
-// //                 <p>₹{product.price}</p>
-// //               </div>
-// //               {/* Add edit/delete buttons if needed */}
-// //             </div>
-// //           </li>
-// //         ))}
-// //       </ul>
-// //     </div>
-// //   );
-// // }
-// // {
-// //   /* <Button
-// //   variant="outline"
-// //   onClick={() => router.push(`/admin/products/${product.id}/edit`)}
-// // >
-// //   Edit
-// // </Button>
-// // <Button
-// //   variant="destructive"
-// //   onClick={() => handleDelete(product.id)}
-// // >
-// //   Delete
-// // </Button> */
-// // }
-// // // const handleDelete = async (id: string) => {
-// // //   if (!confirm("Are you sure you want to delete this product?")) return;
-
-// // //   try {
-// // //     await axios.delete(`/products/${id}`);
-// // //     setProducts((prev) => prev.filter((p) => p.id !== id));
-// // //     toast.success("Product deleted");
-// // //   } catch {
-// // //     toast.error("Failed to delete product");
-// // //   }
-// // // };
 // "use client";
 
 // import { useEffect, useState } from "react";
+
 // import axiosInstance from "@/lib/axios";
+
 // import { toast } from "sonner";
-// import { Button } from "@/components/ui/button";
-// import Image from "next/image";
-// import { AdminProduct } from "@/types/product";
+// import { motion } from "framer-motion";
 
-// export default function AdminProductListPage() {
-//   const [products, setProducts] = useState<AdminProduct[]>([]);
+// import { useAuth } from "@/context/AuthContext";
+
+// import EmptyState from "@/components/layouts/emptyStates/EmptyState";
+
+// export default function SellerProductPage() {
+//   const [products, setProducts] = useState<SellerProduct[]>([]);
 //   const [loading, setLoading] = useState(true);
-
+//   const { user } = useAuth();
+//   //if (user?.role !== "SELLER") return;
 //   const fetchProducts = async () => {
 //     try {
-//       const res = await axiosInstance.get("/product/admin/all");
+//       if (!user?.id || user?.role !== "ADMIN") return;
+//       const sellerId = user?.id;
+//       const res = await axiosInstance.get(`/product/admin/all`);
 //       setProducts(res.data);
 //     } catch {
 //       toast.error("Failed to fetch products");
@@ -81,176 +28,170 @@
 //       setLoading(false);
 //     }
 //   };
+//   useEffect(() => {
+//     fetchProducts();
+//   }, [user]);
 
 //   const deleteProduct = async (id: string) => {
 //     try {
-//       await axiosInstance.delete(`/product/admin/${id}`);
+//       if (user?.role !== "SELLER") return;
+//       await axiosInstance.delete(`/product/seller/${id}`);
 //       toast.success("Product deleted");
-//       setProducts(products.filter((p) => p.id !== id));
+//       fetchProducts(); // refresh
 //     } catch {
 //       toast.error("Failed to delete product");
 //     }
 //   };
-
-//   useEffect(() => {
-//     fetchProducts();
-//   }, []);
+//   if (!user || user.role !== "SELLER") {
+//     return (
+//       <div className="text-center mt-10 text-red-600">Unauthorized Access</div>
+//     );
+//   }
 
 //   if (loading) return <div className="text-center mt-10">Loading...</div>;
-//   if (!products.length)
-//     return <div className="text-center mt-10">No products found</div>;
+//   if (!products.length) return <EmptyState message="No products listed yet." />;
 
 //   return (
-//     <div className="max-w-5xl mx-auto mt-10 px-4">
-//       <h1 className="text-2xl font-bold text-olive mb-6">📦 All Products</h1>
+//     <motion.div
+//       className="max-w-4xl mx-auto mt-12 px-4"
+//       initial={{ opacity: 0, y: 10 }}
+//       animate={{ opacity: 1, y: 0 }}
+//     >
+//       <h1 className="text-3xl font-bold text-olive mb-6">📦 My Products</h1>
 
-//       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+//       <div className="space-y-4">
 //         {products.map((product) => (
-//           <li
+//           <SellerProductCard
 //             key={product.id}
-//             className="flex items-center justify-between bg-white p-4 rounded-xl shadow"
-//           >
-//             <div className="flex items-center gap-4">
-//               <Image
-//                 src={product.imageUrl || "/placeholder.png"}
-//                 alt={product.name}
-//                 width={60}
-//                 height={60}
-//                 className="rounded-lg object-cover"
-//               />
-//               <div>
-//                 <h2 className="text-lg font-semibold text-olive">
-//                   {product.name}
-//                 </h2>
-//                 <p className="text-sm text-olive/70">₹{product.price}</p>
-//                 <p className="text-xs text-gray-500">
-//                   Seller ID: {product.sellerId}
-//                 </p>
-//               </div>
-//             </div>
-//             <Button
-//               variant="destructive"
-//               onClick={() => deleteProduct(product.id)}
-//             >
-//               Delete
-//             </Button>
-//           </li>
+//             product={product}
+//             onDelete={deleteProduct}
+//           />
 //         ))}
-//       </ul>
-//     </div>
+//       </div>
+//     </motion.div>
 //   );
 // }
-// "use client";
-
-// import { useEffect, useState } from "react";
-// import axios from "@/lib/axios";
-// import { useSellerRoute } from "@/lib/useSellerRoute";
-// import Link from "next/link";
-
-// export default function SellerProductsPage() {
-//   useSellerRoute();
-//   const [products, setProducts] = useState([]);
-
-//   useEffect(() => {
-//     axios.get("/products/seller").then((res) => setProducts(res.data));
-//   }, []);
-
-//   return (
-//     <div>
-//       <h2 className="text-2xl font-semibold mb-4">Your Products</h2>
-//       <ul className="space-y-4">
-//         {products.map((p) => (
-//           <li
-//             key={p.id}
-//             className="bg-white p-4 border rounded shadow flex justify-between"
-//           >
-//             <div>
-//               <p className="font-bold">{p.name}</p>
-//               <p>₹{p.price}</p>
-//             </div>
-//             <Link
-//               href={`/seller/products/${p.id}/edit`}
-//               className="text-blue-600 underline"
-//             >
-//               Edit
-//             </Link>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
+// sample products
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
 
+import { useAuth } from "@/context/AuthContext";
 import axiosInstance from "@/lib/axios";
 
-import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { AxiosError } from "axios";
+import { Product } from "@/types/product";
+import { AddToCartDto } from "@/types/cart";
+import EmptyState from "@/components/layouts/emptyStates/EmptyState";
+import ProductCard from "@/components/layouts/product/ProductCard";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
 
-import { SellerProduct } from "@/types/product";
-import { useAuth } from "@/context/AuthContext";
-import SellerProductCard from "@/components/layouts/SellerProductCard";
-import EmptyState from "@/components/layouts/EmptyState";
+export default function ProductsPage() {
+  useProtectedRoute("ADMIN");
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
 
-export default function SellerProductPage() {
-  const [products, setProducts] = useState<SellerProduct[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
-  //if (user?.role !== "SELLER") return;
-  const fetchProducts = async () => {
-    try {
-      if (!user?.id || user?.role !== "SELLER") return;
-      const sellerId = user?.id;
-      const res = await axiosInstance.get(`/product/seller/${sellerId}`);
-      setProducts(res.data);
-    } catch {
-      toast.error("Failed to fetch products");
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchProducts();
-  }, [user]);
+  const { isLoggedIn } = useAuth();
 
-  const deleteProduct = async (id: string) => {
+  useEffect(() => {
+    axiosInstance
+      .get("/product/user")
+      .then((res) => setProducts(res.data))
+      .catch((err) => {
+        console.error(
+          "❌ Failed product list request:",
+          err?.response?.data || err.message
+        );
+        toast.error("Failed to load products");
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const addToCart = async (payload: AddToCartDto) => {
+    if (!isLoggedIn) {
+      toast.error("Please log in to add to cart");
+      return;
+    }
+
+    if (payload.quantity <= 0) {
+      toast.error("Quantity must be greater than 0");
+      return;
+    }
+
     try {
-      if (user?.role !== "SELLER") return;
-      await axiosInstance.delete(`/product/seller/${id}`);
-      toast.success("Product deleted");
-      fetchProducts(); // refresh
-    } catch {
-      toast.error("Failed to delete product");
+      await axiosInstance.post("/cart/add", payload);
+      toast.success("Added to cart!");
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
+      console.log(err);
+      toast.error(err.response?.data?.message || "Error adding to cart");
     }
   };
-  if (!user || user.role !== "SELLER") {
+
+  const handleQuantityChange = (productId: string, qty: number) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: Math.max(1, qty),
+    }));
+  };
+
+  const getQuantity = (productId: string) => quantities[productId] || 1;
+
+  if (loading) {
     return (
-      <div className="text-center mt-10 text-red-600">Unauthorized Access</div>
+      <motion.div
+        className="flex items-center justify-center min-h-[60vh] text-olive"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-olive border-t-transparent"></div>
+          <span className="text-lg font-medium">Loading Products...</span>
+        </div>
+      </motion.div>
+    );
+  }
+  if (!products.length) {
+    return (
+      <div className="flex flex-col py-20">
+        <main className="flex-1 flex items-center justify-center">
+          <EmptyState
+            title="No Products Available"
+            description="Please check back later or contact support."
+          />
+        </main>
+      </div>
     );
   }
 
-  if (loading) return <div className="text-center mt-10">Loading...</div>;
-  if (!products.length) return <EmptyState message="No products listed yet." />;
-
   return (
-    <motion.div
-      className="max-w-4xl mx-auto mt-12 px-4"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      <h1 className="text-3xl font-bold text-olive mb-6">📦 My Products</h1>
-
-      <div className="space-y-4">
-        {products.map((product) => (
-          <SellerProductCard
-            key={product.id}
-            product={product}
-            onDelete={deleteProduct}
-          />
-        ))}
+    <section className="bg-beige py-6 px-6 text-olive">
+      {/* <section className="bg-beige text-olive  flex items-center justify-center px-6 "></section> */}
+      <div className="max-w-4xl mx-auto p-4 bg-beige rounded-lg">
+        <h1 className="text-2xl font-bold mb-4">Products</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              quantity={getQuantity(product.id)}
+              onQuantityChange={(qty) => handleQuantityChange(product.id, qty)}
+              onAddToCart={() =>
+                addToCart({
+                  productId: product.id,
+                  quantity: getQuantity(product.id),
+                  productName: product.name,
+                  productPrice: product.price,
+                  sellerId: product.userId,
+                })
+              }
+            />
+          ))}
+        </div>
       </div>
-    </motion.div>
+    </section>
   );
 }

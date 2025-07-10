@@ -7,8 +7,10 @@ import axiosInstance from "@/lib/axios";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { Order } from "@/types/order";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
 
 export default function OrderDetailPage() {
+  useProtectedRoute("USER");
   const id = useParams();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);

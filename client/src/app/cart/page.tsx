@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 //import { useProtectedRoute } from "@/lib/useProtectedRoute";
 
-import CartItemCard from "@/components/layouts/CartItemCard";
-import CartSummary from "@/components/layouts/CartSummary";
+import CartItemCard from "@/components/layouts/cart/CartItemCard";
+import CartSummary from "@/components/layouts/cart/CartSummary";
 import { useCart } from "@/hooks/useCart";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
@@ -13,12 +13,13 @@ import { useRouter } from "next/navigation";
 import { CreateOrderDto, OrderItemDto, OrderResponse } from "@/types/order";
 import { paymentRequestDto } from "@/types/payment";
 import RequireAuth from "@/components/auth/RequireAuth";
-import CartEmptyState from "@/components/layouts/cartEmptyState";
+import CartEmptyState from "@/components/layouts/emptyStates/cartEmptyState";
 //import { CartItem } from "@/types/cart";
 
 export default function CartPage() {
   //useProtectedRoute(); // must be logged in
-  const { items, total, loading, updateQuantity, removeItem } = useCart();
+  const { items, total, loading, updateQuantity, removeItem, clearCart } =
+    useCart();
 
   const router = useRouter();
   const handleCheckout = async () => {
@@ -32,7 +33,7 @@ export default function CartPage() {
 
       const orderRes = await axiosInstance.post("/order/create", payload);
       const order: OrderResponse = orderRes.data;
-      toast.success("Order placed successfully!");
+
       const totalAmount = order.orderItems.reduce(
         (sum, item) => sum + item.totalPrice,
         0
@@ -59,6 +60,7 @@ export default function CartPage() {
           toast.success("Order placed successfully!");
           router.push("/orders");
         }
+        toast.success("Order placed successfully!");
       } catch (error) {
         console.error("Error in payment request ", error);
       }
@@ -119,6 +121,7 @@ export default function CartPage() {
                 }}
                 onQuantityChange={updateQuantity}
                 onRemove={removeItem}
+                onClearCart={clearCart}
               />
             ))}
           </ul>

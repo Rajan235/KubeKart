@@ -10,7 +10,7 @@ export default async function handler(
     const authHeader = req.headers.authorization || "";
 
     const response = await axios.get(
-      "http://order-service:8080/api/orders/admin",
+      "http://order-service:4000/api/orders/admin",
       {
         headers: {
           Authorization: authHeader,

@@ -1,8 +1,8 @@
 "use client";
 
 import RequireAuth from "@/components/auth/RequireAuth";
+import ProfileDashboard from "@/components/layouts/profile/ProfileDashboard";
 //import ProfileCard from "@/components/layouts/ProfileCard";
-import ProfileDashboard from "@/components/layouts/ProfileDashboard";
 
 export default function ProfilePage() {
   return (

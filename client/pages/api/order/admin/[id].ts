@@ -11,7 +11,7 @@ export default async function handler(
   try {
     if (req.method === "GET") {
       const response = await axios.get(
-        `http://order-service:8080/api/orders/admin/${id}`,
+        `http://order-service:4000/api/orders/admin/${id}`,
         {
           headers: {
             Authorization: authHeader,
@@ -23,7 +23,7 @@ export default async function handler(
 
     if (req.method === "DELETE") {
       const response = await axios.delete(
-        `http://order-service:8080/api/orders/admin/${id}`,
+        `http://order-service:4000/api/orders/admin/${id}`,
         {
           headers: {
             Authorization: authHeader,

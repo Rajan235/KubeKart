@@ -11,7 +11,7 @@ export default async function handler(
 
   try {
     const response = await axios.get(
-      `http://order-service:8080/api/orders/seller/${id}`,
+      `http://order-service:4000/api/orders/seller/${id}`,
       {
         headers: {
           Authorization: authHeader,

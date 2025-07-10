@@ -21,6 +21,7 @@ router.put(
   validateRequest,
   async (req: Request, res: Response) => {
     const product = await Product.findById(req.params.id);
+    console.log(product);
 
     if (!product) {
       throw new NotFoundError();

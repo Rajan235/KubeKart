@@ -6,21 +6,24 @@ import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 
 import { motion } from "framer-motion";
-import { SellerProduct } from "@/types/product";
-import ProductForm from "@/components/ProductForm";
+
+import ProductForm from "@/components/layouts/product/ProductForm";
 import { Button } from "@/components/ui/button";
+import { ProductFormData } from "@/types/product";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
 
 export default function ProductPage() {
+  useProtectedRoute("ADMIN");
   const id = useParams();
   const router = useRouter();
-  const [product, setProduct] = useState<SellerProduct | null>(null);
+  const [product, setProduct] = useState<ProductFormData | null>(null);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axiosInstance.get(`/product/seller/${id}`);
+        const res = await axiosInstance.get(`/product/admin/${id}`);
         const data = res.data;
 
         setProduct(data);
@@ -34,7 +37,7 @@ export default function ProductPage() {
     if (id) fetchProduct();
   }, [id]);
 
-  const handleDelete = async (updatedData: SellerProduct) => {
+  const handleDelete = async (updatedData: ProductFormData) => {
     try {
       if (!updatedData.id) {
         toast.error("Missing product ID");
