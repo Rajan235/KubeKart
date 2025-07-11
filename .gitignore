@@ -41,6 +41,8 @@ Thumbs.db
 *.swo
 
 .gcloudignore
+
+dump/
 # ============================
 # ✅ KUBERNETES
 # ============================
