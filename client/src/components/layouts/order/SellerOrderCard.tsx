@@ -1,10 +1,14 @@
 "use client";
 import { Label } from "@radix-ui/react-label";
 
-import { Card, CardContent } from "../ui/card";
-
-import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { OrderResponse, OrderStatus } from "@/types/order";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 
 interface SellerOrderCardProps {
   order: OrderResponse;

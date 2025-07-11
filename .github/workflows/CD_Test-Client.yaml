@@ -1,0 +1,57 @@
+name: Client Service CI/CD - Test Branch
+
+on:
+  pull_request:
+    branches: [test]
+    paths: ["client/**"]
+
+jobs:
+  build-and-cloudbuild:
+    name: Build & Push with Google Cloud Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: auth
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache-dependency-path: client/package-lock.json
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Build Check
+        run: npm run build
+
+      - name: Set up Google Cloud CLI
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: levomart
+
+      - name: Extract short SHA
+        id: vars
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Submit Cloud Build using external file
+        run: |
+          gcloud builds submit \
+            --config=k8s/prod/client-cloudbuild.yaml \
+            --project=levomart
+
+      # - name: Submit Cloud Build
+      #   run: |
+      #     gcloud builds submit auth \
+      #       --tag=asia-south1-docker.pkg.dev/levomart/levomart-repo/auth:$SHORT_SHA \
+      #       --project=levomart

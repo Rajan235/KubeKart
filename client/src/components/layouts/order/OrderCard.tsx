@@ -138,7 +138,7 @@ export default function OrderCard({ order, onCancel }: Props) {
             className="flex justify-between py-4 items-center"
           >
             <div className="flex items-center gap-3">
-              <img
+              {/* <img
                 src={`/images/products/${item.productId}.jpg`}
                 alt={`Image of ${item.productName}`}
                 loading="lazy"
@@ -147,7 +147,7 @@ export default function OrderCard({ order, onCancel }: Props) {
                   (e.target as HTMLImageElement).src =
                     "/images/placeholder.jpg";
                 }}
-              />
+              /> */}
               <div>
                 <p className="font-medium text-olive">{item.productName}</p>
                 <p className="text-sm text-olive/60">

@@ -1,6 +1,7 @@
 "use client";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
+
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { FaEdit, FaTrash } from "react-icons/fa";
 

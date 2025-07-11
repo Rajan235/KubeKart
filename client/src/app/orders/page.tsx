@@ -29,7 +29,7 @@ export default function OrdersPage() {
       const orderDeleteRes = await axiosInstance.delete(`/order/${orderId}`);
       const deletedOrderRes: OrderResponse = orderDeleteRes.data;
       if (!deletedOrderRes) throw new Error("Failed to cancel order");
-      toast.success("Order cancelled");
+      toast.success("Order cancelled successfully");
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status: "CANCELLED" } : o))
       );

@@ -1,0 +1,214 @@
+# name: Auth Service CD - Production
+
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - "auth/**"
+
+# jobs:
+#   docker-build-push:
+#     name: Build & Push Docker Image to Production
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v4
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
+
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v3
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Extract short SHA
+#         id: vars
+#         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+#       - name: Build & Push Docker Image
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: auth
+#           file: auth/Dockerfile
+#           push: true
+#           tags: |
+#             rajanbansal553/rajan-repo:auth-prod-latest
+#             rajanbansal553/rajan-repo:auth-prod-${{ steps.vars.outputs.sha }}
+
+#   deploy-to-k8s:
+#     name: Deploy to Kubernetes Production
+#     runs-on: ubuntu-latest
+#     needs: docker-build-push
+#     steps:
+#       - name: Set up Kubeconfig
+#         run: |
+#           echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
+
+#       - name: Extract short SHA
+#         id: vars
+#         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+#       - name: Patch Auth Deployment (Production)
+#         run: |
+#           kubectl set image deployment/auth auth-container=rajanbansal553/rajan-repo:auth-prod-${{ steps.vars.outputs.sha }} --namespace=prod
+
+#       - name: Verify Deployment Rollout
+#         run: |
+#           kubectl rollout status deployment/auth --namespace=prod
+
+#       - name: Notify Slack (Deployment Success)
+#         if: success()
+#         uses: slackapi/slack-github-action@v1.24.0
+#         with:
+#           payload: |
+#             {
+#               "text": ":rocket: *Auth Service* successfully deployed to *Production* :white_check_mark:",
+#               "username": "GitHub Actions",
+#               "icon_emoji": ":tada:"
+#             }
+#         env:
+#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+#       - name: Rollback on Failure
+#         if: failure()
+#         run: |
+#           echo "❌ Rollback triggered due to failed rollout"
+#           kubectl rollout undo deployment/auth --namespace=prod
+
+#       - name: Notify Slack (Rollback)
+#         if: failure()
+#         uses: slackapi/slack-github-action@v1.24.0
+#         with:
+#           payload: |
+#             {
+#               "text": ":warning: *Auth Service* deployment failed. Rollback executed. Check cluster state.",
+#               "username": "GitHub Actions",
+#               "icon_emoji": ":rotating_light:"
+#             }
+#         env:
+#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+# - name: Set up GCP Auth
+#   uses: google-github-actions/auth@v1
+#   with:
+#     credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+# - name: Set up kubectl
+#   uses: google-github-actions/setup-gcloud@v1
+#   with:
+#     project_id: ${{ secrets.GCP_PROJECT_ID }}
+#     export_default_credentials: true
+
+# - name: Configure Kubeconfig
+#   run: gcloud container clusters get-credentials levomart-cluster --zone us-central1-a
+
+# - name: Deploy to GKE
+#   run: kubectl apply -f k8s/
+# name: Auth Service CI/CD - Production
+
+# on:
+#   # push:
+#   #   branches:
+#   #     - main
+#   #   paths:
+#   #     - "auth/**"
+
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - "auth/**"
+
+# jobs:
+#   build-and-deploy:
+#     name: Build Auth Image & Deploy to GKE
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Authenticate with GCP
+#         uses: google-github-actions/auth@v2
+#         with:
+#           credentials_json: "${{ secrets.GCP_SA_KEY }}"
+
+#       - name: Set up gcloud CLI
+#         uses: google-github-actions/setup-gcloud@v2
+#         with:
+#           project_id: levomart
+#           export_default_credentials: true
+
+#       - name: Get Commit SHA
+#         id: vars
+#         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+#       - name: Submit Cloud Build
+#         run: |
+#           gcloud builds submit auth \
+#             --tag=asia-south1-docker.pkg.dev/levomart/levomart-repo/auth:$SHORT_SHA \
+#             --project=levomart
+
+#       - name: Connect to GKE Cluster
+#         run: |
+#           gcloud container clusters get-credentials levomart-production-cluster \
+#             --region=asia-south1
+
+#       - name: Patch Auth Deployment Image
+#         run: |
+#           kubectl set image deployment/auth \
+#             auth-container=asia-south1-docker.pkg.dev/levomart/levomart-repo/auth:$SHORT_SHA
+
+#       - name: Verify Rollout
+#         run: |
+#           kubectl rollout status deployment/auth
+
+name: Auth Service CI/CD - Production
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'auth/**'  # Adjust path if needed
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "client/**"
+
+jobs:
+  deploy-to-gke:
+    name: Deploy Client to GKE
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up GCP Auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: levomart
+
+      - name: Configure Kubeconfig
+        run: |
+          gcloud container clusters get-credentials levomart-production-cluster \
+            --zone asia-south1 \
+            --project levomart
+
+      - name: Deploy to GKE
+        run: |
+          kubectl apply -f k8s/prod/client
+
+      - name: Verify Rollout
+        run: |
+          kubectl rollout status deployment/client

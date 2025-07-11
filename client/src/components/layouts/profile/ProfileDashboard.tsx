@@ -3,8 +3,8 @@
 import { useAuth } from "@/context/AuthContext";
 
 import { motion } from "framer-motion";
-import ProfileActions from "./ProfileActions";
 import ProfileInfoCard from "./ProfileInfoCard";
+import ProfileActions from "./ProfileActions";
 
 export default function ProfileDashboard() {
   const { user } = useAuth();

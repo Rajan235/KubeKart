@@ -3,8 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
+
 import { LogOut, Edit, MapPin, PackageCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function ProfileActions() {
   const router = useRouter();

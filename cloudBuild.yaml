@@ -1,0 +1,106 @@
+# steps:
+#   # Step 1: Build the Docker image
+#   - name: "gcr.io/cloud-builders/docker"
+#     args:
+#       [
+#         "build",
+#         "-t",
+#         "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest",
+#         "./auth",
+#       ]
+
+#   # Step 2: Push the image to Artifact Registry
+#   - name: "gcr.io/cloud-builders/docker"
+#     args: ["push", "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest"]
+
+#   # # Optional Step 3: Deploy to GKE
+#   # - name: 'gcr.io/cloud-builders/kubectl'
+#   #   args: ['apply', '-f', 'k8s/auth-deployment.yaml']
+#   #   env:
+#   #     - 'CLOUDSDK_COMPUTE_REGION=asia-south1'
+#   #     - 'CLOUDSDK_CONTAINER_CLUSTER=libomart-production-cluster'
+
+# images:
+#   - "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest"
+steps:
+  # Build & push auth
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest",
+        "./auth",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest"]
+
+  # Build & push payment
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia-south1-docker.pkg.dev/levomart/levomart/payment:latest",
+        "./payment",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["push", "asia-south1-docker.pkg.dev/levomart/levomart/payment:latest"]
+
+  # Build & push payment
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia-south1-docker.pkg.dev/levomart/levomart/cart:latest",
+        "./cart",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia-south1-docker.pkg.dev/levomart/levomart/cart:latest"]
+
+  # Build & push product
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia-south1-docker.pkg.dev/levomart/levomart/product:latest",
+        "./product",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["push", "asia-south1-docker.pkg.dev/levomart/levomart/product:latest"]
+
+  # Build & push client
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia-south1-docker.pkg.dev/levomart/levomart/client:latest",
+        "./client",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia-south1-docker.pkg.dev/levomart/levomart/client:latest"]
+
+  # Build & push order
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia-south1-docker.pkg.dev/levomart/levomart/orders:latest",
+        "./orders",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia-south1-docker.pkg.dev/levomart/levomart/orders:latest"]
+
+images:
+  - "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart/payment:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart/cart:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart/product:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart/client:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart/orders:latest"

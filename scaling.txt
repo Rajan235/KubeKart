@@ -729,9 +729,177 @@ it("creates a product", async () => {
 
 Would you like me to generate a **code snippet gallery for your blog**, with pre-formatted descriptions and code blocks for each of these?
 
+
+Great! Let’s dive deep into how to set up a self-hosted Kubernetes cluster using K3s, make it publicly accessible on the internet, and integrate it with GitHub Actions for CI/CD.
+
+⚙️ Overview: What We're Doing
+You will:
+
+✅ Set up a K3s cluster on a cloud VM (or a home server with a public IP).
+
+🌐 Make the cluster's API and Ingress public to the internet.
+
+🔐 Generate and configure the kubeconfig file.
+
+🤖 Connect GitHub Actions using KUBE_CONFIG_DATA secret.
+
+🚀 Deploy your services automatically via CI/CD.
+
+🧱 Step 1: Provision a Server
+Use any of the following cloud providers:
+
+DigitalOcean / AWS EC2 / Google Cloud / Hetzner
+
+Or any VPS or home server with a public IP
+
+Minimum Recommended Spec:
+
+1 CPU, 2 GB RAM
+
+Ubuntu 20.04+
+
+Ensure ports are open:
+
+6443 → Kubernetes API
+
+80/443 → HTTP/HTTPS (Ingress)
+
+Any other ports you plan to expose
+
+🚀 Step 2: Install K3s on Master Node
+SSH into your VM:
+
+bash
+Copy
+Edit
+curl -sfL https://get.k3s.io | sh -
+This installs:
+
+Kubernetes (via K3s)
+
+Containerd as the container runtime
+
+A kubeconfig file for access
+
+✅ To verify:
+
+bash
+Copy
+Edit
+kubectl get nodes
+📁 Step 3: Get and Configure Kubeconfig
+bash
+Copy
+Edit
+sudo cat /etc/rancher/k3s/k3s.yaml
+This file has the cluster access info.
+
+But it has:
+
+yaml
+Copy
+Edit
+server: https://127.0.0.1:6443
+Change it to:
+
+yaml
+Copy
+Edit
+server: https://<YOUR_PUBLIC_IP>:6443
+Example:
+
+yaml
+Copy
+Edit
+server: https://192.168.1.100:6443
+✅ Test it locally:
+
+bash
+Copy
+Edit
+KUBECONFIG=./k3s.yaml kubectl get pods -A
+If it works, you're good!
+
+🔐 Step 4: Connect to GitHub Actions
+Now base64-encode the kubeconfig for GitHub:
+
+bash
+Copy
+Edit
+cat k3s.yaml | base64 -w 0
+Copy the output and store it in your GitHub repository:
+
+Go to Repo → Settings → Secrets → Actions
+
+Create a secret named: KUBE_CONFIG_DATA
+
+Paste the base64 string as the value
+
+🌐 Step 5: Set up Ingress (Expose Services to Internet)
+K3s includes Traefik by default as an ingress controller.
+
+✅ Example Ingress YAML:
+
+yaml
+Copy
+Edit
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: product-ingress
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+    - host: myapp.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: product-service
+                port:
+                  number: 80
+🎯 Point myapp.example.com to your VM's public IP via DNS.
+
+If you're not using a domain, access via the public IP and set host: <PUBLIC_IP>.
+
+🤖 Step 6: CI/CD from GitHub
+Here’s a GitHub Actions deploy step:
+
+yaml
+Copy
+Edit
+- name: Set up kubeconfig
+  run: |
+    echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
+
+- name: Deploy to K8s
+  run: |
+    kubectl apply -f k8s/product-deployment.yaml
+    kubectl rollout status deployment/product
+✅ This gives you full automation from PR merge to deployment on your K3s cluster.
+
+🔁 Optional Enhancements
+✅ Custom Domain + HTTPS
+Use cert-manager and Let's Encrypt:
+
+bash
+Copy
+Edit
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+Then define ClusterIssuer and TLS ingress.
+
+✅ Summary
+Step	Goal
+🧱 VM Setup	Provision public server with Linux
+🚀 K3s	Install K3s in 1 command
+📁 Kubeconfig	Edit and export access file
+🔐 GitHub	Save kubeconfig as secret
+🌐 Ingress	Public
+
 things to do 
 1 implement producvt update event 
 
-2 handel payment 
-3 make client code error free and correct pages request 
- 
+ gcloud builds submit --config cloudbuild.yaml .

@@ -1,11 +1,6 @@
 name: CI for Order Service
 
 on:
-  #   push:
-  #     branches:
-  #       - dev
-  #     paths:
-  #       - "order/**"
   pull_request:
     branches:
       - dev

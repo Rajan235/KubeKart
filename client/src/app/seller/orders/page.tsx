@@ -52,8 +52,10 @@ export default function SellerOrdersPage() {
 
   const fetchOrders = async () => {
     try {
+      console.log("fetching selelr orders");
       const res = await axiosInstance.get("/order/seller");
-      setOrders(res.data.orders);
+      console.log(res.data.orders);
+      setOrders(res.data);
       // setOrders([dummyOrder]);
     } catch {
       toast.error("Failed to load orders");
@@ -64,7 +66,7 @@ export default function SellerOrdersPage() {
 
   const handleStatusChange = async (itemId: string, newStatus: string) => {
     try {
-      await axiosInstance.post("/order/seller/update", {
+      await axiosInstance.patch("/order/seller/update", {
         id: itemId,
         status: newStatus,
       });

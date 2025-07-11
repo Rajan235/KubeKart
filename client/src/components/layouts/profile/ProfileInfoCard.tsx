@@ -5,7 +5,7 @@ import Role from "@/types/role";
 
 interface Props {
   user: {
-    id: string;
+    userId: string;
     name: string;
     email: string;
     role?: Role;

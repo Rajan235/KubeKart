@@ -113,13 +113,13 @@ export default function ProductForm({
           value={form.imageUrl || ""}
           onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
         />
-        {form.imageUrl && (
+        {/* {form.imageUrl && (
           <img
             src={form.imageUrl}
             alt="Preview"
             className="mt-2 w-48 h-auto rounded border border-gray-300"
           />
-        )}
+        )} */}
       </div>
 
       {/* Submit Button */}

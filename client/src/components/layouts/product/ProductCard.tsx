@@ -1,8 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Product } from "@/types/product";
 
-import { Button } from "../ui/button";
 import Link from "next/link";
 
 interface ProductCardProps {

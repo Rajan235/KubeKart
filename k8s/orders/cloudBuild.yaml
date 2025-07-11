@@ -1,0 +1,15 @@
+steps:
+  # Build & push order
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "asia-south1-docker.pkg.dev/levomart/levomart/orders:latest",
+        "./orders",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia-south1-docker.pkg.dev/levomart/levomart/orders:latest"]
+
+images:
+  - "asia-south1-docker.pkg.dev/levomart/levomart/orders:latest"
