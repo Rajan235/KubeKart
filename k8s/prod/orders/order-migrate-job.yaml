@@ -7,7 +7,14 @@ spec:
     spec:
       containers:
         - name: migrate
-          image: order:latest
+          image: asia-south1-docker.pkg.dev/levomart/levomart-repo/orders:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
           command: ["npx", "prisma", "migrate", "deploy"]
           envFrom:
             - configMapRef:

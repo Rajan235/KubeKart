@@ -14,7 +14,15 @@ spec:
     spec:
       containers:
         - name: order-container
-          image: asia-south1-docker.pkg.dev/levomart/levomart-repo/order:latest
+          image: asia-south1-docker.pkg.dev/levomart/levomart-repo/orders:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
+
           ports:
             - containerPort: 4000
           env:
@@ -101,14 +109,6 @@ spec:
                 secretKeyRef:
                   name: order-secret
                   key: JWT_KEY
-          volumeMounts:
-            - name: shared-schemas-volume
-              mountPath: /app/shared-schemas
-      volumes:
-        - name: shared-schemas-volume
-          hostPath:
-            path: /run/desktop/mnt/host/d/projects/op_project_1/shared-schemas
-            type: Directory
 
 ---
 apiVersion: v1

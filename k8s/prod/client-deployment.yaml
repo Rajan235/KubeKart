@@ -15,6 +15,13 @@ spec:
       containers:
         - name: client
           image: asia-south1-docker.pkg.dev/levomart/levomart-repo/client:latest
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
           ports:
             - containerPort: 3000
 

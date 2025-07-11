@@ -7,7 +7,8 @@ FROM openjdk:21-slim
 WORKDIR /app-cart-service
 # - Copies the built JAR file (cart-0.0.1-SNAPSHOT.jar) from the target directory on the host to the container, renaming it to cart-service.jar.
 COPY target/cart-0.0.1-SNAPSHOT.jar cart-service.jar
-
+# Copy shared-schemas directory into the image
+COPY shared-schemas/ /app/shared-schemas/
 # Specifies the command to run the application using Java and the provided JAR file when the container starts.
 ENTRYPOINT [ "java","-jar", "cart-service.jar" ]
 

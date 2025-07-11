@@ -7,7 +7,7 @@ FROM openjdk:21-slim
 WORKDIR /app-payment-service
 # - Copies the built JAR file (payment-0.0.1-SNAPSHOT.jar) from the target directory on the host to the container, renaming it to payment-service.jar.
 COPY target/payment-0.0.1-SNAPSHOT.jar payment-service.jar
-
+COPY shared-schemas/ /app/shared-schemas/
 # Specifies the command to run the application using Java and the provided JAR file when the container starts.
 ENTRYPOINT [ "java","-jar", "payment-service.jar" ]
 

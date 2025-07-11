@@ -15,6 +15,13 @@ spec:
       containers:
         - name: product-container
           image: asia-south1-docker.pkg.dev/levomart/levomart-repo/product:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
           ports:
             - containerPort: 4000
           env:
@@ -69,14 +76,6 @@ spec:
                   name: product-config
                   key: KAFKA_TOPIC_ORDER_UPDATED_SCHEMA_PATH
 
-          volumeMounts:
-            - name: shared-schemas-volume
-              mountPath: /app/shared-schemas
-      volumes:
-        - name: shared-schemas-volume
-          hostPath:
-            path: /run/desktop/mnt/host/d/projects/op_project_1/shared-schemas
-            type: Directory
 ---
 apiVersion: v1
 kind: Service

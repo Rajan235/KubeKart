@@ -8,6 +8,14 @@ spec:
       containers:
         - name: kafka-topic-init
           image: bitnami/kafka:latest
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
+
           command:
             - /bin/bash
             - -c

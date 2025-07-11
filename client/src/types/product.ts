@@ -19,13 +19,16 @@ export interface Product {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface ProductFormData extends Product {
-  id: string;
-  name: string;
-  category?: string;
-  price: number;
-  stock?: number;
-  description?: string;
-  imageUrl?: string;
-  userId: string;
-}
+// export interface ProductFormData extends Product {
+//   id: string;
+//   name: string;
+//   category?: string;
+//   price: number;
+//   stock?: number;
+//   description?: string;
+//   imageUrl?: string;
+//   userId: string;
+// }
+export type ProductFormData = Partial<
+  Omit<Product, "createdAt" | "updatedAt" | "version">
+>;

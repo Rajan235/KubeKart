@@ -28,7 +28,7 @@ export default function ProductForm({
   }, [initialData]);
 
   const handleSubmit = () => {
-    if (!form.name || form.price <= 0) {
+    if (!form.name) {
       toast.error("Please fill all fields correctly");
       return;
     }

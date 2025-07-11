@@ -8,6 +8,9 @@ WORKDIR /app-auth-service
 # - Copies the built JAR file (auth-0.0.1-SNAPSHOT.jar) from the target directory on the host to the container, renaming it to auth-service.jar.
 COPY target/auth-0.0.1-SNAPSHOT.jar auth-service.jar
 
+# Copy shared-schemas directory into the image
+COPY shared-schemas/ /app/shared-schemas/
+
 # Specifies the command to run the application using Java and the provided JAR file when the container starts.
 ENTRYPOINT [ "java","-jar", "auth-service.jar" ]
 

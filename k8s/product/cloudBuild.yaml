@@ -5,11 +5,14 @@ steps:
       [
         "build",
         "-t",
-        "asia-south1-docker.pkg.dev/levomart/levomart/product:latest",
+        "asia-south1-docker.pkg.dev/levomart/levomart-repo/product:latest",
         "./product",
       ]
   - name: "gcr.io/cloud-builders/docker"
     args:
-      ["push", "asia-south1-docker.pkg.dev/levomart/levomart/product:latest"]
+      [
+        "push",
+        "asia-south1-docker.pkg.dev/levomart/levomart-repo/product:latest",
+      ]
 
-  - "asia-south1-docker.pkg.dev/levomart/levomart/product:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart-repo/product:latest"

@@ -5,11 +5,12 @@ steps:
       [
         "build",
         "-t",
-        "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest",
+        "asia-south1-docker.pkg.dev/levomart/levomart-repo/auth:latest",
         "./auth",
       ]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest"]
+    args:
+      ["push", "asia-south1-docker.pkg.dev/levomart/levomart-repo/auth:latest"]
 
 images:
-  - "asia-south1-docker.pkg.dev/levomart/levomart/auth:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart-repo/auth:latest"

@@ -15,6 +15,13 @@ spec:
       containers:
         - name: cart-redis
           image: redis
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"
 ---
 apiVersion: v1
 kind: Service
