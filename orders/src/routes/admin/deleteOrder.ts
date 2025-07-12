@@ -33,7 +33,7 @@ router.delete(
       data: { status: OrderStatus.CANCELLED },
     });
     if (!cancelledOrder) throw new NotFoundError();
-    // console.log("Order cancelled:", cancelledOrder);
+    // console.log("Order cancelled!!:", cancelledOrder);
     await orderUpdated(cancelledOrder as OrderResponse);
 
     res.status(200).send({ message: "Order cancelled", order: cancelledOrder });
