@@ -1,6 +1,9 @@
 name: Auth Service CI/CD - Test Branch
 
 on:
+  push:
+    branches: [test]
+    paths: ["auth/**"]
   pull_request:
     branches: [test]
     paths: ["auth/**"]
