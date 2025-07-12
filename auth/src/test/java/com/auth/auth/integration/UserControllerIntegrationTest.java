@@ -35,7 +35,7 @@ public class UserControllerIntegrationTest {
         request.setEmail("mockuser@example.com");
         request.setRole(Role.USER);
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -47,7 +47,7 @@ public class UserControllerIntegrationTest {
     void testRegisterEndpoint_missingFields() throws Exception {
         //RegisterRequest request = new RegisterRequest(); // empty fields
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/auth/register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(new RegisterRequest())))
         .andExpect(status().isBadRequest())

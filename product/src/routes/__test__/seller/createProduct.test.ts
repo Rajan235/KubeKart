@@ -10,6 +10,10 @@
 import request from "supertest";
 import { app } from "../../../app";
 
+jest.mock("../../../events/productCreated", () => ({
+  productCreated: jest.fn(), // will replace the actual Kafka-related function
+}));
+
 it("creates a product and returns 201", async () => {
   const token = global.signin("SELLER");
 

@@ -9,6 +9,8 @@ declare global {
 }
 
 //jest.mock('../nats-wrapper');
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.test" });
 
 let mongo: any;
 beforeAll(async () => {

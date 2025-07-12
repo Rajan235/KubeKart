@@ -57,15 +57,9 @@ export default function Navbar() {
       </div>
     );
   }
-  console.log("🧠 Navbar Auth Values:", {
-    isLoggedIn,
-    user,
-    role: user?.role,
-    isLoading,
-  });
 
   const role = user?.role?.toUpperCase() as Role;
-  console.log("✅ Final Role in Navbar:", role);
+  //const role = "USER"; // Default to USER for now, can be set based on user role
 
   const links = role ? roleLinks[role] : [];
 

@@ -290,13 +290,13 @@ LevoMart is a scalable, cloud-native e-commerce platform built with real-world e
 
 ## 🏡 UI Screenshots
 
-| Product Page                                                                | Cart Page                                                                   |
-| --------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| ![K8s_diagram](./docs/images/architectural_diagrams/Kafka_Architecture.png) | ![K8s_diagram](./docs/images/architectural_diagrams/Kafka_Architecture.png) |
+| Product Page                                               | Cart Page                                           |
+| ---------------------------------------------------------- | --------------------------------------------------- |
+| ![Product Page](./docs/images/ui-screenshots/products.png) | ![cart Page](./docs/images/ui-screenshots/cart.png) |
 
-| Orders                                                                      | Payments                                                                    | Auth                                                                        |
-| --------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| ![K8s_diagram](./docs/images/architectural_diagrams/Kafka_Architecture.png) | ![K8s_diagram](./docs/images/architectural_diagrams/Kafka_Architecture.png) | ![K8s_diagram](./docs/images/architectural_diagrams/Kafka_Architecture.png) |
+| Orders                                             | Seller Dash Board                                                     | Add product                                                 |
+| -------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------- |
+| ![orders](./docs/images/ui-screenshots/orders.png) | ![sellerdashboard](./docs/images/ui-screenshots/seller-dashboard.png) | ![addproduct](./docs/images/ui-screenshots/add-product.png) |
 
 ---
 

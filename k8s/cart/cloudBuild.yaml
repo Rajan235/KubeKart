@@ -13,4 +13,4 @@ steps:
       ["push", "asia-south1-docker.pkg.dev/levomart/levomart-repo/cart:latest"]
 
 images:
-  - "asia-south1-docker.pkg.dev/levomart/levomart-repo/payment:latest"
+  - "asia-south1-docker.pkg.dev/levomart/levomart-repo/cart:latest"

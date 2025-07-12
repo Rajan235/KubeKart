@@ -8,10 +8,84 @@ import { OrderResponse } from "@/types/order";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
+// const SAMPLE_ORDERS: OrderResponse[] = [
+//   {
+//     id: "order1",
+//     userId: "user1",
+//     status: "DELIVERED",
+//     expiresAt: null,
+//     createdAt: new Date("2025-07-10T10:00:00Z"),
+//     updatedAt: new Date("2025-07-10T12:00:00Z"),
+//     version: 1,
+//     orderItems: [
+//       {
+//         id: "item1",
+//         productId: "1",
+//         productName: "HandBag",
+//         productPrice: 999,
+//         quantity: 2,
+//         totalPrice: 1998,
+//         createdAt: new Date("2025-07-10T10:00:00Z"),
+//         updatedAt: new Date("2025-07-10T12:00:00Z"),
+//         version: 1,
+//         orderId: "order1",
+//         sellerId: "seller1",
+//         // You can add extra fields for UI
+//       },
+//     ],
+//   },
+//   {
+//     id: "order2",
+//     userId: "user1",
+//     status: "PROCESSING",
+//     expiresAt: null,
+//     createdAt: new Date("2025-07-11T14:30:00Z"),
+//     updatedAt: new Date("2025-07-11T15:00:00Z"),
+//     version: 1,
+//     orderItems: [
+//       {
+//         id: "item2",
+//         productId: "2",
+//         productName: "Mens sneakers",
+//         productPrice: 799,
+//         quantity: 1,
+//         totalPrice: 799,
+//         createdAt: new Date("2025-07-11T14:30:00Z"),
+//         updatedAt: new Date("2025-07-11T15:00:00Z"),
+//         version: 1,
+//         orderId: "order2",
+//         sellerId: "seller2",
+//       },
+//     ],
+//   },
+//   {
+//     id: "order3",
+//     userId: "user1",
+//     status: "CANCELLED",
+//     expiresAt: null,
+//     createdAt: new Date("2025-07-09T09:15:00Z"),
+//     updatedAt: new Date("2025-07-09T10:00:00Z"),
+//     version: 1,
+//     orderItems: [
+//       {
+//         id: "item3",
+//         productId: "3",
+//         productName: "Headphones",
+//         productPrice: 1299,
+//         quantity: 1,
+//         totalPrice: 1299,
+//         createdAt: new Date("2025-07-09T09:15:00Z"),
+//         updatedAt: new Date("2025-07-09T10:00:00Z"),
+//         version: 1,
+//         orderId: "order3",
+//         sellerId: "seller3",
+//       },
+//     ],
+//   },
+// ];
 export default function OrdersPage() {
   useProtectedRoute("USER");
-  useProtectedRoute(); // must be logged in
+  // must be logged in
 
   const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,6 +96,8 @@ export default function OrdersPage() {
       .then((res) => setOrders(res.data))
       .catch(() => toast.error("Failed to fetch orders"))
       .finally(() => setLoading(false));
+    //setOrders(SAMPLE_ORDERS);
+    setLoading(false);
   }, []);
 
   const cancelOrder = async (orderId: string) => {

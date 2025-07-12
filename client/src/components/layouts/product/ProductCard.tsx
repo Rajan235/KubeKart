@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Product } from "@/types/product";
+import { Product, ProductFormData } from "@/types/product";
 
 import Link from "next/link";
 
 interface ProductCardProps {
-  product: Product;
+  product: Product | ProductFormData;
   quantity: number;
   onQuantityChange: (qty: number) => void;
   onAddToCart: () => void;
@@ -22,20 +22,17 @@ export default function ProductCard({
     <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-6 flex flex-col">
       {/* Link wraps only non-interactive content */}
       <Link href={`/product/${product.id}`} className="cursor-pointer group">
-        <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
-          <span className="text-5xl">📦</span>
-        </div>
-        {/* {product.imageUrl ? (
-        <img
-          src={product.imageUrl}
-          alt={product.name}
-          className="w-full h-48 object-cover rounded mb-4"
-        />
-      ) : (
-        <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
-          <span className="text-5xl">📦</span>
-        </div>
-      )} */}
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-48 object-cover rounded mb-4"
+          />
+        ) : (
+          <div className="bg-[#f0f0f0] h-48 mb-4 rounded-lg flex items-center justify-center">
+            <span className="text-5xl">📦</span>
+          </div>
+        )}
 
         <h2 className="text-xl font-semibold text-olive mb-2">
           {product.name}
