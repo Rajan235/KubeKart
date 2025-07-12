@@ -9,6 +9,18 @@ jobs:
   build-and-cloudbuild:
     name: Build & Push with Google Cloud Build
     runs-on: ubuntu-latest
+    env:
+      JWT_KEY: "TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg="
+      KAFKA_CLIENT_ID: "product-service"
+      KAFKA_BROKERS_ADDRESS: "localhost:9092"
+      KAFKA_TOPIC_PRODUCT_CREATED_SCHEMA_PATH: "../../../shared-schemas/product/product-created.schema.json"
+      KAFKA_TOPIC_PRODUCT_UPDATED_SCHEMA_PATH: "../../../shared-schemas/product/product-updated.schema.json"
+      KAFKA_TOPIC_ORDER_CREATED_SCHEMA_PATH: "../../../shared-schemas/order/order-created.schema.json"
+      KAFKA_TOPIC_ORDER_UPDATED_SCHEMA_PATH: "../../../shared-schemas/order/order-updated.schema.json"
+      PORT: 4000
+      NODE_ENV: "test"
+      KAFKAJS_NO_PARTITIONER_WARNING: 1
+
     defaults:
       run:
         working-directory: product

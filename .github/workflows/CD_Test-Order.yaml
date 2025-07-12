@@ -9,6 +9,16 @@ jobs:
   build-and-cloudbuild:
     name: Build & Push with Google Cloud Build
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://postgres:5533@localhost:5432/orders_test"
+      PORT: 4000
+      TEST_EMAIL: "Wd7w9@example.com"
+      JWT_KEY: "TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg="
+      NODE_ENV: "test"
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+      KAFKAJS_NO_PARTITIONER_WARNING: 1
+      DATABASE_URL_TEST: "file:./test.db"
+
     defaults:
       run:
         working-directory: orders

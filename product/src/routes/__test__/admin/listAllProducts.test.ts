@@ -22,7 +22,7 @@ it("returns 200 and all products for admin", async () => {
   ]);
 
   const res = await request(app)
-    .get("/api/admin/products")
+    .get("/api/products/admin")
     .set("Authorization", global.signin("ADMIN"))
     .expect(200);
 
@@ -32,14 +32,14 @@ it("returns 200 and all products for admin", async () => {
 });
 
 it("returns 401 if user is not authenticated", async () => {
-  await request(app).get("/api/admin/products").expect(401);
+  await request(app).get("/api/products/admin").expect(401);
 });
 // currently sending 401 not authorized
 it("returns 403 if user is not an admin", async () => {
   await request(app)
-    .get("/api/admin/products")
+    .get("/api/products/admin")
     .set("Authorization", global.signin("USER"))
-    .expect(401);
+    .expect(403);
 });
 // const products = await Product.find({ isBlocked: false }); // or `active: true`
 // it("filters out blocked/inactive products if implemented", async () => {
@@ -59,7 +59,7 @@ it("returns 403 if user is not an admin", async () => {
 //   ]);
 
 //   const res = await request(app)
-//     .get("/api/admin/products")
+//     .get("/api/products/admin")
 //     .set("Authorization", global.signin("ADMIN"))
 //     .expect(200);
 

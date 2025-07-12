@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/api/products", async (req: Request, res: Response) => {
   try {
     const products = await Product.find({});
-    console.log(`Fetched ${products.length} products`);
+    //console.log(`Fetched ${products.length} products`);
     res.send(products);
   } catch (error) {
     console.error("Error fetching products:", error);

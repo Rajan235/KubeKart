@@ -15,7 +15,7 @@ it("fetches the order", async () => {
       id: randomUUID(),
       name: "Test Product",
       price: 100,
-      sellerId: randomUUID(),
+      userId: randomUUID(),
     },
   });
 
@@ -31,14 +31,14 @@ it("fetches the order", async () => {
 
   // make a request to build an order with this ticket
   const { body: order } = await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", user)
     .send(items)
     .expect(201);
 
   // make request to fetch the order
   const { body: fetchedOrder } = await request(app)
-    .get(`/api/user/orders/${order.id}`)
+    .get(`/api/orders/user/${order.id}`)
     .set("Authorization", user)
     .send()
     .expect(200);
@@ -48,13 +48,13 @@ it("fetches the order", async () => {
 
 it("401 unauthenticated", async () => {
   const fakeOrderId = randomUUID();
-  await request(app).get(`/api/user/orders/${fakeOrderId}`).send().expect(401);
+  await request(app).get(`/api/orders/user/${fakeOrderId}`).send().expect(401);
 });
 
 it("404 if order doesnt exist", async () => {
   const fakeOrderId = randomUUID();
   await request(app)
-    .get(`/api/user/orders/${fakeOrderId}`)
+    .get(`/api/orders/user/${fakeOrderId}`)
     .set("Authorization", global.signin("USER"))
     .send()
     .expect(404);
@@ -71,7 +71,7 @@ it("returns an error if one user tries to fetch another users order", async () =
       id: randomUUID(),
       name: "Test Product",
       price: 100,
-      sellerId: randomUUID(),
+      userId: randomUUID(),
     },
   });
 
@@ -86,14 +86,14 @@ it("returns an error if one user tries to fetch another users order", async () =
 
   // make a request to build an order with this ticket
   const { body: order } = await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", userOneToken)
     .send(items)
     .expect(201);
 
   // make request to fetch the order
   await request(app)
-    .get(`/api/user/orders/${order.id}`)
+    .get(`/api/orders/user/${order.id}`)
     .set("Authorization", userTwoToken)
     .send()
     .expect(401);

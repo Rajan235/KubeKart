@@ -7,6 +7,7 @@ import { NotFoundError } from "../../utils/errors/not-found-error";
 import { Product } from "../../models/product";
 import { updateProductValidator } from "../../validators/updateProduct.validator";
 import { productUpdated } from "../../events/productUpdated";
+import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-error";
 
 //import { productUpdatedPublisher } from "../events/publishers/product-updated-publisher";
 //import { natsWrapper } from "../nats-wrapper";
@@ -21,7 +22,7 @@ router.put(
   validateRequest,
   async (req: Request, res: Response) => {
     const product = await Product.findById(req.params.id);
-    console.log(product);
+    //console.log(product);
 
     if (!product) {
       throw new NotFoundError();
@@ -31,7 +32,7 @@ router.put(
       product.userId !== req.currentUser!.id &&
       req.currentUser!.role !== "ADMIN"
     ) {
-      throw new NotAuthorizedError();
+      throw new ForbiddenRequestError();
     }
 
     const updatableFields = [
@@ -51,6 +52,7 @@ router.put(
     await product.save();
 
     await productUpdated(product);
+    console.log("Product updated successfully and event published");
 
     res.send(product);
   }

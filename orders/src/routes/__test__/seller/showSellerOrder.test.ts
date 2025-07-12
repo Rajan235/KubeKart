@@ -7,13 +7,13 @@ import request from "supertest";
 import { app } from "../../../app";
 import { prisma } from "../../../utils/prisma/prisma";
 import { randomUUID } from "crypto";
-const buildOrderForSeller = async (sellerId: string) => {
+const buildOrderForSeller = async (userId: string) => {
   const product = await prisma.product.create({
     data: {
       id: randomUUID(),
       name: "Test Product",
       price: 100,
-      sellerId,
+      userId,
       version: 0,
     },
   });
@@ -21,7 +21,7 @@ const buildOrderForSeller = async (sellerId: string) => {
   const userToken = global.signin("USER");
 
   const { body: order } = await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", userToken)
     .send({
       items: [
@@ -39,14 +39,14 @@ const buildOrderForSeller = async (sellerId: string) => {
 it("200 if order has item belonging to authenticated seller", async () => {
   const sellerToken = global.signin("SELLER");
 
-  const sellerId = JSON.parse(
+  const userId = JSON.parse(
     Buffer.from(sellerToken.split(" ")[1].split(".")[1], "base64").toString()
   ).id;
 
-  const order = await buildOrderForSeller(sellerId);
+  const order = await buildOrderForSeller(userId);
 
   const res = await request(app)
-    .get(`/api/seller/orders/${order.id}`)
+    .get(`/api/orders/seller/${order.id}`)
     .set("Authorization", sellerToken)
     .expect(200);
 
@@ -56,7 +56,7 @@ it("200 if order has item belonging to authenticated seller", async () => {
 it("401 if unauthenticated", async () => {
   const order = await buildOrderForSeller("some_seller");
 
-  await request(app).get(`/api/seller/orders/${order.id}`).expect(401);
+  await request(app).get(`/api/orders/seller/${order.id}`).expect(401);
 });
 
 it("403 if product not owned by seller", async () => {
@@ -65,7 +65,7 @@ it("403 if product not owned by seller", async () => {
   const otherSeller = global.signin("SELLER");
 
   await request(app)
-    .get(`/api/seller/orders/${order.id}`)
+    .get(`/api/orders/seller/${order.id}`)
     .set("Authorization", otherSeller)
     .expect(403);
 });
@@ -74,7 +74,7 @@ it("404 if order not found", async () => {
   const seller = global.signin("SELLER");
 
   await request(app)
-    .get("/api/seller/orders/non-existing-id")
+    .get("/api/orders/seller/non-existing-id")
     .set("Authorization", seller)
     .expect(404);
 });
@@ -83,7 +83,7 @@ it("404 if order not found", async () => {
 //   const seller = global.signin("SELLER");
 
 //   await request(app)
-//     .get("/api/seller/orders/invalid-uuid!!")
+//     .get("/api/orders/seller/invalid-uuid!!")
 //     .set("Authorization", seller)
 //     .expect(400);
 // });

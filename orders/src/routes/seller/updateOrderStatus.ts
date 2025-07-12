@@ -3,7 +3,7 @@ import { requireAuth, requireRole } from "../../middlewares/require-auth";
 import { body } from "express-validator";
 import { prisma } from "../../utils/prisma/prisma";
 import { NotAuthorizedError } from "../../utils/errors/not-authorized-error";
-import { OrderStatus } from "@prisma/client";
+//import { OrderStatus } from "../../../prisma/generated/prod-client";
 import { NotFoundError } from "../../utils/errors/not-found-error";
 import { updateOrderStatusValidator } from "../../validators/update-order-status.validator";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
@@ -11,6 +11,7 @@ import { updateWithVersion } from "../../utils/prisma/updateWithVersion";
 import { validateRequest } from "../../middlewares/validate-request";
 import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-error";
 import { orderUpdated } from "../../events/orderUpdated";
+import { OrderStatus } from "@prisma/client";
 const router = express.Router();
 
 router.patch(

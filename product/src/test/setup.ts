@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../app";
 import jwt from "jsonwebtoken";
-
+import { randomUUID } from "crypto";
 declare global {
   var signin: (role?: string) => string;
 }
@@ -14,7 +14,7 @@ dotenv.config({ path: ".env.test" });
 
 let mongo: any;
 beforeAll(async () => {
-  process.env.JWT_KEY = "NewSecretKeyForJWTSigningPurposes12345678";
+  //process.env.JWT_KEY = "NewSecretKeyForJWTSigningPurposes12345678";
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
   mongo = await MongoMemoryServer.create();
@@ -44,13 +44,13 @@ afterAll(async () => {
 global.signin = (role = "ADMIN") => {
   // Build a JWT payload.  { id, email }
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: randomUUID(),
     email: "test@test.com",
     role, // or 'seller' based on your needs
   };
 
   // Create the JWT!
-  const token = jwt.sign(payload, process.env.JWT_KEY!);
+  const token = jwt.sign(payload, "NewSecretKeyForJWTSigningPurposes12345678");
   return `Bearer ${token}`;
 
   // // Build session Object. { jwt: MY_JWT }

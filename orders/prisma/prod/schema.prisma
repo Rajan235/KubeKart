@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  // output   = "../generated/prod-client"
   
 }
 
@@ -13,7 +14,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL_TEST") // Use a different database for testing
+// }
 enum OrderStatus {
   CREATED
   PENDING

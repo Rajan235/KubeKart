@@ -8,6 +8,9 @@
 // * ✅ Should ensure no active orders before deletion (optional)
 import request from "supertest";
 import { app } from "../../../app";
+jest.mock("../../../events/productCreated", () => ({
+  productCreated: jest.fn(), // will replace the actual Kafka-related function
+}));
 it("returns 204 and deletes product if seller owns it", async () => {
   const token = global.signin("SELLER");
 
@@ -39,7 +42,7 @@ it("returns 403 if user is not a seller or admin", async () => {
   await request(app)
     .delete("/api/products/someId")
     .set("Authorization", token)
-    .expect(401);
+    .expect(403);
 });
 //currently sending 401
 it("returns 403 if seller tries to delete another seller's product", async () => {
@@ -59,7 +62,7 @@ it("returns 403 if seller tries to delete another seller's product", async () =>
   await request(app)
     .delete(`/api/products/${res.body.id}`)
     .set("Authorization", seller2)
-    .expect(401);
+    .expect(403);
 });
 it("allows admin to delete any product", async () => {
   const seller = global.signin("SELLER");

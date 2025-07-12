@@ -3,6 +3,7 @@ import { requireAuth, requireRole } from "../../middlewares/require-auth";
 import { NotFoundError } from "../../utils/errors/not-found-error";
 import { NotAuthorizedError } from "../../utils/errors/not-authorized-error";
 import { Product } from "../../models/product";
+import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-error";
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.delete(
       product.userId !== req.currentUser!.id &&
       req.currentUser!.role !== "ADMIN"
     ) {
-      throw new NotAuthorizedError();
+      throw new ForbiddenRequestError();
     }
 
     await product.deleteOne();

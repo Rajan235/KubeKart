@@ -56,7 +56,7 @@ it("returns 403 if user is not a seller or admin", async () => {
       price: 200,
       stock: 5,
     })
-    .expect(401);
+    .expect(403);
 });
 
 it("returns 400 if name is missing", async () => {
@@ -109,6 +109,7 @@ it("returns 400 if price or stock is negative", async () => {
 });
 it("returns 400 if product name already exists", async () => {
   const token = global.signin("SELLER");
+  console.log(token);
 
   await request(app)
     .post("/api/products")

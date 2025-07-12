@@ -1,4 +1,4 @@
-// #### ✅ `DELETE /api/admin/orders/:id`
+// #### ✅ `DELETE /api/orders/admin/:id`
 
 // * [x] 200 on success
 // * [x] 401 unauthenticated
@@ -8,38 +8,72 @@ import request from "supertest";
 import { app } from "../../../app";
 import { prisma } from "../../../utils/prisma/prisma";
 import { OrderStatus } from "@prisma/client";
+import { randomUUID } from "crypto";
+jest.mock("../../../events/orderUpdated", () => ({
+  orderUpdated: jest.fn(), // will replace the actual Kafka-related function
+}));
 
 // Helper function to create an order
+// const createOrder = async () => {
+//   const product = await prisma.product.create({
+//     data: {
+//       id: "prod_123",
+//       name: "Test Product",
+//       price: 100,
+//       userId: "seller_123",
+//       version: 0,
+//     },
+//   });
+
+//   const order = await prisma.order.create({
+//     data: {
+//       userId: "user_123",
+//       status: OrderStatus.CREATED,
+//       expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+//       orderItems: {
+//         create: [
+//           {
+//             productId: product.id,
+//             productName: product.name,
+//             productPrice: product.price,
+//             sellerId: product.userId,
+//             quantity: 1,
+//             totalPrice: 100,
+//           },
+//         ],
+//       },
+//     },
+//   });
+
+//   return order;
+// };
 const createOrder = async () => {
+  const productId = randomUUID();
+  const sellerId = randomUUID();
   const product = await prisma.product.create({
     data: {
-      id: "prod_123",
+      id: productId,
       name: "Test Product",
       price: 100,
-      sellerId: "seller_123",
+      userId: sellerId,
       version: 0,
     },
   });
 
-  const order = await prisma.order.create({
-    data: {
-      userId: "user_123",
-      status: OrderStatus.CREATED,
-      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
-      orderItems: {
-        create: [
-          {
-            productId: product.id,
-            productName: product.name,
-            productPrice: product.price,
-            sellerId: product.sellerId,
-            quantity: 1,
-            totalPrice: 100,
-          },
-        ],
-      },
-    },
-  });
+  const userToken = global.signin("USER");
+
+  const { body: order } = await request(app)
+    .post("/api/orders/user")
+    .set("Authorization", userToken)
+    .send({
+      items: [
+        {
+          productId: product.id,
+          quantity: 1,
+        },
+      ],
+    })
+    .expect(201);
 
   return order;
 };
@@ -47,9 +81,10 @@ const createOrder = async () => {
 it("returns 200 on successful cancellation", async () => {
   const adminToken = global.signin("ADMIN");
   const order = await createOrder();
+  // console.log("Order created:", order);
 
   const res = await request(app)
-    .delete(`/api/admin/orders/${order.id}`)
+    .delete(`/api/orders/admin/${order.id}`)
     .set("Authorization", adminToken)
     .expect(200);
 
@@ -65,7 +100,7 @@ it("returns 200 on successful cancellation", async () => {
 it("returns 401 if unauthenticated", async () => {
   const order = await createOrder();
 
-  await request(app).delete(`/api/admin/orders/${order.id}`).expect(401);
+  await request(app).delete(`/api/orders/admin/${order.id}`).expect(401);
 });
 
 it("returns 403 if not ADMIN", async () => {
@@ -73,7 +108,7 @@ it("returns 403 if not ADMIN", async () => {
   const order = await createOrder();
 
   await request(app)
-    .delete(`/api/admin/orders/${order.id}`)
+    .delete(`/api/orders/admin/${order.id}`)
     .set("Authorization", userToken)
     .expect(403);
 });
@@ -82,7 +117,7 @@ it("returns 404 if order not found", async () => {
   const adminToken = global.signin("ADMIN");
 
   await request(app)
-    .delete(`/api/admin/orders/nonexistent-id`)
+    .delete(`/api/orders/admin/nonexistent-id`)
     .set("Authorization", adminToken)
     .expect(404);
 });
@@ -97,7 +132,7 @@ it("returns 404 if order not found", async () => {
 //     });
 
 //     const res = await request(app)
-//       .delete(`/api/admin/orders/${order.id}`)
+//       .delete(`/api/orders/admin/${order.id}`)
 //       .set("Authorization", adminToken)
 //       .expect(400);
 

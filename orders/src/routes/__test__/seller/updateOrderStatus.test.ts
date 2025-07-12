@@ -9,14 +9,17 @@ import { prisma } from "../../../utils/prisma/prisma";
 import { app } from "../../../app";
 import { CreateOrderDto } from "../../../types/dtos/create-order.dto";
 import { randomUUID } from "crypto";
+jest.mock("../../../events/orderUpdated", () => ({
+  orderUpdated: jest.fn(), // will replace the actual Kafka-related function
+}));
 
-const buildOrder = async (sellerId: string) => {
+const buildOrder = async (userId: string) => {
   const product = await prisma.product.create({
     data: {
       id: randomUUID(),
       name: "Test Product",
       price: 100,
-      sellerId,
+      userId,
       version: 0,
     },
   });
@@ -32,11 +35,13 @@ const buildOrder = async (sellerId: string) => {
   };
 
   const res = await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", user)
-    .send(items);
+    .send(items)
+    .expect(201);
+  console.log(res.body);
 
-  return { order: res.body, sellerId, product };
+  return { order: res.body, userId, product };
 };
 it("200 on successful status update", async () => {
   const sellerToken = global.signin("SELLER");
@@ -47,7 +52,7 @@ it("200 on successful status update", async () => {
   const { order } = await buildOrder(sellerId);
 
   const res = await request(app)
-    .patch(`/api/seller/orders/${order.id}/status`)
+    .patch(`/api/orders/seller/${order.id}/status`)
     .set("Authorization", sellerToken)
     .send({ status: "COMPLETED" })
     .expect(200);
@@ -56,7 +61,7 @@ it("200 on successful status update", async () => {
 });
 it("401 unauthenticated", async () => {
   await request(app)
-    .patch("/api/seller/orders/some-id/status")
+    .patch("/api/orders/seller/some-id/status")
     .send({ status: "COMPLETED" })
     .expect(401);
 });
@@ -65,7 +70,7 @@ it("403 if not SELLER", async () => {
   const token = global.signin("USER");
 
   await request(app)
-    .patch("/api/seller/orders/some-id/status")
+    .patch("/api/orders/seller/some-id/status")
     .set("Authorization", token)
     .send({ status: "COMPLETED" })
     .expect(403);
@@ -77,7 +82,7 @@ it("403 if seller doesn’t own the product", async () => {
   const fakeSeller = global.signin("SELLER");
 
   await request(app)
-    .patch(`/api/seller/orders/${order.id}/status`)
+    .patch(`/api/orders/seller/${order.id}/status`)
     .set("Authorization", fakeSeller)
     .send({ status: "COMPLETED" })
     .expect(403);
@@ -85,22 +90,22 @@ it("403 if seller doesn’t own the product", async () => {
 
 it("400 for invalid status or missing body", async () => {
   const sellerToken = global.signin("SELLER");
-  const sellerId = JSON.parse(
+  const userId = JSON.parse(
     Buffer.from(sellerToken.split(" ")[1].split(".")[1], "base64").toString()
   ).id;
 
-  const { order } = await buildOrder(sellerId);
+  const { order } = await buildOrder(userId);
 
   // Missing body
   await request(app)
-    .patch(`/api/seller/orders/${order.id}/status`)
+    .patch(`/api/orders/seller/${order.id}/status`)
     .set("Authorization", sellerToken)
     .send({})
     .expect(400);
 
   // Invalid status
   await request(app)
-    .patch(`/api/seller/orders/${order.id}/status`)
+    .patch(`/api/orders/seller/${order.id}/status`)
     .set("Authorization", sellerToken)
     .send({ status: "INVALID_STATUS" })
     .expect(400);
@@ -110,7 +115,7 @@ it("404 if order not found", async () => {
   const sellerToken = global.signin("SELLER");
 
   await request(app)
-    .patch("/api/seller/orders/non-existing-id/status")
+    .patch("/api/orders/seller/non-existing-id/status")
     .set("Authorization", sellerToken)
     .send({ status: "COMPLETED" })
     .expect(404);

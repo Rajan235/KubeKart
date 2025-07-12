@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 import { body } from "express-validator";
 
 import { prisma } from "../../utils/prisma/prisma";
-import { OrderStatus } from "@prisma/client";
+//import { OrderStatus } from "../../../prisma/generated/prod-client";
 import { validateRequest } from "../../middlewares/validate-request";
 import { requireAuth, requireRole } from "../../middlewares/require-auth";
 import { NotFoundError } from "../../utils/errors/not-found-error";
@@ -11,6 +11,7 @@ import { updateOrderValidator } from "../../validators/update-order.validator";
 import { UpdateOrderRequest } from "../../types/dtos/update-order-request.dto";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
 import { orderUpdated } from "../../events/orderUpdated";
+import { OrderStatus } from "@prisma/client";
 
 const router = express.Router();
 

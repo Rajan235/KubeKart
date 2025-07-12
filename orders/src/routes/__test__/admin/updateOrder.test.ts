@@ -1,4 +1,4 @@
-// #### ✅ `PATCH /api/admin/orders/:id`
+// #### ✅ `PATCH /api/orders/admin/:id`
 
 // * [x] 200 on successful update
 // * [x] 401 unauthenticated
@@ -10,6 +10,9 @@ import { app } from "../../../app";
 
 import { OrderStatus } from "@prisma/client";
 import { prisma } from "../../../utils/prisma/prisma";
+jest.mock("../../../events/orderUpdated", () => ({
+  orderUpdated: jest.fn(), // will replace the actual Kafka-related function
+}));
 
 // Helper to create an order
 const createOrder = async (userId: string) => {
@@ -18,7 +21,7 @@ const createOrder = async (userId: string) => {
       id: "prod_123",
       name: "Test Product",
       price: 100,
-      sellerId: "seller_123",
+      userId: "seller_123",
       version: 0,
     },
   });
@@ -34,7 +37,7 @@ const createOrder = async (userId: string) => {
             productId: product.id,
             productName: product.name,
             productPrice: product.price,
-            sellerId: product.sellerId,
+            sellerId: product.userId,
             quantity: 1,
             totalPrice: 100,
           },
@@ -51,7 +54,7 @@ it("returns 200 on successful update", async () => {
   const order = await createOrder("user_1");
 
   const res = await request(app)
-    .patch(`/api/admin/orders/${order.id}`)
+    .patch(`/api/orders/admin/${order.id}`)
     .set("Authorization", adminToken)
     .send({
       status: "CANCELLED",
@@ -65,7 +68,7 @@ it("returns 401 if user is not authenticated", async () => {
   const order = await createOrder("user_1");
 
   await request(app)
-    .patch(`/api/admin/orders/${order.id}`)
+    .patch(`/api/orders/admin/${order.id}`)
     .send({ status: "CANCELLED" })
     .expect(401);
 });
@@ -75,7 +78,7 @@ it("returns 403 if user is not admin", async () => {
   const order = await createOrder("user_1");
 
   await request(app)
-    .patch(`/api/admin/orders/${order.id}`)
+    .patch(`/api/orders/admin/${order.id}`)
     .set("Authorization", userToken)
     .send({ status: "CANCELLED" })
     .expect(403);
@@ -85,7 +88,7 @@ it("returns 404 if order not found", async () => {
   const adminToken = global.signin("ADMIN");
 
   await request(app)
-    .patch("/api/admin/orders/nonexistent-order-id")
+    .patch("/api/orders/admin/nonexistent-order-id")
     .set("Authorization", adminToken)
     .send({ status: "CANCELLED" })
     .expect(404);
@@ -96,7 +99,7 @@ it("returns 400 if status is invalid", async () => {
   const order = await createOrder("user_1");
 
   await request(app)
-    .patch(`/api/admin/orders/${order.id}`)
+    .patch(`/api/orders/admin/${order.id}`)
     .set("Authorization", adminToken)
     .send({ status: "INVALID_STATUS" })
     .expect(400);
@@ -109,7 +112,7 @@ it("returns 400 if status is invalid", async () => {
 //     const futureDate = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 
 //     const res = await request(app)
-//       .patch(`/api/admin/orders/${order.id}`)
+//       .patch(`/api/orders/admin/${order.id}`)
 //       .set("Authorization", adminToken)
 //       .send({
 //         status: "PENDING",
