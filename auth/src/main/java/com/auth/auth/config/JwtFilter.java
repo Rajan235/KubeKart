@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 // Validates token for "john".
 
-// Authenticates the request.
+// Authenticates the requests.
 
 // Request goes to /api/products controller with a valid user.
 
