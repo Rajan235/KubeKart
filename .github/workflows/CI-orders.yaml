@@ -53,6 +53,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: orders/package-lock.json
 
+      - name: Install Prisma CLI Early
+        run: npm install prisma --save-dev
+
+      - name: Generate Test Prisma Client (before full install)
+        run: npx prisma generate --schema=prisma/test/schema.test.prisma
       - name: Install Dependencies
         run: npm ci
 
