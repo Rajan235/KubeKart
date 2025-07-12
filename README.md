@@ -290,6 +290,12 @@ LevoMart is a scalable, cloud-native e-commerce platform built with real-world e
 
 ## 🏡 UI Screenshots
 
+# Homepage
+
+![Home Page](./docs/images/ui-screenshots/homepage.png)
+
+![Home Page2](./docs/images/ui-screenshots/homepage2.png)
+
 | Product Page                                               | Cart Page                                           |
 | ---------------------------------------------------------- | --------------------------------------------------- |
 | ![Product Page](./docs/images/ui-screenshots/products.png) | ![cart Page](./docs/images/ui-screenshots/cart.png) |
