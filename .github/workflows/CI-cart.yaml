@@ -1,5 +1,8 @@
 name: CI for Cart Service
 on:
+  push:
+    branches: [dev]
+    paths: ["cart/**"]
   pull_request:
     branches:
       - dev
