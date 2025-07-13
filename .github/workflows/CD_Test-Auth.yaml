@@ -12,6 +12,12 @@ jobs:
   build-and-cloudbuild:
     name: Build & Push with Google Cloud Build
     runs-on: ubuntu-latest
+    env:
+      DB_URL: jdbc:h2:mem:testdb
+      DB_USER: test_user
+      DB_PASSWORD: test_password
+      KAFKA_BROKERS: localhost:9092
+      JWT_KEY: "TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg="
     defaults:
       run:
         working-directory: auth
@@ -19,6 +25,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Copy shared-schemas into /app folder (for schema path resolution)
+        run: |
+          sudo mkdir -p /app
+          sudo cp -r ../shared-schemas /app/
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -29,6 +39,7 @@ jobs:
 
       - name: Build and verify tests
         run: mvn clean verify -B
+        continue-on-error: false
 
       - name: Set up Google Cloud CLI
         uses: google-github-actions/auth@v2
@@ -47,7 +58,7 @@ jobs:
       - name: Submit Cloud Build using external file
         run: |
           gcloud builds submit \
-            --config=k8s/prod/auth/cloudbuild.yaml \
+            --config=k8s/auth/cloudBuild.yaml \
             --project=levomart
 
       # - name: Submit Cloud Build

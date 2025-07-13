@@ -9,6 +9,16 @@ jobs:
   build-and-cloudbuild:
     name: Build & Push with Google Cloud Build
     runs-on: ubuntu-latest
+    env:
+      DB_URL: jdbc:h2:mem:testdb
+      DB_USER: test_user
+      DB_PASSWORD: test_password
+      STRIPE_SECRET_KEY: test_stripe_key
+      WEBHOOK_SECRET_KEY: test_webhook_secret
+      CHECKOUT_SUCCESS_URL: http://localhost/success
+      CHECKOUT_CANCEL_URL: http://localhost/cancel
+      KAFKA_BROKERS: localhost:9092
+      JWT_KEY: dummy-jwt-key
     defaults:
       run:
         working-directory: payment
@@ -26,6 +36,7 @@ jobs:
 
       - name: Build and verify tests
         run: mvn clean verify -B
+        continue-on-error: false
 
       - name: Set up Google Cloud CLI
         uses: google-github-actions/auth@v2
@@ -44,7 +55,7 @@ jobs:
       - name: Submit Cloud Build using external file
         run: |
           gcloud builds submit \
-            --config=k8s/payment/cloudbuild.yaml \
+            --config=k8s/payment/cloudBuild.yaml \
             --project=levomart
 
       # - name: Submit Cloud Build

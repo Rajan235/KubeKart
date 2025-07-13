@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: auth
+        working-directory: client
 
     steps:
       - name: Checkout Code
@@ -47,7 +47,7 @@ jobs:
       - name: Submit Cloud Build using external file
         run: |
           gcloud builds submit \
-            --config=k8s/prod/client-cloudbuild.yaml \
+            --config=k8s/client-cloudBuild.yaml \
             --project=levomart
 
       # - name: Submit Cloud Build

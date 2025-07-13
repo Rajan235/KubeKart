@@ -40,7 +40,7 @@ Thumbs.db
 *.swp
 *.swo
 
-.gcloudignore
+
 
 dump/
 # ============================

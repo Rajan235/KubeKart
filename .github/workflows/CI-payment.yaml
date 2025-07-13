@@ -1,8 +1,8 @@
 name: CI for Payment Service
 on:
-  push:
-    branches: [dev]
-    paths: ["payment/**"]
+  # push:
+  #   branches: [dev]
+  #   paths: ["payment/**"]
   pull_request:
     branches:
       - dev
