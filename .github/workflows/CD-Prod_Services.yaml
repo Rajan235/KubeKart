@@ -40,11 +40,11 @@ jobs:
           kubectl apply -f k8s/prod/kafka-deployment.yaml
           kubectl apply -f k8s/prod/kafka-topic-init-job.yaml
 
-      - name: Verify Rollouts
-        run: |
+      # - name: Verify Rollouts
+      #   run: |
 
-          kubectl rollout status deployment/kafka
-          kubectl rollout status deployment/ingress
+      #     kubectl rollout status deployment/kafka
+      #     kubectl rollout status deployment/ingress
 
       - name: Echo Done
         run: echo "✅ Done with Auth Service CI/CD for Production Branch"

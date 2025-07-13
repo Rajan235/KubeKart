@@ -47,7 +47,7 @@ public class OrderCreatedListener {
             // paymentRequest.setCurrency("INR");
 
             // String checkoutUrl = paymentService.createStripeCheckoutSession(paymentRequest);
-            // log.info("✅ Stripe Checkout URL : {}", checkoutUrl);
+            // log.info("✅ Stripes Checkout URL : {}", checkoutUrl);
 
         } catch (Exception e) {
             log.error("❌ Failed to process order-created event: ", e);
