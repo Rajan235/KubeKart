@@ -67,7 +67,9 @@ schema:
       path: src/test/resources/schemas/dummy/user-created.schema.json
 
 # Exclude Kafka auto-configuration to avoid instantiating Kafka beans during tests
-spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+spring.autoconfigure.exclude:
+  - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  - org.springframework.boot.autoconfigure.kafka.KafkaAnnotationDrivenConfiguration
 # Topic fallback values (used by UserService even if Kafka is disabled)
 # topic:
 #   user-created: test-user-created
