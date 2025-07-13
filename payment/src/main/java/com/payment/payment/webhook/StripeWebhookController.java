@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import com.stripe.model.PaymentIntent;
 
 @RestController
-@RequestMapping("/api/payment/webhooks")
+@RequestMapping("/api/internal/payment/webhooks")
 @RequiredArgsConstructor
 public class StripeWebhookController {
 

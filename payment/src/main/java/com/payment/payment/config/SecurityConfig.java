@@ -25,7 +25,7 @@ public class SecurityConfig {
                 // .requestMatchers("/api/payment/public/**").permitAll()  // public
                 // .requestMatchers("/api/webhooks/stripe").permitAll()
                 .requestMatchers("/api/payment/create-checkout-session").hasRole("USER")
-                .requestMatchers("/api/payment/webhooks/stripe").permitAll()
+                .requestMatchers("/api/internal/payment/webhooks/stripe").permitAll()
 
                 // .requestMatchers("/api/payment/admin/**").hasRole("ADMIN")
                 // .requestMatchers("/api/payment/user/**").hasAnyRole("USER", "ADMIN")

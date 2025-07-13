@@ -1,4 +1,4 @@
-// package com.auth.auth.integration;
+package com.auth.auth.integration;
 
 import com.auth.auth.dtos.LoginRequest;
 import com.auth.auth.dtos.RegisterRequest;
@@ -22,20 +22,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.TestInstance;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-// import org.springframework.boot.test.context.SpringBootTest;
-// //import org.springframework.context.annotation.Import;
-// import org.springframework.http.MediaType;
-// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-// import org.springframework.security.core.context.SecurityContext;
-// import org.springframework.security.core.context.SecurityContextHolder;
-// import org.springframework.test.context.ActiveProfiles;
-// import org.springframework.test.web.servlet.MockMvc;
-// import org.springframework.test.web.servlet.MvcResult;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.UUID;
 
@@ -45,14 +34,11 @@ import java.util.UUID;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserAuthIntegrationTest {
 
-// @SpringBootTest
-// @AutoConfigureMockMvc
-// @ActiveProfiles("test")
-// @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-// public class UserAuthIntegrationTest {
+    @Autowired
+    private MockMvc mockMvc;
 
-//     @Autowired
-//     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     
 
@@ -77,14 +63,10 @@ public class UserAuthIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("User registered"));
 
-//     @Test
-//     void testLoginAndGetCurrentUser() throws Exception {
-//         // 1. Register a user
-//         RegisterRequest register = new RegisterRequest();
-//         register.setUsername("authuser");
-//         register.setPassword("securepass");
-//         register.setEmail("authuser@example.com");
-//         register.setRole(Role.ADMIN);
+        // 2. Login to get JWT token
+        LoginRequest login = new LoginRequest();
+        login.setUsername("authuser");
+        login.setPassword("securepass");
 
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,10 +75,9 @@ public class UserAuthIntegrationTest {
                 .andExpect(jsonPath("$.token").exists())
                 .andReturn();
 
-//         // 2. Login to get JWT token
-//         LoginRequest login = new LoginRequest();
-//         login.setUsername("authuser");
-//         login.setPassword("securepass");
+        String jsonResponse = loginResult.getResponse().getContentAsString();
+        String token = objectMapper.readTree(jsonResponse).get("token").asText();
+        assertThat(token).isNotBlank();
 
         // 3. Call /current-user with Bearer token
         mockMvc.perform(get("/api/auth/current-user")
@@ -126,8 +107,10 @@ void testLoginWithWrongPassword() throws Exception {
             .content(objectMapper.writeValueAsString(register)))
             .andExpect(status().isOk());
 
-//     @Test
-//     void testCurrentUserWithoutTokenShouldFail() throws Exception {
+    // Now attempt login with incorrect password
+    LoginRequest login = new LoginRequest();
+    login.setUsername("wrongpassuser");
+    login.setPassword("wrongpass");
 
     mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
@@ -136,10 +119,10 @@ void testLoginWithWrongPassword() throws Exception {
             .andExpect(jsonPath("$.message").value("Invalid Credentials"));
 }
 
-//     mockMvc.perform(post("/register")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(register)))
-//             .andExpect(status().isOk());
+@Test
+void testLoginWithMissingFields() throws Exception {
+    // Empty login object
+    LoginRequest login = new LoginRequest();
 
     mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
@@ -160,10 +143,9 @@ void testAdminEndpointWithAdminRole() throws Exception {
             .content(objectMapper.writeValueAsString(register)))
             .andExpect(status().isOk());
 
-// @Test
-// void testLoginWithMissingFields() throws Exception {
-//     // Empty login object
-//     LoginRequest login = new LoginRequest();
+    LoginRequest login = new LoginRequest();
+    login.setUsername("adminuser");
+    login.setPassword("adminpass");
 
     MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
@@ -171,10 +153,7 @@ void testAdminEndpointWithAdminRole() throws Exception {
             .andExpect(status().isOk())
             .andReturn();
 
-//     mockMvc.perform(post("/register")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(register)))
-//             .andExpect(status().isOk());
+    String token = objectMapper.readTree(loginResult.getResponse().getContentAsString()).get("token").asText();
 
     mockMvc.perform(get("/api/auth/admin-only")
             .header("Authorization", "Bearer " + token))
@@ -182,22 +161,23 @@ void testAdminEndpointWithAdminRole() throws Exception {
             .andExpect(content().string("Welcome, Admin!"));
 }
 
-//     MvcResult loginResult = mockMvc.perform(post("/login")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(login)))
-//             .andExpect(status().isOk())
-//             .andReturn();
+@Test
+void testAdminEndpointWithUserRole_shouldFail() throws Exception {
+    // Register regular user
+    RegisterRequest register = new RegisterRequest();
+    register.setUsername("useronly");
+    register.setPassword("userpass");
+    register.setEmail("useronly@example.com");
+    register.setRole(Role.USER);
 
     mockMvc.perform(post("/api/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(register)))
             .andExpect(status().isOk());
 
-//     mockMvc.perform(get("/admin-only")
-//             .header("Authorization", "Bearer " + token))
-//             .andExpect(status().isOk())
-//             .andExpect(content().string("Welcome, Admin!"));
-// }
+    LoginRequest login = new LoginRequest();
+    login.setUsername("useronly");
+    login.setPassword("userpass");
 
     MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
@@ -205,10 +185,7 @@ void testAdminEndpointWithAdminRole() throws Exception {
             .andExpect(status().isOk())
             .andReturn();
 
-//     mockMvc.perform(post("/register")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(register)))
-//             .andExpect(status().isOk());
+    String token = objectMapper.readTree(loginResult.getResponse().getContentAsString()).get("token").asText();
 
     mockMvc.perform(get("/api/auth/admin-only")
             .header("Authorization", "Bearer " + token))
@@ -219,28 +196,11 @@ void mockCurrentUserWithoutJWT() {
     User mockUser = new User(UUID.randomUUID(), "mock", "pass", "mock@email.com", Role.ADMIN);
     UserPrincipal mockPrincipal = new UserPrincipal(mockUser);
 
-//     MvcResult loginResult = mockMvc.perform(post("/login")
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .content(objectMapper.writeValueAsString(login)))
-//             .andExpect(status().isOk())
-//             .andReturn();
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
+    context.setAuthentication(new UsernamePasswordAuthenticationToken(mockPrincipal, null, mockPrincipal.getAuthorities()));
+    SecurityContextHolder.setContext(context);
 
-//     String token = objectMapper.readTree(loginResult.getResponse().getContentAsString()).get("token").asText();
+    // Call method under test here
+}
 
-//     mockMvc.perform(get("/admin-only")
-//             .header("Authorization", "Bearer " + token))
-//             .andExpect(status().isForbidden());
-// }
-// @Test
-// void mockCurrentUserWithoutJWT() {
-//     User mockUser = new User(1, "mock", "pass", "mock@email.com", Role.ADMIN);
-//     UserPrincipal mockPrincipal = new UserPrincipal(mockUser);
-
-//     SecurityContext context = SecurityContextHolder.createEmptyContext();
-//     context.setAuthentication(new UsernamePasswordAuthenticationToken(mockPrincipal, null, mockPrincipal.getAuthorities()));
-//     SecurityContextHolder.setContext(context);
-
-//     // Call method under test here
-// }
-
-// }
+}

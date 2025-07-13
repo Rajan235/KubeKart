@@ -99,6 +99,23 @@ export default function ProductPage() {
           ) : (
             <span className="text-5xl">📦</span>
           )} */}
+          {product.imageUrl ? (
+            // If using next/image, uncomment below and import Image from "next/image"
+            // <Image
+            //   src={product.imageUrl}
+            //   alt={product.name}
+            //   width={200}
+            //   height={200}
+            //   className="object-contain w-full h-full"
+            // />
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="object-contain w-full h-full"
+            />
+          ) : (
+            <span className="text-olive/40 text-6xl">📦</span>
+          )}
         </div>
 
         {/* Info */}

@@ -92,3 +92,4 @@ spring.autoconfigure.exclude:
 # # Disable security for actuator endpoints in tests
 # management.endpoints.web.exposure.include=*
 # management.endpoint.health.show-details=always
+

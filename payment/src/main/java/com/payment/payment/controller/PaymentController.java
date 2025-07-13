@@ -27,6 +27,7 @@ private final PaymentService paymentService;
 
     @PostMapping("/create-checkout-session")
     public ResponseEntity<Map<String, String>> createCheckout(@RequestBody PaymentRequest request) throws StripeException {
+        request.setAmount(request.getAmount() * 100); // Convert amount to cents
         String url = paymentService.createStripeCheckoutSession(request);
         return ResponseEntity.ok(Map.of("checkoutUrl", url));
     }

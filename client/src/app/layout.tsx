@@ -21,7 +21,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "LevoCart",
+  title: "LevoMart",
   description: "Distributed Ecommerce website",
 };
 

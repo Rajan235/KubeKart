@@ -23,7 +23,7 @@ export function useCart() {
 
   const updateQuantity = async (id: string, quantity: number) => {
     try {
-      await axiosInstance.post("/cart/update", { id, quantity });
+      await axiosInstance.put("/cart/update", { id, quantity });
       fetchCart();
       toast.success("Updated quantity");
     } catch {
@@ -33,7 +33,7 @@ export function useCart() {
 
   const removeItem = async (id: string) => {
     try {
-      await axiosInstance.post(`/cart/remove/${id}`, { id });
+      await axiosInstance.delete(`/cart/remove/${id}`);
       fetchCart();
       toast.success("Item removed");
     } catch {
@@ -42,7 +42,7 @@ export function useCart() {
   };
   const clearCart = async () => {
     try {
-      await axiosInstance.post("/cart/clear");
+      await axiosInstance.delete("/cart/clear");
       fetchCart();
       toast.success("Cart cleared");
     } catch {

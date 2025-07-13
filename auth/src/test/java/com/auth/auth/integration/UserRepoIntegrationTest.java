@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
-// import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
 
@@ -18,8 +18,8 @@ import java.util.UUID;
 @ActiveProfiles("test")
 public class UserRepoIntegrationTest {
 
-//     @Autowired
-//     private UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
     @Test
     void testUsernameMustBeUnique() {
@@ -38,7 +38,7 @@ public class UserRepoIntegrationTest {
         u2.setEmail("u2@example.com");
         u2.setRole(Role.USER);
 
-//         userRepo.save(u1);
-//         assertThrows(DataIntegrityViolationException.class, () -> userRepo.saveAndFlush(u2));
-//     }
-// }
+        userRepo.save(u1);
+        assertThrows(DataIntegrityViolationException.class, () -> userRepo.saveAndFlush(u2));
+    }
+}
