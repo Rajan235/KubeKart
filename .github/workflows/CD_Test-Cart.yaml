@@ -55,7 +55,7 @@ jobs:
       - name: Submit Cloud Build using external file
         run: |
           gcloud builds submit \
-            --config=../../k8s/cart/cloudBuild.yaml \
+            --config=../k8s/cart/cloudBuild.yaml .. \
             --project=levomart
 
       # - name: Submit Cloud Build
