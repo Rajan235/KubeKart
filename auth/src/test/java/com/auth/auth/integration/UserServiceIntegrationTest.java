@@ -5,11 +5,11 @@
 // import com.auth.auth.service.UserService;
 // import com.auth.auth.dao.UserRepo;
 
-// import org.junit.jupiter.api.Test;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.context.annotation.Import;
-// import org.springframework.test.context.ActiveProfiles;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 // import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,8 +33,8 @@
 
 //         User savedUser = userService.saveUser(user);
 
-//         assertNotNull(savedUser);
-//         assertTrue(savedUser.getUserId() > 0);
+        assertNotNull(savedUser);
+        //assertTrue(savedUser.getUserId() > 0);
 
 //         User fromDb = userRepo.findByUsername("integrationUser");
 //         assertNotNull(fromDb);

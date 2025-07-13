@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+// import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import jakarta.servlet.http.HttpServletResponse;
 
-//manual and custom security configuration for the application
+//manual and custom security configuration for the applications
 @Configuration
 @EnableWebSecurity
 //@Profile("!test") // Exclude this configuration in the test profile
@@ -37,8 +38,8 @@ public class SecurityConfig {
 	
 	@Bean
 	public AuthenticationProvider authProvider() {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setUserDetailsService(userDetailsService);
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+    // provider.setUserDetailsService(userDetailsService);
     provider.setPasswordEncoder(passwordEncoder());
     return provider;
 	}
@@ -54,8 +55,13 @@ public class SecurityConfig {
 
 		http.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
-						.requestMatchers("/register", "/login")
+						.requestMatchers("/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html","/api/auth/register", "/api/auth/login")
 						.permitAll()
+						
+                
+            
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -63,7 +69,14 @@ public class SecurityConfig {
 				.authenticationEntryPoint((request, response, authException) -> {
 						response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 						response.setContentType("application/json");
-						response.getWriter().write("{\"message\": \"Unauthorized\"}");}));
+						response.getWriter().write("{\"message\": \"Unauthorized\"}");})
+						
+						.accessDeniedHandler((request, response, accessDeniedException) -> {
+      response.setStatus(HttpStatus.FORBIDDEN.value());
+      response.setContentType("application/json");
+      response.getWriter().write("{\"message\":\"Access Denied\"}");
+  }))
+						;
 
 
 		return http.build();

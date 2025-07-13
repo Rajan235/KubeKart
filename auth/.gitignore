@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.env 
+!**/target/auth-0.0.1-SNAPSHOT.jar
+
