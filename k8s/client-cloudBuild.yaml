@@ -19,7 +19,7 @@
 #   - "asia-south1-docker.pkg.dev/levomart/levomart-repo/client:latest"
 steps:
   - name: gcr.io/cloud-builders/docker
-    dir: client
+
     args:
       - build
       - -t

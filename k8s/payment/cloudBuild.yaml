@@ -15,7 +15,7 @@
 #   - "asia-south1-docker.pkg.dev/levomart/levomart-repo/payment:latest"
 steps:
   - name: gcr.io/cloud-builders/docker
-    dir: payment
+
     args:
       - build
       - -t

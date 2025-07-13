@@ -18,7 +18,7 @@
 #   - "asia-south1-docker.pkg.dev/levomart/levomart-repo/product:latest"
 steps:
   - name: gcr.io/cloud-builders/docker
-    dir: product
+
     args:
       - build
       - -t
