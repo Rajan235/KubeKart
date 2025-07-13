@@ -40,6 +40,6 @@ jobs:
         run: |
           kubectl apply -f k8s/prod/client-deployment.yaml
 
-    #   - name: Verify Rollout
-    #     run: |
-    #       kubectl rollout status deployment/client
+      - name: Verify Rollout
+        run: |
+          kubectl rollout status deployment/client

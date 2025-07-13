@@ -13,7 +13,6 @@ import { Product } from "@/types/product";
 import { AddToCartDto } from "@/types/cart";
 import EmptyState from "@/components/layouts/emptyStates/EmptyState";
 import ProductCard from "@/components/layouts/product/ProductCard";
-
 // const SAMPLE_PRODUCTS: ProductFormData[] = [
 //   {
 //     userId: "1",
