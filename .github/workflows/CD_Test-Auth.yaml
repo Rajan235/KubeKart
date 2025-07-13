@@ -65,41 +65,30 @@ jobs:
             --format='value(metadata.build.id)')
 
           echo "🔍 Raw Build Output:"
-           echo "$BUILD_OUTPUT"
+          BUILD_OUTPUT=$(gcloud builds log $BUILD_ID --project=levomart)
 
-          # Extract build ID using grep
-          BUILD_ID=$(echo "$BUILD_OUTPUT" | grep -oE 'builds/[a-z0-9\-]+' | head -1 | cut -d'/' -f2)
+      # - name: Wait for Cloud Build to Finish
+      #   run: |
+      #     echo "⏳ Waiting for build $BUILD_ID to complete..."
 
-          if [[ -z "$BUILD_ID" ]]; then
-            echo "❌ Failed to extract build ID"
-            exit 1
-          fi
+      #     for i in {1..60}; do
+      #       STATUS=$(gcloud builds describe $BUILD_ID --project=levomart --format='value(status)')
+      #       echo "🔁 Build status: $STATUS"
 
-          echo "✅ Extracted BUILD_ID: $BUILD_ID"
-          echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
+      #       if [[ "$STATUS" == "SUCCESS" ]]; then
+      #         echo "✅ Build succeeded!"
+      #         exit 0
+      #       elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" || "$STATUS" == "TIMEOUT" ]]; then
+      #         echo "❌ Build failed with status: $STATUS"
+      #         exit 1
+      #       fi
 
-      - name: Wait for Cloud Build to Finish
-        run: |
-          echo "⏳ Waiting for build $BUILD_ID to complete..."
+      #       echo "⏱ Sleeping for 20 seconds..."
+      #       sleep 20
+      #     done
 
-          for i in {1..60}; do
-            STATUS=$(gcloud builds describe $BUILD_ID --project=levomart --format='value(status)')
-            echo "🔁 Build status: $STATUS"
-            
-            if [[ "$STATUS" == "SUCCESS" ]]; then
-              echo "✅ Build succeeded!"
-              exit 0
-            elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" || "$STATUS" == "TIMEOUT" ]]; then
-              echo "❌ Build failed with status: $STATUS"
-              exit 1
-            fi
-            
-            echo "⏱ Sleeping for 20 seconds..."
-            sleep 20
-          done
-
-          echo "❌ Timed out waiting for build to finish."
-          exit 1
+      #     echo "❌ Timed out waiting for build to finish."
+      #     exit 1
 
       # - name: Submit Cloud Build using external file
       #   run: |
