@@ -108,5 +108,5 @@ test-results/
 **/target/
 **/build/
 **/dist/
-
+githubrbac.yaml
 !auth/target/auth-0.0.1-SNAPSHOT.jar
