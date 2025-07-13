@@ -16,11 +16,12 @@
 #   - "asia-south1-docker.pkg.dev/levomart/levomart-repo/cart:latest"
 steps:
   - name: gcr.io/cloud-builders/docker
+    dir: cart
     args:
       - build
       - -t
       - asia-south1-docker.pkg.dev/levomart/levomart-repo/cart:latest
-      - ./cart
+      - .
 
   - name: gcr.io/cloud-builders/docker
     args:
