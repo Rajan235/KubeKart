@@ -12,7 +12,12 @@ jobs:
   build:
     name: Backend (Spring Boot + Maven) - Build & Test
     runs-on: ubuntu-latest
-
+    env:
+      DB_URL: jdbc:h2:mem:testdb
+      DB_USER: test_user
+      DB_PASSWORD: test_password
+      KAFKA_BROKERS: localhost:9092
+      JWT_KEY: dummy-jwt-key
     defaults:
       run:
         working-directory: auth
