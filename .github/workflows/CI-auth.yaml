@@ -18,6 +18,7 @@ jobs:
       DB_PASSWORD: test_password
       KAFKA_BROKERS: localhost:9092
       JWT_KEY: dummy-jwt-key
+      SPRING_PROFILES_ACTIVE: test
     defaults:
       run:
         working-directory: auth

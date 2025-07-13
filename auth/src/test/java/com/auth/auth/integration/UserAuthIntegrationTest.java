@@ -40,6 +40,8 @@ public class UserAuthIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    
+
     @BeforeEach
     void setup() {
         // This method can be used to set up any common test data or configurations

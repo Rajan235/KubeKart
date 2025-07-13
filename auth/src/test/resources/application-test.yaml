@@ -1,9 +1,44 @@
+# spring:
+#   datasource:
+#     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+#     driver-class-name: org.h2.Driver
+#     username: sa
+#     password:
+#   jpa:
+#     hibernate:
+#       ddl-auto: create-drop
+#     show-sql: true
+#     properties:
+#       hibernate:
+#         format_sql: true
+#   h2:
+#     console:
+#       enabled: true
+#   kafka:
+#     bootstrap-servers: dummy:1234
+#     producer:
+#       retries: 0
+#     consumer:
+#       group-id: dummy
+#     listener:
+#       missing-topics-fatal: false
+#   autoconfigure:
+#     exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+#   enabled: false
+
+# spring.h2.console.enabled: true
+# spring.h2.console.path: /h2-console
+
 spring:
+  profiles:
+    active: test
+
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -11,13 +46,29 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
   h2:
     console:
       enabled: true
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
-spring.h2.console.enabled: true
-spring.h2.console.path: /h2-console
+    path: /h2-console
+
+  kafka:
+    enabled: false # Optional, use in @ConditionalOnProperty
+    bootstrap-servers: dummy:1234
+    producer:
+      retries: 0
+    consumer:
+      group-id: dummy
+    listener:
+      missing-topics-fatal: false
+
+# Disable Kafka auto-configuration completely
+spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+# Optional: enable actuator or debug logs in test env
+# logging.level.org.springframework=INFO
+# management.endpoints.web.exposure.include=*
+# management.endpoint.health.show-details=always
+
 # JPA Configuration
 
 # # Logging
