@@ -64,9 +64,6 @@ jobs:
             --async \
             --format='value(metadata.build.id)')
 
-          echo "🔍 Raw Build Output:"
-          BUILD_OUTPUT=$(gcloud builds log $BUILD_ID --project=levomart)
-
       # - name: Wait for Cloud Build to Finish
       #   run: |
       #     echo "⏳ Waiting for build $BUILD_ID to complete..."
@@ -101,3 +98,5 @@ jobs:
       #     gcloud builds submit auth \
       #       --tag=asia-south1-docker.pkg.dev/levomart/levomart-repo/auth:$SHORT_SHA \
       #       --project=levomart
+      - name: Echo Done
+        run: echo "Done with Auth Service CI/CD for Test Branch"

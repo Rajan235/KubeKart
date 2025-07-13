@@ -61,8 +61,8 @@ jobs:
             --async \
             --format='value(metadata.build.id)')
 
-          echo "🔍 Raw Build Output:"
-          BUILD_OUTPUT=$(gcloud builds log $BUILD_ID --project=levomart)
+      - name: Echo Done
+        run: echo "Done with payment Service CI/CD for Test Branch"
 
       # - name: Wait for Cloud Build to Finish
       #   run: |
