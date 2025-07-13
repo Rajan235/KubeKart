@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import jakarta.servlet.http.HttpServletResponse;
 
-//manual and custom security configuration for the application
+//manual and custom security configuration for the applications
 @Configuration
 @EnableWebSecurity
 //@Profile("!test") // Exclude this configuration in the test profile
