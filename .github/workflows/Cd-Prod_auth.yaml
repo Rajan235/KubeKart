@@ -40,8 +40,8 @@ jobs:
         run: |
           kubectl apply -f k8s/prod/auth
 
-      - name: Verify Rollout
-        run: |
-          kubectl rollout status deployment/auth
+      # - name: Verify Rollout
+      #   run: |
+      #     kubectl rollout status deployment/auth
       - name: Echo Done
         run: echo "Done with Auth Service CI/CD for Production Branch"

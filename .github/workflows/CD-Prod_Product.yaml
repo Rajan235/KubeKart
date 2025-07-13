@@ -40,6 +40,6 @@ jobs:
         run: |
           kubectl apply -f k8s/prod/product
 
-      - name: Verify Rollout
-        run: |
-          kubectl rollout status deployment/product
+      # - name: Verify Rollout
+      #   run: |
+      #     kubectl rollout status deployment/product

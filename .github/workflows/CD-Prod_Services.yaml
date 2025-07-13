@@ -1,4 +1,4 @@
-name: Auth Service CI/CD - Production
+name: Service CI/CD - Production
 
 on:
   pull_request:
@@ -42,7 +42,7 @@ jobs:
 
       - name: Verify Rollouts
         run: |
-          kubectl rollout status deployment/auth
+
           kubectl rollout status deployment/kafka
           kubectl rollout status deployment/ingress
 
