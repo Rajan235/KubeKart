@@ -1,15 +1,13 @@
-name: Order Service CI/CD - Production
+name: Auth Service CI/CD - Production
 
 on:
   pull_request:
     branches:
       - main
-    paths:
-      - "orders/**"
 
 jobs:
   deploy-to-gke:
-    name: Deploy Orders to GKE
+    name: Deploy services to GKE
     runs-on: ubuntu-latest
 
     steps:
@@ -38,8 +36,15 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl apply -f k8s/prod/orders
+          kubectl apply -f k8s/prod/ingress-service-deployment.yaml
+          kubectl apply -f k8s/prod/kafka-deployment.yaml
+          kubectl apply -f k8s/prod/kafka-topic-init-job.yaml
 
-      - name: Verify Rollout
+      - name: Verify Rollouts
         run: |
-          kubectl rollout status deployment/orders
+          kubectl rollout status deployment/auth
+          kubectl rollout status deployment/kafka
+          kubectl rollout status deployment/ingress
+
+      - name: Echo Done
+        run: echo "✅ Done with Auth Service CI/CD for Production Branch"
