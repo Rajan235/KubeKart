@@ -44,11 +44,46 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Submit Cloud Build using external file
+      - name: Submit Cloud Build (Async)
+        id: cloudbuild
         run: |
-          gcloud builds submit \
+          build_output=$(gcloud builds submit \
             --project=levomart \
-            --config=../k8s/client-cloudBuild.yaml
+            --config=../k8s/client-cloudBuild.yaml \
+            --async \
+            --format='value(metadata.build.id)')
+
+          echo "BUILD_ID=$build_output" >> $GITHUB_ENV
+          echo "✅ Submitted build with ID: $build_output"
+
+      - name: Wait for Cloud Build to Finish
+        run: |
+          echo "⏳ Waiting for build $BUILD_ID to complete..."
+
+          for i in {1..60}; do
+            STATUS=$(gcloud builds describe $BUILD_ID --project=levomart --format='value(status)')
+            echo "🔁 Build status: $STATUS"
+            
+            if [[ "$STATUS" == "SUCCESS" ]]; then
+              echo "✅ Build succeeded!"
+              exit 0
+            elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" || "$STATUS" == "TIMEOUT" ]]; then
+              echo "❌ Build failed with status: $STATUS"
+              exit 1
+            fi
+            
+            echo "⏱ Sleeping for 20 seconds..."
+            sleep 20
+          done
+
+          echo "❌ Timed out waiting for build to finish."
+          exit 1
+
+      # - name: Submit Cloud Build using external file
+      #   run: |
+      #     gcloud builds submit \
+      #       --project=levomart \
+      #       --config=../k8s/client-cloudBuild.yaml
 
       # - name: Submit Cloud Build
       #   run: |
