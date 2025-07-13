@@ -28,7 +28,7 @@ jobs:
 
       - name: Configure Kubeconfig
         run: |
-          gcloud container clusters get-credentials levomart-production-cluster \
+          gcloud container clusters get-credentials levomart-prod-cluster \
             --zone asia-south1 \
             --project levomart
 
