@@ -8,7 +8,7 @@ import { NotFoundError } from "../../utils/errors/not-found-error";
 import { asyncHandler } from "../../utils/async-handler";
 import { orderUpdated } from "../../events/orderUpdated";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus } from "../../utils/prisma/prisma";
 
 const router = express.Router();
 

@@ -11,7 +11,7 @@ import { updateOrderValidator } from "../../validators/update-order.validator";
 import { UpdateOrderRequest } from "../../types/dtos/update-order-request.dto";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
 import { orderUpdated } from "../../events/orderUpdated";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus } from "../../utils/prisma/prisma";
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.patch(
     const updated = await prisma.order.update({
       where: { id: req.params.id },
       data: {
-        status: status as OrderStatus,
+        status: status,
         //expiresAt: expiresAt ? new Date(expiresAt) : undefined,
       },
     });
