@@ -26,6 +26,10 @@ jobs:
         with:
           project_id: levomart
 
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet
+
       - name: Configure Kubeconfig
         run: |
           gcloud container clusters get-credentials levomart-prod-cluster \
