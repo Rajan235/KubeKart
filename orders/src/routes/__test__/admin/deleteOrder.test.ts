@@ -6,8 +6,8 @@
 // * [x] 404 if order not found
 import request from "supertest";
 import { app } from "../../../app";
-import { prisma } from "../../../utils/prisma/prisma";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, prisma } from "../../../utils/prisma/prisma";
+
 import { randomUUID } from "crypto";
 jest.mock("../../../events/orderUpdated", () => ({
   orderUpdated: jest.fn(), // will replace the actual Kafka-related function

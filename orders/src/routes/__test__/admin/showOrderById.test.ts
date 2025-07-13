@@ -6,8 +6,7 @@
 // * [x] 404 if order not found
 import request from "supertest";
 import { app } from "../../../app";
-import { prisma } from "../../../utils/prisma/prisma";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, prisma } from "../../../utils/prisma/prisma";
 
 const buildOrder = async () => {
   const product = await prisma.product.create({

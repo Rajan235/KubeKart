@@ -8,8 +8,7 @@
 import request from "supertest";
 import { app } from "../../../app";
 
-import { OrderStatus } from "@prisma/client";
-import { prisma } from "../../../utils/prisma/prisma";
+import { OrderStatus, prisma } from "../../../utils/prisma/prisma";
 jest.mock("../../../events/orderUpdated", () => ({
   orderUpdated: jest.fn(), // will replace the actual Kafka-related function
 }));

@@ -5,8 +5,7 @@
 // * [x] 403 if not ADMIN
 import request from "supertest";
 import { app } from "../../../app";
-import { prisma } from "../../../utils/prisma/prisma";
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, prisma } from "../../../utils/prisma/prisma";
 
 // Utility to create a test order
 const createOrder = async (userId: string, productId: string) => {

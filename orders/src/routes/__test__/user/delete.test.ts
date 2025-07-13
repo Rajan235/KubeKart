@@ -1,11 +1,10 @@
 import request from "supertest";
 import { app } from "../../../app";
 
-import { prisma } from "../../../utils/prisma/prisma";
+import { OrderStatus, prisma } from "../../../utils/prisma/prisma";
 import { CreateOrderDto } from "../../../types/dtos/create-order.dto";
 //import { OrderStatus } from "../../../../prisma/generated/test-client";
 import { randomUUID } from "crypto";
-import { OrderStatus } from "@prisma/client";
 
 // * [x] 200 on success done
 // * [x] 401 unauthenticated done
