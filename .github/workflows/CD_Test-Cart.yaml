@@ -56,8 +56,19 @@ jobs:
             --async \
             --format='value(metadata.build.id)')
 
+          echo "🔍 Raw Build Output:"
+           echo "$BUILD_OUTPUT"
+
+          # Extract build ID using grep
+          BUILD_ID=$(echo "$BUILD_OUTPUT" | grep -oE 'builds/[a-z0-9\-]+' | head -1 | cut -d'/' -f2)
+
+          if [[ -z "$BUILD_ID" ]]; then
+            echo "❌ Failed to extract build ID"
+            exit 1
+          fi
+
+          echo "✅ Extracted BUILD_ID: $BUILD_ID"
           echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
-          echo "✅ Submitted build with ID: $BUILD_ID"
 
       - name: Wait for Cloud Build to Finish
         run: |
