@@ -12,13 +12,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.auth.auth.dao.UserRepo;
 import com.auth.auth.model.Role;
 import com.auth.auth.model.User;
 import com.auth.auth.service.UserService;
 
+@ActiveProfiles("test")
 public class UserServiceTest {
 
     @Mock

@@ -1,11 +1,15 @@
 package com.auth.auth.model;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,8 +23,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private int userId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userId", columnDefinition = "UUID", updatable = false, nullable = false)
+    private UUID userId;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -33,39 +38,20 @@ public class User {
     @Column( nullable = false)
     private Role role;
 
-    // public User() {
-    // }
+    @Version
+    private Long version;
 
-    // public User(String username, String password, String email) {
-    //     this.username = username;
-    //     this.password = password;
-    //     this.email = email;
-    // }
+    public User(UUID userId, String username, String password, String email, Role role) {
+    this.userId = userId;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role;
+    // this.version = 0L;
+    // version will be managed by JPA
+}
 
-    // public String getUsername() {
-    //     return username;
-    // }
-
-    // public void setUsername(String username) {
-    //     this.username = username;
-    // }
-
-    // public String getPassword() {
-    //     return password;
-    // }
-
-    // public void setPassword(String password) {
-    //     this.password = password;
-    // }
-
-    // public String getEmail() {
-    //     return email;
-    // }
-
-    // public void setEmail(String email) {
-    //     this.email = email;
-    // }
-
+    
 
 
 }

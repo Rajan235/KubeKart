@@ -10,11 +10,12 @@ interface ProductAttributes {
   category: string;
   userId: string;
   stock?: number;
+  imageUrl?: string;
 }
 
 //describe the properties that a Product Document has as it exists in MongoDB
 //used to define the shape of the document in MongoDB and type checking
-interface ProductDoc extends mongoose.Document {
+export interface ProductDoc extends mongoose.Document {
   name: string;
   price: number;
   userId: string;
@@ -22,9 +23,13 @@ interface ProductDoc extends mongoose.Document {
   category?: string;
   orderId?: string;
   stock?: number;
+  imageUrl?: string;
   createdAt: Date;
   updatedAt: Date;
   version: number; // for optimistic concurrency control
+}
+export interface ProductEvent extends ProductDoc {
+  id: string;
 }
 // describe the properties that a Product Model has stactic methods
 //allow us to create custome methods for product model
@@ -43,6 +48,7 @@ const productSchema = new mongoose.Schema(
     category: { type: String, required: false },
     orderId: { type: String, required: false, default: null },
     stock: { type: Number, required: false, default: 0 },
+    imageUrl: { type: String, required: false, default: null },
   },
   {
     toJSON: {
