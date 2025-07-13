@@ -172,61 +172,63 @@ export default function FeaturedProducts() {
                 key={index}
                 className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
               >
-                <div
-                  className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden hover:scale-105"
-                  // onMouseEnter={() => setHoveredProduct(index)}
-                  // onMouseLeave={() => setHoveredProduct(null)}
-                >
-                  {/* Product Image Placeholder */}
-                  <div className="relative aspect-square overflow-hidden bg-beige/30">
-                    <div className="w-full h-full flex items-center justify-center">
-                      {product.imageUrl ? (
-                        // If using next/image, uncomment below and import Image from "next/image"
-                        // <Image
-                        //   src={product.imageUrl}
-                        //   alt={product.name}
-                        //   width={200}
-                        //   height={200}
-                        //   className="object-contain w-full h-full"
-                        // />
-                        <img
-                          src={product.imageUrl}
-                          alt={product.name}
-                          className="object-contain w-full h-full"
-                        />
-                      ) : (
-                        <span className="text-olive/40 text-6xl">📦</span>
-                      )}
+                <Link href={`/product/${product.id}`} className="block h-full">
+                  <div
+                    className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden hover:scale-105"
+                    // onMouseEnter={() => setHoveredProduct(index)}
+                    // onMouseLeave={() => setHoveredProduct(null)}
+                  >
+                    {/* Product Image Placeholder */}
+                    <div className="relative aspect-square overflow-hidden bg-beige/30">
+                      <div className="w-full h-full flex items-center justify-center">
+                        {product.imageUrl ? (
+                          // If using next/image, uncomment below and import Image from "next/image"
+                          // <Image
+                          //   src={product.imageUrl}
+                          //   alt={product.name}
+                          //   width={200}
+                          //   height={200}
+                          //   className="object-contain w-full h-full"
+                          // />
+                          <img
+                            src={product.imageUrl}
+                            alt={product.name}
+                            className="object-contain w-full h-full"
+                          />
+                        ) : (
+                          <span className="text-olive/40 text-6xl">📦</span>
+                        )}
+                      </div>
+                      <div className="absolute top-4 left-4 bg-olive/90 text-beige px-3 py-1 rounded-full text-sm font-medium">
+                        {product.category}
+                      </div>
                     </div>
-                    <div className="absolute top-4 left-4 bg-olive/90 text-beige px-3 py-1 rounded-full text-sm font-medium">
-                      {product.category}
-                    </div>
-                  </div>
 
-                  {/* Product Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-olive mb-2 group-hover:text-olive/80">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm line-clamp-2 mb-4">
-                      {product.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-olive">
-                        ₹{product.price}
-                      </span>
-                      {product.stock !== undefined && (
-                        <span className="text-sm text-gray-400">
-                          In Stock: {product.stock}
+                    {/* Product Info */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-olive mb-2 group-hover:text-olive/80">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                        {product.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-olive">
+                          ₹{product.price}
                         </span>
-                      )}
-                    </div>
+                        {product.stock !== undefined && (
+                          <span className="text-sm text-gray-400">
+                            In Stock: {product.stock}
+                          </span>
+                        )}
+                      </div>
 
-                    <button className="mt-4 w-full bg-olive text-beige px-4 py-2 rounded-full text-sm font-medium hover:bg-olive/90  opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                      Add to Cart
-                    </button>
+                      <button className="mt-4 w-full bg-olive text-beige px-4 py-2 rounded-full text-sm font-medium hover:bg-olive/90  opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </CarouselItem>
             ))}
           </CarouselContent>

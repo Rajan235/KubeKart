@@ -15,7 +15,14 @@ spec:
             limits:
               cpu: "300m"
               memory: "512Mi"
-          command: ["npx", "prisma", "migrate", "deploy"]
+          command:
+            [
+              "npx",
+              "prisma",
+              "migrate",
+              "deploy",
+              "--schema=./prisma/prod/schema.prisma",
+            ]
           envFrom:
             - configMapRef:
                 name: order-config

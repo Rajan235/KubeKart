@@ -21,6 +21,7 @@ router.patch(
   updateOrderStatusValidator,
   validateRequest,
   async (req: Request, res: Response) => {
+    console.log("Updating order status", req.params.orderId, req.body.status);
     const order = await prisma.order.findUnique({
       where: { id: req.params.orderId },
       include: { orderItems: true },
@@ -55,11 +56,16 @@ router.patch(
     const updated = await prisma.order.findUnique({
       where: { id: order.id },
     });
-
+    console.log("Updated order status", updated);
     if (!updated) throw new NotFoundError();
-    await orderUpdated(updated as OrderResponse);
+    try {
+      await orderUpdated(updated as OrderResponse);
+    } catch (err) {
+      console.error("Error publishing order updated event", err);
+    }
 
     res.send(updated as OrderResponse);
+    console.log("Order status updated successfully", updated.id);
   }
 );
 export { router as updateOrderStatusRouter };

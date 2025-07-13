@@ -3,6 +3,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 //mport { useAuth } from "@/context/AuthContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import axiosInstance from "@/lib/axios";
 import { AxiosError } from "axios";
@@ -74,12 +81,37 @@ export default function RegisterForm() {
         onChange={(e) => setPassword(e.target.value)}
         className="w-full mb-6 p-3 border border-olive/30 rounded"
       />
-      <input
+      {/* <input
         placeholder="Role"
         value={role}
         onChange={(e) => setRole(e.target.value)}
         className="w-full mb-6 p-3 border border-olive/30 rounded"
-      />
+      /> */}
+      {/* <select
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        className="w-full mb-6 p-3 border border-olive/30 rounded bg-white text-olive"
+        required
+      >
+        <option value="">Select Role</option>
+        <option value="USER">User</option>
+        <option value="ADMIN">Admin</option>
+        <option value="SELLER">Seller</option>
+      </select> */}
+      <div className="mb-6">
+        <label className="block text-olive mb-2 font-medium">Role</label>
+        <Select value={role} onValueChange={(val) => setRole(val)}>
+          <SelectTrigger className="w-full border border-olive/30">
+            <SelectValue placeholder="Select a role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="USER">User</SelectItem>
+            <SelectItem value="ADMIN">Admin</SelectItem>
+            <SelectItem value="SELLER">Seller</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <Button
         type="submit"
         className="w-full bg-olive text-beige hover:bg-olive/90"

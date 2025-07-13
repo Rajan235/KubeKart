@@ -45,7 +45,7 @@ export default function SellerOrderCard({
               <Label className="text-sm">Status</Label>
               <Select
                 value={order.status}
-                onValueChange={(val) => handleStatusChange(item.productId, val)}
+                onValueChange={(val) => handleStatusChange(item.orderId, val)}
               >
                 <SelectTrigger className="w-[120px] text-olive border-olive">
                   {order.status}
