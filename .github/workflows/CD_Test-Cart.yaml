@@ -47,10 +47,15 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
+      - name: get file system overview
+        run: |
+          df -h
+          ls -la
+
       - name: Submit Cloud Build using external file
         run: |
           gcloud builds submit \
-            --config=../k8s/cart/cloudBuild.yaml \
+            --config=../../k8s/cart/cloudBuild.yaml \
             --project=levomart
 
       # - name: Submit Cloud Build
