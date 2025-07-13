@@ -38,6 +38,7 @@ import static org.mockito.ArgumentMatchers.any;
     
 @Import(UserController.class)
 @AutoConfigureMockMvc(addFilters = false) 
+@ActiveProfiles("test")
     public class UserControllerTest {
 
         @Autowired

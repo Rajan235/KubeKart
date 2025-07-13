@@ -57,7 +57,7 @@ public class UserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-     @Autowired
+     @Autowired(required = false    )
     private KafkaEventPublisher eventPublisher;
 
     @Value("${schema.user.created.path}")
@@ -120,20 +120,32 @@ public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest
         user.getEmail(),
         user.getRole()
     );
-
-     try {
+    if (eventPublisher != null) {
+    try {
         String json = objectMapper.writeValueAsString(event);
-        // String schemaPath = Paths.get(System.getProperty("user.dir"))
-        //                  .resolve("../shared-schemas/auth/user-created.schema.json")
-        //                  .normalize()
-        //                  .toAbsolutePath()
-        //                  .toString();
         JsonSchemaValidator.validate(json, userCreatedSchemaPath);
         eventPublisher.publish("user-created", user.getUserId().toString(), json);
         System.out.println("✅ Published user-created event");
     } catch (Exception e) {
         System.err.println("❌ Failed to publish user-created event: " + e.getMessage());
     }
+} else {
+    System.out.println("⚠️ Kafka disabled, skipping event publish.");
+}
+
+    //  try {
+    //     String json = objectMapper.writeValueAsString(event);
+    //     // String schemaPath = Paths.get(System.getProperty("user.dir"))
+    //     //                  .resolve("../shared-schemas/auth/user-created.schema.json")
+    //     //                  .normalize()
+    //     //                  .toAbsolutePath()
+    //     //                  .toString();
+    //     JsonSchemaValidator.validate(json, userCreatedSchemaPath);
+    //     eventPublisher.publish("user-created", user.getUserId().toString(), json);
+    //     System.out.println("✅ Published user-created event");
+    // } catch (Exception e) {
+    //     System.err.println("❌ Failed to publish user-created event: " + e.getMessage());
+    // }
 
 
 
