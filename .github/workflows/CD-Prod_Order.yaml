@@ -2,10 +2,10 @@ name: Order Service CI/CD - Production
 
 on:
   pull_request:
-    branches:
-      - main
-    paths:
-      - "orders/**"
+    # branches:
+    #   - main
+    # paths:
+    #   - "orders/**"
 
 jobs:
   deploy-to-gke:
