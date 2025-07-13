@@ -57,14 +57,14 @@ jobs:
       - name: Submit Cloud Build (Async)
         id: cloudbuild
         run: |
-          build_output=$(gcloud builds submit \
+          BUILD_ID=$(gcloud builds submit \
             --project=levomart \
             --config=../k8s/orders/cloudBuild.yaml \
             --async \
             --format='value(metadata.build.id)')
 
-          echo "BUILD_ID=$build_output" >> $GITHUB_ENV
-          echo "✅ Submitted build with ID: $build_output"
+          echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
+          echo "✅ Submitted build with ID: $BUILD_ID"
 
       - name: Wait for Cloud Build to Finish
         run: |
