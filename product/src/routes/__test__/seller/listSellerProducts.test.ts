@@ -3,6 +3,9 @@
 import { app } from "../../../app";
 import { Product } from "../../../models/product";
 import request from "supertest";
+jest.mock("../../../events/productCreated", () => ({
+  productCreated: jest.fn(), // will replace the actual Kafka-related function
+}));
 
 // * ✅ 200 with list of seller's products done
 // * ❌ 401 unauthenticated done
@@ -18,7 +21,7 @@ it("returns 200 with seller's products", async () => {
   await Product.create({ name: "Item 2", price: 200, userId });
 
   const res = await request(app)
-    .get(`/seller/${userId}/products`)
+    .get(`/api/products/seller/${userId}`)
     .set("Authorization", sellerToken)
     .expect(200);
 
@@ -36,7 +39,7 @@ it("allows admin to fetch seller's products", async () => {
   await Product.create({ name: "Admin Visible", price: 50, userId: sellerId });
 
   const res = await request(app)
-    .get(`/seller/${sellerId}/products`)
+    .get(`/api/products/seller/${sellerId}`)
     .set("Authorization", adminToken)
     .expect(200);
 
@@ -44,7 +47,7 @@ it("allows admin to fetch seller's products", async () => {
 });
 
 it("returns 401 if user is not authenticated", async () => {
-  await request(app).get("/seller/some-user-id/products").expect(401);
+  await request(app).get("/api/products/seller/some-user-id").expect(401);
 });
 //currently sending 401
 it("returns 403 if seller tries to fetch another seller's products", async () => {
@@ -65,9 +68,9 @@ it("returns 403 if seller tries to fetch another seller's products", async () =>
   });
 
   await request(app)
-    .get(`/seller/${seller1Id}/products`)
+    .get(`/api/products/seller/${seller1Id}`)
     .set("Authorization", seller2)
-    .expect(401);
+    .expect(403);
 });
 it("returns 200 with empty array if seller has no products", async () => {
   const seller = global.signin("SELLER");
@@ -76,7 +79,7 @@ it("returns 200 with empty array if seller has no products", async () => {
   ).id;
 
   const res = await request(app)
-    .get(`/seller/${sellerId}/products`)
+    .get(`/api/products/seller/${sellerId}`)
     .set("Authorization", seller)
     .expect(200);
 

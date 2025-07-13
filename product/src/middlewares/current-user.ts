@@ -29,6 +29,8 @@ export const currentUser = (
   //   return next();
   // }
   const token = authHeader.replace("Bearer ", "").trim();
+  // console.log("Token received:", token);
+  // console.log("JWT Key:", process.env.JWT_KEY);
   const jwt_key = Buffer.from(
     // "TmV3U2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg=",
     process.env.JWT_KEY!,
@@ -39,7 +41,7 @@ export const currentUser = (
     const payload = jwt.verify(token, jwt_key) as UserPayload;
 
     req.currentUser = payload;
-    console.log("Current user:", req.currentUser);
+    //console.log("Current user:", req.currentUser);
   } catch (err) {
     console.error("Error parsing JWT:", err);
   }

@@ -31,6 +31,8 @@ import com.auth.auth.service.JwtService;
 import com.auth.auth.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +43,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 
 
-
+@Tag(name = "Auth Controller", description = "Handles authentication and registration")
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -55,7 +57,7 @@ public class UserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-     @Autowired
+     @Autowired(required = false    )
     private KafkaEventPublisher eventPublisher;
 
     @Value("${schema.user.created.path}")
@@ -75,10 +77,13 @@ public ResponseEntity<UserDto> getCurrentUser() {
         UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
         User user = userPrincipal.getUser();
         if (user != null) {
+
             UserDto userDto = new UserDto();
+            userDto.setUserId(user.getUserId());
             userDto.setUsername(user.getUsername());
             userDto.setEmail(user.getEmail());
             userDto.setRole(user.getRole());
+            
             return ResponseEntity.ok(userDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -92,7 +97,7 @@ public ResponseEntity<UserDto> getCurrentUser() {
 }
    
     
-
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
 public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
     // map to entity
@@ -115,20 +120,32 @@ public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest
         user.getEmail(),
         user.getRole()
     );
-
-     try {
+    if (eventPublisher != null) {
+    try {
         String json = objectMapper.writeValueAsString(event);
-        // String schemaPath = Paths.get(System.getProperty("user.dir"))
-        //                  .resolve("../shared-schemas/auth/user-created.schema.json")
-        //                  .normalize()
-        //                  .toAbsolutePath()
-        //                  .toString();
         JsonSchemaValidator.validate(json, userCreatedSchemaPath);
         eventPublisher.publish("user-created", user.getUserId().toString(), json);
         System.out.println("✅ Published user-created event");
     } catch (Exception e) {
         System.err.println("❌ Failed to publish user-created event: " + e.getMessage());
     }
+} else {
+    System.out.println("⚠️ Kafka disabled, skipping event publish.");
+}
+
+    //  try {
+    //     String json = objectMapper.writeValueAsString(event);
+    //     // String schemaPath = Paths.get(System.getProperty("user.dir"))
+    //     //                  .resolve("../shared-schemas/auth/user-created.schema.json")
+    //     //                  .normalize()
+    //     //                  .toAbsolutePath()
+    //     //                  .toString();
+    //     JsonSchemaValidator.validate(json, userCreatedSchemaPath);
+    //     eventPublisher.publish("user-created", user.getUserId().toString(), json);
+    //     System.out.println("✅ Published user-created event");
+    // } catch (Exception e) {
+    //     System.err.println("❌ Failed to publish user-created event: " + e.getMessage());
+    // }
 
 
 

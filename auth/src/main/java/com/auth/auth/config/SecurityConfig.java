@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import jakarta.servlet.http.HttpServletResponse;
 
-//manual and custom security configuration for the application
+//manual and custom security configuration for the applications
 @Configuration
 @EnableWebSecurity
 //@Profile("!test") // Exclude this configuration in the test profile
@@ -55,8 +55,13 @@ public class SecurityConfig {
 
 		http.csrf(customizer -> customizer.disable())
 				.authorizeHttpRequests(request -> request
-						.requestMatchers("/api/auth/register", "/api/auth/login")
+						.requestMatchers("/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html","/api/auth/register", "/api/auth/login")
 						.permitAll()
+						
+                
+            
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

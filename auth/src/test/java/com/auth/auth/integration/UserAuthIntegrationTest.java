@@ -40,6 +40,8 @@ public class UserAuthIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    
+
     @BeforeEach
     void setup() {
         // This method can be used to set up any common test data or configurations
@@ -55,7 +57,7 @@ public class UserAuthIntegrationTest {
         register.setEmail("authuser@example.com");
         register.setRole(Role.ADMIN);
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(register)))
                 .andExpect(status().isOk())
@@ -66,7 +68,7 @@ public class UserAuthIntegrationTest {
         login.setUsername("authuser");
         login.setPassword("securepass");
 
-        MvcResult loginResult = mockMvc.perform(post("/login")
+        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(login)))
                 .andExpect(status().isOk())
@@ -78,7 +80,7 @@ public class UserAuthIntegrationTest {
         assertThat(token).isNotBlank();
 
         // 3. Call /current-user with Bearer token
-        mockMvc.perform(get("/current-user")
+        mockMvc.perform(get("/api/auth/current-user")
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("authuser"))
@@ -100,7 +102,7 @@ void testLoginWithWrongPassword() throws Exception {
     register.setEmail("wrongpass@example.com");
     register.setRole(Role.ADMIN);
 
-    mockMvc.perform(post("/register")
+    mockMvc.perform(post("/api/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(register)))
             .andExpect(status().isOk());
@@ -110,7 +112,7 @@ void testLoginWithWrongPassword() throws Exception {
     login.setUsername("wrongpassuser");
     login.setPassword("wrongpass");
 
-    mockMvc.perform(post("/login")
+    mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(login)))
             .andExpect(status().isUnauthorized())
@@ -122,7 +124,7 @@ void testLoginWithMissingFields() throws Exception {
     // Empty login object
     LoginRequest login = new LoginRequest();
 
-    mockMvc.perform(post("/login")
+    mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(login)))
             .andExpect(status().isBadRequest()); // If @Valid is applied
@@ -136,7 +138,7 @@ void testAdminEndpointWithAdminRole() throws Exception {
     register.setEmail("admin@example.com");
     register.setRole(Role.ADMIN);
 
-    mockMvc.perform(post("/register")
+    mockMvc.perform(post("/api/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(register)))
             .andExpect(status().isOk());
@@ -145,7 +147,7 @@ void testAdminEndpointWithAdminRole() throws Exception {
     login.setUsername("adminuser");
     login.setPassword("adminpass");
 
-    MvcResult loginResult = mockMvc.perform(post("/login")
+    MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(login)))
             .andExpect(status().isOk())
@@ -153,7 +155,7 @@ void testAdminEndpointWithAdminRole() throws Exception {
 
     String token = objectMapper.readTree(loginResult.getResponse().getContentAsString()).get("token").asText();
 
-    mockMvc.perform(get("/admin-only")
+    mockMvc.perform(get("/api/auth/admin-only")
             .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(content().string("Welcome, Admin!"));
@@ -168,7 +170,7 @@ void testAdminEndpointWithUserRole_shouldFail() throws Exception {
     register.setEmail("useronly@example.com");
     register.setRole(Role.USER);
 
-    mockMvc.perform(post("/register")
+    mockMvc.perform(post("/api/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(register)))
             .andExpect(status().isOk());
@@ -177,7 +179,7 @@ void testAdminEndpointWithUserRole_shouldFail() throws Exception {
     login.setUsername("useronly");
     login.setPassword("userpass");
 
-    MvcResult loginResult = mockMvc.perform(post("/login")
+    MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(login)))
             .andExpect(status().isOk())
@@ -185,7 +187,7 @@ void testAdminEndpointWithUserRole_shouldFail() throws Exception {
 
     String token = objectMapper.readTree(loginResult.getResponse().getContentAsString()).get("token").asText();
 
-    mockMvc.perform(get("/admin-only")
+    mockMvc.perform(get("/api/auth/admin-only")
             .header("Authorization", "Bearer " + token))
             .andExpect(status().isForbidden());
 }

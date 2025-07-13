@@ -40,6 +40,15 @@ export function useCart() {
       toast.error("Remove failed");
     }
   };
+  const clearCart = async () => {
+    try {
+      await axiosInstance.post("/cart/clear");
+      fetchCart();
+      toast.success("Cart cleared");
+    } catch {
+      toast.error("Clear failed");
+    }
+  };
 
   useEffect(() => {
     fetchCart();
@@ -57,5 +66,6 @@ export function useCart() {
     updateQuantity,
     removeItem,
     totaiItems,
+    clearCart,
   };
 }

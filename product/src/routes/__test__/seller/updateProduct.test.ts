@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import { app } from "../../../app";
 import { Product } from "../../../models/product";
 import request from "supertest";
+jest.mock("../../../events/productCreated", () => ({
+  productCreated: jest.fn(), // will replace the actual Kafka-related function
+}));
 // * ✅ 200 on successful update done
 // * ❌ 401 unauthenticated
 // * ❌ 403 if not seller
@@ -82,7 +85,7 @@ it("returns 403 if seller tries to update someone else's product", async () => {
     .put(`/api/products/${product.id}`)
     .set("Authorization", seller2)
     .send({ price: 999 })
-    .expect(401);
+    .expect(403);
 });
 
 it("returns 404 if product not found", async () => {

@@ -1,11 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config();
 import mongoose from "mongoose";
 import { app } from "./app";
 import { consumer, initKafka, producer } from "./events/kafka";
-import dotenv from "dotenv";
 import { listenOrderCreated } from "./events/orderCreatedListener";
 import { listenOrderUpdated } from "./events/orderUpdatedListener";
-
-dotenv.config();
 
 const start = async () => {
   if (!process.env.JWT_KEY) {

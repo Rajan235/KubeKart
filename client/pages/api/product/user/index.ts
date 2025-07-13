@@ -5,10 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("hi from bff handeler product");
   try {
     if (req.method !== "GET") {
-      console.log("hi from bff handeler produc1111111t");
       return res.status(405).end();
     }
     const response = await axios.get(

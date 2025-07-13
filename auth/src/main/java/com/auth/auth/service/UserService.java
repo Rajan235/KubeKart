@@ -1,5 +1,6 @@
 package com.auth.auth.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -67,7 +68,7 @@ public class UserService {
     public UserService(
         UserRepo repo,
         PasswordEncoder encoder,
-        KafkaTemplate<String, String> kafkaTemplate,
+          @Autowired(required = false)  KafkaTemplate<String, String> kafkaTemplate,
         @Value("${schema.user.created.path}") String schemaPath,
         @Value("${topic.user-created}") String userCreatedTopic
     ) {
@@ -92,7 +93,13 @@ public class UserService {
 
             String json = objectMapper.writeValueAsString(event);
             JsonSchemaValidator.validate(json, schemaPath);
-            kafkaTemplate.send(userCreatedTopic, json);
+            if (kafkaTemplate != null) {
+    kafkaTemplate.send(userCreatedTopic, json);
+    System.out.println("✅ Published user-created event: " + json);
+} else {
+    System.out.println("⚠️ Kafka is disabled. Skipping event publishing.");
+}
+
 
             System.out.println("✅ Published user-created event: " + json);
         } catch (Exception e) {

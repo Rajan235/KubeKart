@@ -9,9 +9,11 @@ import axiosInstance from "@/lib/axios";
 import { Product } from "@/types/product";
 
 import { AddToCartDto } from "@/types/cart";
-import EmptyState from "@/components/layouts/EmptyState";
+import EmptyState from "@/components/layouts/emptyStates/EmptyState";
 import { motion } from "framer-motion";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
 export default function ProductPage() {
+  useProtectedRoute("USER");
   const params = useParams();
   const id = params?.id;
   const [product, setProduct] = useState<Product | null>(null);
@@ -88,7 +90,7 @@ export default function ProductPage() {
       <div className="max-w-5xl mx-auto p-6 bg-white rounded-2xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Image */}
         <div className="bg-[#f0f0f0] h-64 rounded-lg flex items-center justify-center overflow-hidden">
-          {product.imageUrl ? (
+          {/* {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
@@ -96,7 +98,7 @@ export default function ProductPage() {
             />
           ) : (
             <span className="text-5xl">📦</span>
-          )}
+          )} */}
         </div>
 
         {/* Info */}

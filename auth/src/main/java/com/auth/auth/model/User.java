@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,19 @@ public class User {
     @Enumerated(jakarta.persistence.EnumType.STRING)
     @Column( nullable = false)
     private Role role;
+
+    @Version
+    private Long version;
+
+    public User(UUID userId, String username, String password, String email, Role role) {
+    this.userId = userId;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role;
+    // this.version = 0L;
+    // version will be managed by JPA
+}
 
     
 

@@ -9,7 +9,7 @@ export default async function handler(
     if (req.method !== "GET") return res.status(405).end();
     const authHeader = req.headers.authorization || "";
     const response = await axios.get(
-      "http://order-service:8080/api/orders/seller",
+      "http://order-service:4000/api/orders/seller",
       {
         headers: {
           Authorization: authHeader,

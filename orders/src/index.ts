@@ -15,8 +15,7 @@ const start = async () => {
     await initKafka(); // ✅ Only producer.connect()
     await consumer.connect(); // ✅ Separate consumer.connect()
     console.log("✅ Kafka Consumer Connected");
-
-    // ✅ Start all listeners
+    //✅ Start all listeners
     await Promise.all([listenProductCreated(), listenProductUpdated()]);
   } catch (err) {
     console.error("❌ Error starting Kafka/listeners:", err);
@@ -30,7 +29,7 @@ const start = async () => {
 };
 
 start();
-// Graceful shutdown handling
+//Graceful shutdown handling
 process.on("SIGINT", async () => {
   console.log("🛑 Caught SIGINT. Shutting down gracefully...");
   await producer.disconnect();

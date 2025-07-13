@@ -8,7 +8,14 @@ spec:
       containers:
         - name: migrate
           image: order:latest
-          command: ["npx", "prisma", "migrate", "deploy"]
+          command:
+            [
+              "npx",
+              "prisma",
+              "migrate",
+              "deploy",
+              "--schema=./prisma/prod/schema.prisma",
+            ]
           envFrom:
             - configMapRef:
                 name: order-config

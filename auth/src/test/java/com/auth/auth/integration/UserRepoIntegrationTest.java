@@ -23,8 +23,20 @@ public class UserRepoIntegrationTest {
 
     @Test
     void testUsernameMustBeUnique() {
-        User u1 = new User(UUID.randomUUID(), "sameuser", "pass1", "u1@example.com", Role.USER);
-        User u2 = new User(UUID.randomUUID(),"sameuser", "pass2", "u2@example.com", Role.USER);
+        //User u1 = new User(UUID.randomUUID(), "sameuser", "pass1", "u1@example.com", Role.USER);
+        User u1 = new User();
+        
+        u1.setUsername("sameuser");
+        u1.setPassword("pass1");
+        u1.setEmail("ui@example.com");
+        u1.setRole(Role.USER);
+      //  User u2 = new User(UUID.randomUUID(),"sameuser", "pass2", "u2@example.com", Role.USER);
+        User u2 = new User();
+     
+        u2.setUsername("sameuser");
+        u2.setPassword("pass2");
+        u2.setEmail("u2@example.com");
+        u2.setRole(Role.USER);
 
         userRepo.save(u1);
         assertThrows(DataIntegrityViolationException.class, () -> userRepo.saveAndFlush(u2));

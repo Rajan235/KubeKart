@@ -35,7 +35,7 @@ export const currentUser = (
     const payload = jwt.verify(token, jwt_key) as UserPayload;
 
     req.currentUser = payload;
-    console.log("Current user:", req.currentUser);
+    //console.log("Current user:", req.currentUser);
   } catch (err) {
     console.error("Error parsing JWT:", err);
   }

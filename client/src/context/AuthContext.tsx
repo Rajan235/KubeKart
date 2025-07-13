@@ -8,7 +8,7 @@ import Role from "@/types/role";
 // Define your user and role types
 
 interface User {
-  id: string;
+  userId: string;
   name: string;
   email: string;
   role: Role;
@@ -20,6 +20,12 @@ interface AuthContextType {
   login: (token: string) => Promise<void>;
   logout: () => void;
 }
+// const dummyUser: User = {
+//   id: "user123",
+//   name: "Rajan Bansal",
+//   email: "rajan@example.com",
+//   role: "SELLER",
+// };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -44,7 +50,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log(res.data);
         setUser(res.data); // Must match the User interface
+        //setUser(dummyUser);
       } catch (err) {
         console.error("❌ AuthContext: Failed to fetch current user", err);
         localStorage.removeItem("token");

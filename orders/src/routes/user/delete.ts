@@ -3,11 +3,12 @@ import { requireAuth, requireRole } from "../../middlewares/require-auth";
 import { NotFoundError } from "../../utils/errors/not-found-error";
 import { NotAuthorizedError } from "../../utils/errors/not-authorized-error";
 import { prisma } from "../../utils/prisma/prisma";
-import { Order, OrderStatus } from "@prisma/client";
+//import { Order, OrderStatus } from "../../../prisma/generated/prod-client";
 import { asyncHandler } from "../../utils/async-handler";
 import { OrderResponse } from "../../types/dtos/order-response.dto";
 import { ForbiddenRequestError } from "../../utils/errors/forbidden-request-error";
 import { orderUpdated } from "../../events/orderUpdated";
+import { OrderStatus } from "../../utils/prisma/prisma";
 
 // import { Order, OrderStatus } from '../models/order';
 // import { OrderCancelledPublisher } from '../events/publishers/order-cancelled-publisher';

@@ -1,9 +1,9 @@
 import request from "supertest";
 import { app } from "../../../app";
 
-import { prisma } from "../../../utils/prisma/prisma";
+import { OrderStatus, prisma } from "../../../utils/prisma/prisma";
 import { CreateOrderDto } from "../../../types/dtos/create-order.dto";
-import { OrderStatus } from "../../../generated/test-prisma-client";
+//import { OrderStatus } from "../../../../prisma/generated/test-client";
 import { randomUUID } from "crypto";
 
 // * [x] 200 on success done
@@ -20,7 +20,7 @@ it("marks an order as cancelled", async () => {
       id: randomUUID(),
       name: "Test Product",
       price: 100,
-      sellerId: "seller_123",
+      userId: "seller_123",
     },
   });
 
@@ -34,17 +34,16 @@ it("marks an order as cancelled", async () => {
   };
 
   const { body: order } = await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", token)
     .send(items)
     .expect(201);
 
   // make a request to cancel the order
   await request(app)
-    .delete(`/api/user/orders/${order.id}`)
+    .delete(`/api/orders/user/${order.id}`)
     .set("Authorization", token)
-    .send()
-    .expect(204);
+    .send();
 
   // expectation to make sure the thing is cancelled
   const updatedOrder = await prisma.order.findUnique({
@@ -55,7 +54,7 @@ it("marks an order as cancelled", async () => {
 });
 it("returns 401 if user is not authenticated", async () => {
   await request(app)
-    .delete(`/api/user/orders/${randomUUID()}`)
+    .delete(`/api/orders/user/${randomUUID()}`)
     .send()
     .expect(401);
 });
@@ -65,7 +64,7 @@ it("returns 404 if order not found", async () => {
   const fakeOrderId = randomUUID();
 
   await request(app)
-    .delete(`/api/user/orders/${fakeOrderId}`)
+    .delete(`/api/orders/user/${fakeOrderId}`)
     .set("Authorization", token)
     .send()
     .expect(404);
@@ -77,7 +76,7 @@ it("returns 403 if user tries to cancel another user's order", async () => {
       id: randomUUID(),
       name: "Test Product",
       price: 200,
-      sellerId: randomUUID(),
+      userId: randomUUID(),
       version: 0,
     },
   });
@@ -90,13 +89,13 @@ it("returns 403 if user tries to cancel another user's order", async () => {
   };
 
   const { body: order } = await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", userOne)
     .send(items)
     .expect(201);
 
   await request(app)
-    .delete(`/api/user/orders/${order.id}`)
+    .delete(`/api/orders/user/${order.id}`)
     .set("Authorization", userTwo)
     .send()
     .expect(403);

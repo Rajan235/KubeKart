@@ -26,7 +26,7 @@ it("returns 404 if the product does not exist", async () => {
     ],
   };
   await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", token)
     .send(items)
     .expect(404);
@@ -36,13 +36,13 @@ it("returns 400 validation error if productId and quantity are missing", async (
   const token = global.signin("USER");
 
   await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", token)
     .send({}) // missing 'items'
     .expect(400);
 
   await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", token)
     .send({ items: [{}] }) // missing fields inside item
     .expect(400);
@@ -52,7 +52,7 @@ it("returns 400 validation error for invalid UUID productId or invalid quantity"
   const token = global.signin("USER");
 
   await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", token)
     .send({
       items: [
@@ -74,7 +74,7 @@ it("returns 201 on successful order creation", async () => {
       id: randomUUID(),
       name: "Test Product",
       price: 100,
-      sellerId: "seller_123",
+      userId: "seller_123",
     },
   });
 
@@ -88,7 +88,7 @@ it("returns 201 on successful order creation", async () => {
   };
 
   const res = await request(app)
-    .post("/api/user/orders")
+    .post("/api/orders/user")
     .set("Authorization", token)
     .send(items);
 
@@ -108,7 +108,7 @@ it("returns 401 if user is not authenticated", async () => {
     ],
   };
 
-  await request(app).post("/api/user/orders").send(items).expect(401);
+  await request(app).post("/api/orders/user").send(items).expect(401);
 });
 // Optional future test
 // it("returns 400 if quantity > stock");

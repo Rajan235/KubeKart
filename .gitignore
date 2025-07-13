@@ -7,6 +7,7 @@
 **/.mvn/
 **/build/
 *.iml
+
 # Node.js
 **/node_modules/
 **/npm-debug.log
@@ -39,6 +40,9 @@ Thumbs.db
 *.swp
 *.swo
 
+
+
+dump/
 # ============================
 # ✅ KUBERNETES
 # ============================
@@ -104,3 +108,5 @@ test-results/
 **/target/
 **/build/
 **/dist/
+
+!auth/target/auth-0.0.1-SNAPSHOT.jar

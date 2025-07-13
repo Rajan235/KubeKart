@@ -7,13 +7,103 @@ import { toast } from "sonner";
 
 import { useAuth } from "@/context/AuthContext";
 import axiosInstance from "@/lib/axios";
-import ProductCard from "@/components/layouts/ProductCard";
+
 import { AxiosError } from "axios";
 import { Product } from "@/types/product";
 import { AddToCartDto } from "@/types/cart";
-import EmptyState from "@/components/layouts/EmptyState";
-
+import EmptyState from "@/components/layouts/emptyStates/EmptyState";
+import ProductCard from "@/components/layouts/product/ProductCard";
+import { useProtectedRoute } from "@/lib/useProtectedRoute";
+// const SAMPLE_PRODUCTS: ProductFormData[] = [
+//   {
+//     userId: "1",
+//     name: "HandBag",
+//     description: "Stylish and durable handbag for everyday use.",
+//     price: 999,
+//     category: "Fashion accessories",
+//     imageUrl:
+//       "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRUSicaXmNwfpnpf7Mcry7XgBvjExZFFd745_vpzZ7x-5rWpK5wpnPF4QhznpvWLhRfcHeXH7tILpmlOMbFgQb0mS11QDKB59CvCFDAlKPu4Ud_zP-Z9DIvNXlyye5d6AFn_J2khD-C&usqp=CAc",
+//     stock: 10,
+//   },
+//   {
+//     userId: "2",
+//     name: "Mens sneakers",
+//     description: "Comfortable and stylish sneakers for Men.",
+//     price: 799,
+//     category: "Shoes",
+//     imageUrl: "/images/sneakers.png",
+//     stock: 5,
+//   },
+//   {
+//     userId: "3",
+//     name: "Headphones",
+//     description: "Premium quality headphones with noise cancellation.",
+//     price: 1299,
+//     category: "Electronics",
+//     imageUrl: "/images/headphones.png",
+//     stock: 8,
+//   },
+//   {
+//     userId: "4",
+//     name: "Mens wallet",
+//     description: "Genuine leather wallet with multiple compartments.",
+//     price: 499,
+//     category: "Fashion accessories",
+//     imageUrl: "/images/wallet.png",
+//     stock: 15,
+//   },
+//   {
+//     userId: "5",
+//     name: "Mens shirt",
+//     description: "Stylish and comfortable shirt for every occasion.",
+//     price: 1599,
+//     category: "Fashion",
+//     imageUrl: "/images/shirt.png",
+//     stock: 3,
+//   },
+// {
+//   userId: "6",
+//   name: "Sample Product 6",
+//   description: "High demand sample product.",
+//   price: 899,
+//   category: "Sample",
+//   stock: 12,
+// },
+// {
+//   userId: "7",
+//   name: "Sample Product 7",
+//   description: "Limited edition sample product.",
+//   price: 1999,
+//   category: "Sample",
+//   stock: 2,
+// },
+// {
+//   userId: "8",
+//   name: "Sample Product 8",
+//   description: "Eco-friendly sample product.",
+//   price: 699,
+//   category: "Sample",
+//   stock: 20,
+// },
+// {
+//   userId: "9",
+//   name: "Sample Product 9",
+//   description: "Popular sample product among customers.",
+//   price: 1099,
+//   category: "Sample",
+//   stock: 7,
+// },
+// {
+//   userId: "10",
+//   name: "Sample Product 10",
+//   description: "Top-rated sample product.",
+//   price: 1399,
+//   category: "Sample",
+//   stock: 6,
+// },
+//];
 export default function ProductsPage() {
+  useProtectedRoute("USER");
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -32,6 +122,8 @@ export default function ProductsPage() {
         toast.error("Failed to load products");
       })
       .finally(() => setLoading(false));
+    // setProducts(SAMPLE_PRODUCTS);
+    // setLoading(false);
   }, []);
 
   const addToCart = async (payload: AddToCartDto) => {

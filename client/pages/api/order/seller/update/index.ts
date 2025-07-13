@@ -12,7 +12,7 @@ export default async function handler(
     const { id, status } = req.body;
 
     const response = await axios.patch(
-      `http://order-service:8080/api/orders/seller/${id}/status`,
+      `http://order-service:4000/api/orders/seller/${id}/status`,
       { status },
       {
         headers: {

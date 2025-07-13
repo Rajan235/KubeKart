@@ -1,5 +1,7 @@
 package com.auth.auth.dtos;
 
+import java.util.UUID;
+
 import com.auth.auth.model.Role;
 
 import jakarta.persistence.Enumerated;
@@ -10,6 +12,8 @@ import lombok.Data;
 
 @Data
 public class UserDto {
+
+    private UUID userId;
     @NotBlank(message = "Username is required")
     private String username;
     @NotBlank(message = "Email is required")
