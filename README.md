@@ -292,17 +292,17 @@ LevoMart is a scalable, cloud-native e-commerce platform built with real-world e
 
 # Homepage
 
-![Home Page](./docs/images/ui-screenshots/homepage.png)
+![Home Page](./docs/images/screenshots/homepage.png)
 
-![Home Page2](./docs/images/ui-screenshots/homepage2.png)
+![Home Page2](./docs/images/screenshots/homepage2.png)
 
-| Product Page                                               | Cart Page                                           |
-| ---------------------------------------------------------- | --------------------------------------------------- |
-| ![Product Page](./docs/images/ui-screenshots/products.png) | ![cart Page](./docs/images/ui-screenshots/cart.png) |
+| Product Page                                            | Cart Page                                        |
+| ------------------------------------------------------- | ------------------------------------------------ |
+| ![Product Page](./docs/images/screenshots/products.png) | ![cart Page](./docs/images/screenshots/cart.png) |
 
-| Orders                                             | Seller Dash Board                                                     | Add product                                                 |
-| -------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------- |
-| ![orders](./docs/images/ui-screenshots/orders.png) | ![sellerdashboard](./docs/images/ui-screenshots/seller-dashboard.png) | ![addproduct](./docs/images/ui-screenshots/add-product.png) |
+| Orders                                          | Seller Dash Board                                                  | Add product                                              |
+| ----------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- |
+| ![orders](./docs/images/screenshots/orders.png) | ![sellerdashboard](./docs/images/screenshots/seller-dashboard.png) | ![addproduct](./docs/images/screenshots/add-product.png) |
 
 ---
 
